@@ -1,0 +1,94 @@
+@use 'base/variables' as v;
+
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+body {
+    font-family: v.$secundaria;
+    font-size: 1.6rem;
+    line-height: 1.8;
+    background-color: v.$grisgrafito;
+}
+p {
+    color: v.$arenaclaro;
+    font-size: 2rem;
+    margin: 0;
+}
+.contenedor {
+    width: 95%;
+    max-width: 120rem;
+    margin: 0 auto;
+}
+
+a {
+    text-decoration: none;
+}
+
+img,
+picture {
+    width: 100%;
+    display: block;
+}
+
+h1, h2, h3 {
+    font-family: v.$titulos;
+    margin: calc(v.$separacion / 2) 0;
+    font-weight: 300;
+    text-align: center;
+    
+}
+
+h1 {
+    font-size: 3.8rem;
+}
+h2 {
+    font-size: 3.4rem;
+}
+h3 {
+    font-size: 3rem;
+}
+h4 {
+    font-size: 2.6rem;
+}
+
+input {
+        padding: 1.5rem 3rem;
+        background-color: v.$grisgrafito;
+        border: solid 2px v.$arenaclaro;
+        color: v.$arenaclaro;
+        border-radius: 1.5rem;
+        font-size: 2rem;
+        font-family: v.$texto;
+        margin: 0;
+        width: auto;
+}
+
+.linea-blanca {
+        width: 100%;
+        height: 2px;
+<<<<<<< HEAD
+        background-color: rgba(255, 255, 255, 0.244);
+=======
+        background-color: white;
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+        }
+
+        .alerta {
+    padding: 1.5rem;
+    text-align: center;
+    color: v.$arenaclaro;
+    font-weight: v.$bold;
+    text-transform: uppercase;
+    margin: 1rem 0;
+    &.error{
+    background-color: v.$rojotierra;
+    }
+    &.exito {
+        background-color: v.$verdepastel;
+    }
+}

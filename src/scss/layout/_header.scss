@@ -1,0 +1,148 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+<<<<<<< HEAD
+@font-face {
+  font-family: 'TrajanPro';
+  src: url('/fonts/TrajanPro-Regular.woff2') format('woff2'),
+       url('/fonts/TrajanPro-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+=======
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
+.header {
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    background-color: v.$grisniebla;
+    
+
+    .superior {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin: 0;
+        padding: 0 2rem;
+
+        @include m.desktop {
+            padding: 0 4rem;
+        }
+
+        span {
+            color: v.$rojo;
+            margin-right: 1rem;
+        }
+<<<<<<< HEAD
+        .nombre-logo {
+            width: 100%;
+        
+=======
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
+        .logo-principal {
+            display: flex;
+            width: 120px;
+            height: 120px;
+<<<<<<< HEAD
+            margin: 0 auto;
+=======
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+            
+            @include m.desktop {
+                display: none;
+            }
+        }
+
+<<<<<<< HEAD
+        .logo-secundario {
+            display: none;
+
+            @include m.desktop {
+                display: flex;
+                width: auto;
+                height: 6rem;
+                margin: 0.5rem 0;
+            }
+        }
+
+    }
+=======
+        h1 {
+            display: none;
+            @include m.desktop {
+                display: flex;
+                color: v.$arenaclaro;
+            }
+            
+        }
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+            
+
+        .contenido-a {
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+
+            p {
+                display: none;
+
+                @include m.desktop {
+                display: flex;
+                width: auto;
+                font-size: 1.8rem;
+                font-family: v.$secundaria;
+                font-weight: v.$bold;
+            }
+        }
+
+        img {
+            width: 35px;
+            height: 35px;
+            margin: 0;
+        }
+        }
+        
+        .botones-login {
+            display: flex;
+            column-gap: 2rem;
+
+            .admin_movil {
+                padding: 1.5rem;
+                img {
+                    width: 5rem;
+                    height: 5rem;
+                }
+                p {
+                    display: none;
+                }
+            @include m.boton(v.$grisniebla,v.$rojo,flex);   
+                width: auto;
+                height: 60px;
+
+            @include m.desktop {
+                width: 160px;
+                height: 5.5rem;
+                padding: 0;
+
+                img {
+                    display: none;
+                }
+                p {
+                    display: flex;
+                    font-size: 1.8rem;
+                }
+            }
+
+            }
+        }
+
+        
+    }
+}
+

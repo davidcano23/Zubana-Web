@@ -1,0 +1,54 @@
+@use 'base/variables' as v;
+@use 'sass:color';
+@use 'sass:math';
+
+
+
+/** Media Queries **/
+@mixin telefono {
+    @media (min-width: #{v.$telefono}) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: #{v.$tablet}) {
+        @content;
+    }
+}
+  
+@mixin desktop {
+    @media (min-width: #{v.$desktop}) {
+        @content;
+    }
+}
+@mixin grid($columnas, $espaciado ) {
+    display: grid;
+    gap: $espaciado;
+    grid-template-columns: repeat($columnas, 1fr);
+}
+
+@mixin boton( $fondo,$bgColor, $display) {
+    background-color: $fondo;
+    color: v.$arenaclaro;
+    font-weight: v.$bold;
+    text-decoration: none;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: $display;
+    transition: ease .5s;
+    border: solid 3px $bgColor;
+    text-transform: uppercase;
+    margin: 0;
+    border-radius: 15px;
+    width: 160px;
+    height: 5.5rem;
+
+    &:hover {
+        background-color: color-mix(in srgb, $fondo 70%, v.$negrocarbon);
+        transition: ease .5s;
+        transform: scale(1.03);
+        cursor: pointer;
+    }
+}

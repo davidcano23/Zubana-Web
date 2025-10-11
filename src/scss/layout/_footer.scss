@@ -1,0 +1,270 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.footer {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4rem;
+
+    @include m.desktop {
+        padding: 0 2rem;
+    }
+
+    p {
+        font-size: 1.6rem;
+        text-align: center;
+        margin-top: 2rem;
+
+        @include m.tablet {
+            font-size: 1.8rem;
+        }
+        @include m.desktop {
+            font-size: 2.2rem;
+        }
+    }
+
+    .admin_movil {
+        padding: 1.5rem;
+        width: 100%;
+            p {
+                display: flex;
+                font-size: 1.8rem;
+                color: v.$grisniebla;
+                text-transform: uppercase;
+            }
+        }
+}
+
+.contenedo {
+    width: 100%;
+}
+
+.navegacion {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: space-between;
+    margin-top: 2rem;
+
+    .titulo-redes {
+        display: none;
+    }
+
+    @include m.desktop {
+        flex-direction: row;
+        align-items: start;
+        justify-content: center;
+
+        .titulo-redes {
+            display: flex;
+        }
+    }
+
+    .propiedades-venta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+
+        @include m.tablet {
+            flex-direction: row;
+            align-items: start;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        @include m.desktop {
+            margin: 0;
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: start;
+        text-align: left;
+        margin: 1.5rem 0;
+        width: 100%;
+
+        @include m.tablet {
+            margin: 0 1rem;
+            width: auto;
+        }
+
+        @include m.desktop {
+           margin: 0 4.5rem; 
+           width: 28rem;
+        }
+
+        img {
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+        }
+
+        .parrafo_img {
+            font-size: 1.6rem;
+            text-align: center;
+            margin: 0 auto;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-family: v.$secundaria;
+            font-size: 1.8rem;
+            color: v.$rojotierra;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nosotros_text {
+            width: auto;
+            height: 15rem;
+            text-align: left;
+            line-height: 1.5;
+            font-size: 1.6rem;
+            color: v.$arenaclaro;
+
+        }
+
+        .sub_hijo_card_footer {
+            display: flex;
+            align-items: end;
+            justify-content: left;
+            width: auto;
+            margin: .5rem 0;
+
+            img {
+                width: 3rem;
+                height: 3rem;
+                margin: 0;
+            }
+
+            a {
+                font-size: 1.4rem;
+                margin-left: 1rem;
+            }
+        }
+
+        .parrafo_footer {
+            text-decoration: none;
+            color: v.$arenaclaro;
+            margin: 0;
+            font-size: 1.8rem;
+
+        }
+
+        @include m.tablet {
+            .nosotros_text {
+                font-size: 1.6rem;
+            }
+            .sub_hijo_card_footer {
+                .parrafo_footer {
+                    font-size: 1.6rem;
+                }
+            }
+            p {
+                font-size: 2rem;
+                text-align: left;
+            }
+            a {
+                font-size: 1.6rem;
+            }
+        }
+
+        @include m.desktop {
+            .nosotros_text {
+                font-size: 1.8rem;
+            }
+            .sub_hijo_card_footer {
+                .parrafo_footer {
+                    font-size: 1.8rem;
+                }
+            }
+            p {
+                font-size: 3rem;
+            }
+            a {
+                font-size: 1.6rem;
+            }
+        }
+    }
+
+
+    .redes-footer {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        justify-content: left;
+        margin: 1rem 0;
+        img {
+            width: 30px;
+            height: 30px;
+            margin: 0;
+            margin-right: .5rem;
+        }
+
+        p {
+            font-size: 1.6rem;
+            color: v.$arenaclaro;
+        }
+
+        @include m.tablet {
+            flex-direction: row;
+            align-items: end;
+            img {
+                width: 35px;
+                height: 35px;
+                margin-right: 1rem;
+            }
+            p {
+                margin: 1.5rem o;
+                font-size: 1.8rem;
+            }
+        }
+
+        @include m.desktop {
+            flex-direction: row;
+            align-items: end;
+            img {
+                width: 50px;
+                height: 50px;
+                margin-right: 1rem;
+            }
+            p {
+                margin: 1.5rem o;
+                font-size: 2.2rem;
+            }
+        }
+    }
+
+}
+
+.mi-alerta {
+    font-family: v.$secundaria;
+    border-radius: 12px;
+    background: v.$arenaclaro;
+}
+
+.mi-boton-confirmar {
+    background-color: v.$rojotierra !important;
+    color: v.$arenaclaro;
+    font-weight: v.$bold;
+    padding: 6px 16px;
+    border-radius: 6px;
+}
+
+.mi-boton-cancelar {
+    background-color: v.$grisniebla !important;
+    color: v.$arenaclaro;
+    font-weight: v.$bold;
+    padding: 6px 16px;
+    border-radius: 6px;
+}

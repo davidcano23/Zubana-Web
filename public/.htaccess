@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /public/
+
+# Sirve archivos reales (css/js/img) y directorios tal cual
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Pasa la ruta a index.php (en dos sabores: PATH_INFO y url)
+RewriteRule ^(.*)$ index.php?PATH_INFO=/$1&url=/$1 [QSA,L]

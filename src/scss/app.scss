@@ -1,0 +1,32 @@
+
+/** BASE **/
+@use 'base/normalize';
+@use 'base/globales';
+@use 'base/variables';
+@use 'base/botones';
+@use 'base/mixins';
+
+/**  LOGIN **/
+@use 'login/login';
+
+/** INTERNAS **/
+@use 'internas/admin';
+@use 'internas/crear';
+@use 'internas/tipoPropiedad';
+
+
+
+/** UI **/
+@use 'layout/header';
+@use 'layout/filtros';
+@use 'layout/footer';
+@use 'layout/filtrar';
+@use 'layout/card';
+@use 'layout/propiedad';
+
+/** IMPORTACION DE LIBRERIAS **/
+@use "../../node_modules/swiper/swiper-bundle" as *;
+
+
+
+

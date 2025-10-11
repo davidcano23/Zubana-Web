@@ -1,0 +1,41 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.tipo_propiedad {
+    
+    h3 {
+        color: v.$rojotierra;
+        font-size: 2.4rem;
+        text-align: center;
+        margin: 0;
+        font-family: v.$secundaria;
+        text-transform: uppercase;
+
+        @include m.tablet {
+            font-size: 3.2rem;
+        }
+
+        @include m.desktop {
+            font-size: 4rem;
+        }
+    }
+
+    .selecciones {
+        width: 100%;
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        text-align: center;
+        gap: 1.5rem;
+
+        @include m.tablet {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        a {
+            @include m.boton(v.$grisgrafito, v.$verdeesmeralda, flex);
+            margin: 0 auto;
+        }
+    }
+
+}

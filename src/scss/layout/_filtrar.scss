@@ -1,0 +1,129 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.superior-inicio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    margin-bottom: 3.5rem;
+
+    .cantidad-propiedades {
+        width: auto;
+        margin: 0 2rem;
+
+        h2 {
+            font-family: v.$texto;
+            font-size: 2rem;
+            font-weight: v.$regular;
+            color: v.$arenaclaro;
+            margin: 0;
+            height: auto;
+            text-align: left;
+        }
+
+        p {
+            font-family: v.$texto;
+            font-size: 1.4rem;
+            color: v.$grisniebla;
+            margin: 0;
+            font-weight: v.$regular;
+            height: auto;
+        }
+
+        @include m.tablet {
+            h2 {
+                font-size: 2.6rem;
+                height: 4rem;
+            }
+
+            p {
+                font-size: 1.6rem;
+            }
+        }
+
+        @include m.desktop {
+            h2 {
+                font-size: 3rem;
+                height: 5rem;
+            }
+
+            p {
+                font-size: 2rem;
+            }
+        }
+    }
+
+    .filtrar {
+
+    // Estilos personalizados para Choices.js
+        .choices {
+            width: 15rem;
+            max-width: 100%;
+            margin: 0;
+            margin-right: 2rem;
+            display: flex !important;
+
+            @include m.tablet {
+                width: 20rem;
+            }
+
+            .choices__inner {
+                background-color: v.$grisgrafito;
+                border: 2px solid v.$arenaclaro;
+                border-radius: 1.5rem;
+                width: 150px;
+                color: v.$arenaclaro;
+                font-size: 1.4rem;
+                transition: all 0.5s ease;
+
+                @include m.tablet{
+                    width: 200px;
+                    
+                }
+
+                &:hover {
+                border-color: none;
+                }
+            }
+
+            // Cuando el select está abierto
+            &.is-open .choices__inner {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                border-bottom: none; // Elimina borde inferior para que se una al dropdown
+                // transition: all 0.5s ease;
+            }
+
+            .choices__list--dropdown {
+                z-index: 9999 !important;
+                font-family: v.$texto;
+                background-color: rgba(v.$grisgrafito, 0.8);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 2px solid v.$arenaclaro;
+                border-top: none; // Elimina borde superior para que se una al input
+                color: v.$arenaclaro;
+                border-radius: 0 0 1rem 1rem;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .choices__item--choice {
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+
+                &:hover {
+                background-color: rgba(v.$grisniebla, 0.8);
+                }
+            }
+
+            .choices__placeholder {
+                color: v.$arenaclaro;
+                font-size: 1.6rem;
+                text-align: center;
+                text-transform: uppercase;
+            }
+            }
+}
+
+}

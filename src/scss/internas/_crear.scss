@@ -1,0 +1,91 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.crear {
+    h1 {
+        color: v.$rojotierra;
+        font-size: 4rem;
+        text-transform: uppercase;
+        font-family: v.$secundaria;
+        font-weight: v.$regular;
+    }
+
+    // BT Regresar
+
+    .bt-regresar {
+        @include m.boton(v.$rojotierra, v.$rojo,flex);
+        margin-bottom: 2.5rem;
+        margin-left: 4rem;
+    }
+
+    //BT-Crear & Actualizar
+
+    .boton-verde {
+        @include m.boton(v.$verdeesmeralda, v.$verdepastel,flex);
+        margin-top: 2.5rem;
+        width: auto;
+    }
+
+
+    legend {
+        font-size: 2.6rem;
+        color: v.$arenaclaro;
+        font-family: v.$texto;
+        font-weight: v.$regular;
+        text-transform: uppercase;
+    }
+
+        .custom-file-input {
+        display: none; // Oculta el input feo
+        }
+
+        .custom-file-label {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background-color: v.$grisgrafito; // azul estilo Tailwind indigo-600
+            color: v.$arenaclaro;
+            border-radius: 1.5rem;
+            border: solid 2px v.$arenaclaro;
+            font-weight: v.$regular;
+            cursor: pointer;
+            transition: background-color 0.5s ease;
+            margin: 1rem 0;
+
+            &:hover {
+                background-color: color-mix(in srgb, v.$grisgrafito 70%, v.$negrocarbon);
+            }
+        }
+
+        .select-estilizado {
+            width: 100%;
+            padding: 1.5rem 2rem;
+            font-size: 1.8rem;
+            font-family: v.$texto;
+            color: v.$arenaclaro;
+            background-color: v.$grisgrafito;
+            border: 2px solid v.$arenaclaro;
+            border-radius: 1.5rem;
+            appearance: none; // Oculta el diseño nativo
+            background-image: url("data:image/svg+xml,%3Csvg fill='white' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1.5rem center;
+            background-size: 1.5rem;
+            cursor: pointer;
+
+            option {
+                background-color: v.$grisgrafito;
+                color: v.$arenaclaro;
+            }
+
+            option:hover {
+                background-color: color-mix(in srgb, v.$grisgrafito 80%, black);
+            }
+            }
+            
+
+            .imagen-peque {
+                width: 25rem;
+                border-radius: 2rem;
+            }
+
+}

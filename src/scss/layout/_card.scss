@@ -1,0 +1,255 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+.card-propiedades {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3.5rem;
+<<<<<<< HEAD
+    width: 100%;
+=======
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
+    @include m.tablet {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include m.desktop {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .card-propiedad {
+        background-color: v.$grisniebla;
+        width: 32rem;
+<<<<<<< HEAD
+        height: 45rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border-radius: 1.5rem;
+        margin: 2rem auto;
+        overflow: hidden;
+=======
+        height: 41.5rem;
+        display: flex;
+        flex-direction: column;
+        border-radius: 1.5rem;
+        margin: 2rem 3rem;
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
+        @include m.tablet {
+            width: 32rem;
+            height: 44.5rem;
+<<<<<<< HEAD
+            
+        }
+
+        @include m.desktop {
+            height: 57rem;
+            width: 40rem;
+            padding-bottom: 1rem;
+=======
+        }
+
+        @include m.desktop {
+            height: 53rem;
+            width: 40rem;
+>>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+        }
+
+        // 🔽 Contenedor de carrusel y zoom (actualizado)
+        .img-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1.5rem 1.5rem 0 0;
+    height: 27rem; // Asegura altura fija
+    width: 100%;
+
+    .swiper-wrapper {
+        height: 100%; // Hace que los slides se ajusten a este contenedor
+    }
+
+    .swiper-slide {
+        height: 100%; // Obliga a que cada slide tenga la misma altura
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: auto; // ✅ Mejora nitidez
+            image-rendering: crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            transition: ease .5s;
+        }
+
+        &:hover img {
+            transform: scale(1.1);
+            transition: ease .5s;
+        }
+    }
+
+    .swiper-button-prev,
+    .swiper-button-next {
+        color: white;
+        background-color: rgba(0, 0, 0, 0.4);
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        &::after {
+            font-size: 1.2rem;
+        }
+    }
+
+    .swiper-button-prev {
+        left: 0.5rem;
+    }
+
+    .swiper-button-next {
+        right: 0.5rem;
+    }
+}
+
+
+        h3 {
+            font-family: v.$secundaria;
+            font-size: 2.2rem;
+            color: v.$arenaclaro;
+            font-weight: v.$bold;
+            text-align: left;
+            padding: 0 2rem;
+            margin: 0;
+            height: 4.2rem;
+
+            @include m.tablet {
+                font-size: 2.6rem;
+            }
+
+            @include m.desktop {
+                font-size: 3rem;
+            }
+        }
+
+        .carac {
+            display: flex;
+            padding: 0 1rem;
+
+            p {
+                font-family: v.$texto;
+                font-size: 1.4rem;
+                color: v.$arenaclaro;
+                font-weight: v.$regular;
+                margin: 0 0.5rem;
+                padding: 0 0.5rem;
+
+                @include m.tablet {
+                    font-size: 1.6rem;
+                }
+
+                @include m.desktop {
+                    font-size: 2rem;
+                }
+            }
+        }
+
+        .metros-descripcion {
+            padding: 0 1rem;
+
+            p {
+                font-family: v.$texto;
+                color: v.$arenaclaro;
+                font-size: 1.6rem;
+                padding: 0 1rem;
+                font-weight: v.$regular;
+                height: 2.8rem;
+                overflow: hidden;
+                text-align: left;
+
+                @include m.tablet {
+                    font-size: 1.6rem;
+                }
+
+                @include m.desktop {
+                    font-size: 1.8rem;
+                }
+            }
+        }
+
+        .linea-blanca {
+            width: 95%;
+            height: 1px;
+            background-color: white;
+            margin: 1rem auto 0 auto;
+        }
+
+        .ubicacion {
+            padding: 0 1rem;
+
+            p {
+                color: v.$rojotierra;
+                font-size: 1.4rem;
+                font-family: v.$texto;
+                font-weight: v.$regular;
+                padding: 0 1rem;
+                margin: 0;
+
+                @include m.tablet {
+                    font-size: 1.6rem;
+                }
+
+                @include m.desktop {
+                    font-size: 2rem;
+                }
+            }
+        }
+
+        a {
+            @include m.boton(v.$grisgrafito, v.$grisgrafito, flex);
+            width: 95%;
+            height: 4.5rem;
+            margin: 0 auto;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            text-transform: uppercase;
+            font-family: v.$secundaria;
+            font-weight: v.$regular;
+
+            @include m.tablet {
+                height: 5.5rem;
+                font-size: 2.2rem;
+            }
+
+            @include m.desktop {
+                height: 6rem;
+                font-size: 2.6rem;
+                margin-bottom: 0;
+                margin-top: 1rem;
+            }
+        }
+    }
+}
+
+
+.paginacion {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.paginacion a {
+    margin: 0 5px;
+    padding: 8px 12px;
+    background-color: transparent;
+    text-decoration: none;
+    border-radius: 5px;
+    color: v.$arenaclaro;
+    border: 2px solid v.$arenaclaro;
+}
+
+.paginacion a.pagina-actual {
+    background-color: v.$rojotierra;
+    color: v.$arenaclaro;
+    font-weight: v.$bold;
+}
+

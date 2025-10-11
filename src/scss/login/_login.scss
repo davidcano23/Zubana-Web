@@ -1,0 +1,70 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+h2 {
+    color: v.$rojotierra;
+    font-size: 4rem;
+    font-family: v.$secundaria;
+    font-weight: v.$bold;
+    margin: 0;
+}
+
+.formulario {
+    margin: 0 auto;
+    max-width: 120rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+
+    fieldset {
+        width: 35rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+        border-radius: 2rem;
+        margin: 1.5rem 0;
+
+        @include m.tablet {
+            width: 70rem;
+        }
+
+        @include m.desktop {
+            width: 100rem;
+        }
+
+
+        label {
+            color: v.$arenaclaro;
+            font-family: v.$secundaria;
+            font-size: 2.6rem;
+            text-align: left;
+        }
+
+        input,textarea {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            height: 4.5rem;
+            border: solid 2px v.$arenaclaro;
+            background-color: v.$grisgrafito;
+            border-radius: 1rem;
+            padding: 1rem;
+            color: v.$arenaclaro;
+            font-size: 2rem;
+            font-family: v.$secundaria;
+        }
+
+        textarea {
+            height: 20rem;
+        }
+
+        .boton {
+            @include m.boton(v.$verdepastel, v.$verdeesmeralda, flex);
+            margin: 0 auto;
+        }
+    }
+}
+
