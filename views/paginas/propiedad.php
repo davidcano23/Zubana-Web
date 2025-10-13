@@ -8,11 +8,7 @@
 
         <div class="informacion-propiedad">
 
-<<<<<<< HEAD
         <!-- <h2><?php echo $propiedad->{'nombre'}; ?></h2> -->
-=======
-        <h2><?php echo $propiedad->{'nombre'}; ?></h2>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
   <div class="swiper galeria-principal">
                 <div class="swiper-wrapper">
@@ -238,11 +234,7 @@
         <?php endif; ?>
 
         <!-- INFORMACION PARA LOTES -->
-<<<<<<< HEAD
          <?php if (in_array($tipo, ['lote campestre', 'lote urbanizable', 'lote rural', 'lote bodega'])) : ?>
-=======
-         <?php if (in_array($tipo, ['lote', 'lote urbanizable', 'lote rural', 'lote bodega'])) : ?>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la propiedad</h4>
 
@@ -407,11 +399,8 @@
             $mensaje_url = urlencode($mensaje);
         ?>
 
-<<<<<<< HEAD
         <a href="https://wa.me/573103817479?text=<?php echo $mensaje_url; ?>" target="_blank" class="whatsapp-button">
-=======
-        <a href="https://wa.me/573117856360?text=<?php echo $mensaje_url; ?>" target="_blank" class="whatsapp-button">
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
             <img src="https://img.icons8.com/ios-filled/50/25D366/whatsapp.png" alt="WhatsApp">
             ¿Estás interesado en esta propiedad? ¡No dudes en contactarnos!
         </a>
@@ -447,11 +436,7 @@
 
                 <div class="carac">
                 <img src="/img/codigo.png" alt="Icono Codigo" loading="lazy">
-<<<<<<< HEAD
                 <p>Codigo: <?php echo $propiedad->{'id'}; ?></p>
-=======
-                <p>Codigo: <?php echo $propiedad->{'codigo'}; ?></p>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
                 </div>
 
             </div>

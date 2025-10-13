@@ -57,21 +57,12 @@ class Local extends ActiveRecord {
 
 
     public function validar() {
-<<<<<<< HEAD
         // if(!$this->nombre) {
         //     self::$errores[] = "El campo nombre es obligatorio";
         // }
         // if(strlen($this->nombre) < 5 ) {
         //     self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
         // }
-=======
-        if(!$this->nombre) {
-            self::$errores[] = "El campo nombre es obligatorio";
-        }
-        if(strlen($this->nombre) < 5 ) {
-            self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(strlen($this->nombre) > 100 ) {
             self::$errores[] = "El campo nombre no puede superar los 100 caracteres";
         }
@@ -84,15 +75,9 @@ class Local extends ActiveRecord {
         if(strlen($this->ubicacion) > 119 ) {
             self::$errores[] = "El campo ubicacion no puede superar los 119 caracteres";
         }
-<<<<<<< HEAD
         // if(!$this->direccion) {
         //     self::$errores[] = "El campo direccion es obligatorio";
         // }
-=======
-        if(!$this->direccion) {
-            self::$errores[] = "El campo direccion es obligatorio";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(strlen($this->direccion) > 74 ) {
             self::$errores[] = "El campo direccion no puede superar los 74 caracteres";
         }
@@ -114,21 +99,12 @@ class Local extends ActiveRecord {
         if(!$this->modalidad) {
             self::$errores[] = "El campo modalidad es obligatorio";
         }
-<<<<<<< HEAD
         // if(!$this->codigo) {
         //     self::$errores[] = "El campo codigo es obligatorio";
         // }
         // if(strlen($this->codigo) > 5 ) {
         //     self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
         // }
-=======
-        if(!$this->codigo) {
-            self::$errores[] = "El campo codigo es obligatorio";
-        }
-        if(strlen($this->codigo) > 5 ) {
-            self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(!isset($this->area_total) || $this->area_total === '') {
             self::$errores[] = "La area es obligatoria";
         }

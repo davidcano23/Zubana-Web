@@ -7,10 +7,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 3.5rem;
-<<<<<<< HEAD
     width: 100%;
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
     @include m.tablet {
         grid-template-columns: repeat(2, 1fr);
@@ -23,7 +20,6 @@
     .card-propiedad {
         background-color: v.$grisniebla;
         width: 32rem;
-<<<<<<< HEAD
         height: 45rem;
         display: flex;
         flex-direction: column;
@@ -31,18 +27,10 @@
         border-radius: 1.5rem;
         margin: 2rem auto;
         overflow: hidden;
-=======
-        height: 41.5rem;
-        display: flex;
-        flex-direction: column;
-        border-radius: 1.5rem;
-        margin: 2rem 3rem;
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
         @include m.tablet {
             width: 32rem;
             height: 44.5rem;
-<<<<<<< HEAD
             
         }
 
@@ -50,13 +38,6 @@
             height: 57rem;
             width: 40rem;
             padding-bottom: 1rem;
-=======
-        }
-
-        @include m.desktop {
-            height: 53rem;
-            width: 40rem;
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         }
 
         // 🔽 Contenedor de carrusel y zoom (actualizado)
@@ -229,7 +210,7 @@
             }
         }
     }
-}
+
 
 
 .paginacion {
@@ -253,3 +234,4 @@
     font-weight: v.$bold;
 }
 
+}

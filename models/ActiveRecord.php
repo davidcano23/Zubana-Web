@@ -150,7 +150,7 @@ public function sanetizarAtributos() {
     }
 
         // En modelos/Propiedad.php
-<<<<<<< HEAD
+
     public static function filtrar($filtros) {
         $query = "SELECT * FROM " . static::$tabla . " WHERE 1=1";
 
@@ -196,83 +196,6 @@ public function sanetizarAtributos() {
         return self::consultarSQL($query);
     }
 
-
-=======
-    public static function filtrar($filtros = []) {
-        $db = self::$db; // Asegúrate de tener $db definido correctamente
-
-        $ubicacion = mysqli_real_escape_string($db, $filtros['ciudad'] ?? '');
-        $tipo = mysqli_real_escape_string($db, $filtros['tipo'] ?? '');
-        $precioMin = intval(str_replace('.', '', $filtros['precio_min'] ?? 0));
-        $precioMax = intval(str_replace('.', '', $filtros['precio_max'] ?? 0));
-        $banos = intval($filtros['banos'] ?? 0);
-        $habitaciones = intval($filtros['habitaciones'] ?? 0);
-        $area_minima = intval($filtros['area_minima'] ?? 0);
-        $modalidad_filtros = mysqli_real_escape_string($db, $filtros['modalidad_filtros'] ?? '');
-        $tipo_unidad_filtros = mysqli_real_escape_string($db, $filtros['tipo_unidad_filtros'] ?? '');
-        $codigo_filtro = mysqli_real_escape_string($db, $filtros['codigo_filtro'] ?? '');
-        $nombre_propietario = mysqli_real_escape_string($db, $filtros['nombre_propietario'] ?? '');
-        $tipo_movil_tablet = mysqli_real_escape_string($db, $filtros['tipo_movil_tablet'] ?? '');
-        $barrio = mysqli_real_escape_string($db, $filtros['barrio'] ?? '');
-
-        $query = "SELECT * FROM " . static::$tabla . " WHERE 1";
-
-        if (!empty($ubicacion)) {
-            $query .= " AND ubicacion LIKE '%$ubicacion%'";
-        }
-
-        if (!empty($barrio)) {
-            $query .= " AND barrio LIKE '%$barrio%'";
-        }
-
-        if (!empty($tipo)) {
-            $query .= " AND tipo = '$tipo'";
-        }
-        if (!empty($tipo_movil_tablet)) {
-            $query .= " AND tipo = '$tipo_movil_tablet'";
-        }
-
-        if ($precioMin > 0) {
-            $query .= " AND precio >= $precioMin";
-        }
-
-        if ($precioMax > 0) {
-            $query .= " AND precio <= $precioMax";
-        }
-        if (property_exists(static::class, 'banos') && isset($filtros['banos']) && $filtros['banos'] !== '') {
-        $banos = self::$db->escape_string($filtros['banos']);
-        $query .= " AND banos = $banos";
-        }
-        if (property_exists(static::class, 'habitaciones') && isset($filtros['habitaciones']) && $filtros['habitaciones'] !== '') {
-        $habitaciones = self::$db->escape_string($filtros['habitaciones']);
-        $query .= " AND habitaciones = $habitaciones";
-        }
-
-        if ($area_minima > 0) {
-            $query .= " AND area_total >= $area_minima";
-        }
-
-        if (!empty($modalidad_filtros)) {
-            $query .= " AND modalidad = '$modalidad_filtros'";
-        }
-        if (!empty($tipo_unidad_filtros)) {
-            $query .= " AND tipo_unidad = '$tipo_unidad_filtros'";
-        }
-
-        if (!empty($codigo_filtro)) {
-            $query .= " AND codigo LIKE '$codigo_filtro'";
-        }
-        if (!empty($nombre_propietario)) {
-            $nombre_propietario = strtolower($nombre_propietario);
-            $query .= " AND LOWER(propietario) LIKE '%$nombre_propietario%'";
-        }
-
-
-
-        return self::consultarSQL($query);
-    }
-
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
     //FUNCTION ORDENAR PROPIEDADES
 
     public static function ordenarResultados($propiedades, $criterio) {
@@ -396,25 +319,17 @@ public function sanetizarAtributos() {
             case 'menor_m2':
                 $orderSQL = "ORDER BY area_total ASC";
                 break;
-<<<<<<< HEAD
+
             default:
                 // 🟢 Orden por defecto: más recientes primero
                 $orderSQL = "ORDER BY id DESC";
                 break;
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         }
 
         $query = "SELECT * FROM " . static::$tabla . " $orderSQL LIMIT $limite OFFSET $offset";
         return self::consultarSQL($query);
     }
 
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
     //Busca un registro por su ID
     public static function find($id) {
     $id = (int) $id; // Forzamos entero

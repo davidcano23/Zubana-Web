@@ -1,6 +1,5 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
-<<<<<<< HEAD
 @font-face {
   font-family: 'TrajanPro';
   src: url('/fonts/TrajanPro-Regular.woff2') format('woff2'),
@@ -8,8 +7,7 @@
   font-weight: normal;
   font-style: normal;
 }
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
 
 .header {
 
@@ -19,7 +17,12 @@
     justify-content: center;
     width: 100%;
     background-color: v.$grisniebla;
-    
+
+        .linea-blanca {
+            width: 100%;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.274);
+        }
 
     .superior {
         display: flex;
@@ -37,28 +40,21 @@
             color: v.$rojo;
             margin-right: 1rem;
         }
-<<<<<<< HEAD
         .nombre-logo {
             width: 100%;
         
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
         .logo-principal {
             display: flex;
             width: 120px;
             height: 120px;
-<<<<<<< HEAD
             margin: 0 auto;
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+
             
             @include m.desktop {
                 display: none;
             }
         }
-
-<<<<<<< HEAD
         .logo-secundario {
             display: none;
 
@@ -71,16 +67,6 @@
         }
 
     }
-=======
-        h1 {
-            display: none;
-            @include m.desktop {
-                display: flex;
-                color: v.$arenaclaro;
-            }
-            
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
             
 
         .contenido-a {

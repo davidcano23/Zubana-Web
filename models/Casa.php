@@ -102,21 +102,13 @@ class Casa extends ActiveRecord {
         if(!isset($this->banos) || $this->banos === '') {
             self::$errores[] = "El campo baños es obligatorio";
         }
-<<<<<<< HEAD
+
         // if(!$this->nombre) {
         //     self::$errores[] = "El campo nombre es obligatorio";
         // }
         // if(strlen($this->nombre) < 5 ) {
         //     self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
         // }
-=======
-        if(!$this->nombre) {
-            self::$errores[] = "El campo nombre es obligatorio";
-        }
-        if(strlen($this->nombre) < 5 ) {
-            self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(strlen($this->nombre) > 100 ) {
             self::$errores[] = "El campo nombre no puede superar los 100 caracteres";
         }
@@ -132,15 +124,9 @@ class Casa extends ActiveRecord {
         if(strlen($this->ubicacion) > 119 ) {
             self::$errores[] = "El campo ubicacion no puede superar los 119 caracteres";
         }
-<<<<<<< HEAD
         // if(!$this->direccion) {
         //     self::$errores[] = "La direccion es obligatoria";
         // }
-=======
-        if(!$this->direccion) {
-            self::$errores[] = "La direccion es obligatoria";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(strlen($this->direccion) > 59 ) {
             self::$errores[] = "El campo direccion no puede superar los 59 caracteres";
         }
@@ -159,21 +145,12 @@ class Casa extends ActiveRecord {
         if(strlen($this->contacto) > 15 ) {
             self::$errores[] = "El campo contacto no puede superar los 15 caracteres";
         }
-<<<<<<< HEAD
         // if(!$this->codigo) {
         //     self::$errores[] = "El campo codigo es obligatoria";
         // }
         // if(strlen($this->codigo) > 5 ) {
         //     self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
         // }
-=======
-        if(!$this->codigo) {
-            self::$errores[] = "El campo codigo es obligatoria";
-        }
-        if(strlen($this->codigo) > 5 ) {
-            self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         if(!$this->modalidad) {
             self::$errores[] = "El campo modalidad es obligatoria";
         }

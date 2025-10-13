@@ -43,11 +43,7 @@
                         <option value="apartaestudio">Apartaestudio</option>
                         <option value="apartaoficina">Apartaoficina</option>
                         <option value="Local">Local</option>
-<<<<<<< HEAD
                         <option value="Lote">Lote Campestre</option>
-=======
-                        <option value="Lote">Lote</option>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
                         <option value="Lote Urbanizable">Lote Urbanizable</option>
                         <option value="Lote Rural">Lote Rural</option>
                         <option value="Lote Bodega">Lote Bodega</option>

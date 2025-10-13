@@ -2,11 +2,7 @@
 
 define('TEMPLATE_URL', __DIR__.'/template');
 define('FUNCIONES_URL',__DIR__.'funciones.php');
-<<<<<<< HEAD
 define('CARPETA_IMAGENES', $_SERVER['DOCUMENT_ROOT'] . '/imagenes/'); 
-=======
-define('CARPETA_IMAGENES', $_SERVER['DOCUMENT_ROOT'] . '/public/imagenes/'); 
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
 function incluirTemplate( string $nombre, bool $inicio = false) {
     include TEMPLATE_URL. "/{$nombre}.php";

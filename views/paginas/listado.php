@@ -30,13 +30,9 @@
             <div class="carac">
                 <p>Baños: <?php echo $propiedad->{'banos'};?></p>
                 <p>Habitaciones: <?php echo $propiedad->{'habitaciones'};?></p>
-<<<<<<< HEAD
                 <?php if($propiedad->estrato != 0): ?>
                 <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
                 <?php endif; ?>
-=======
-                <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
             </div>
         <?php endif; ?>
 
@@ -49,13 +45,9 @@
         <?php if ($propiedad->{'tipo'} === 'Local') : ?>  
             <div class="carac">
                 <p>Baños: <?php echo $propiedad->{'banos'};?></p>
-<<<<<<< HEAD
                 <?php if($propiedad->estrato != 0): ?>
                 <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
                 <?php endif; ?>
-=======
-                <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
             </div>
         <?php endif; ?>
 
@@ -63,11 +55,7 @@
 
                 
 
-<<<<<<< HEAD
                 <?php if (!empty($propiedad->area_total) || $propiedad->area_total != 0) { ?>
-=======
-                <?php if (!empty($propiedad->area_total)) { ?>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
                     <p>Area: <?php echo $propiedad->{'area_total'}; ?>m²</p>
                 <?php } ?>
 
@@ -79,12 +67,9 @@
 
             <div class="ubicacion">
                 <p> <?php echo $propiedad->{'ubicacion'}; ?> </p>
-<<<<<<< HEAD
                 <?php if(!empty($propiedad->barrio)): ?>
                 <p> <?php echo $propiedad->{'barrio'}; ?> </p>
                 <?php endif; ?>
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
             </div>
 
             <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>" class="boton boton-amarillo-block">

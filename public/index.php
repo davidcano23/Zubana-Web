@@ -1,34 +1,9 @@
 <?php
-<<<<<<< HEAD
-=======
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-/**
- * Normaliza PATH_INFO/url cuando vienen desde .htaccess
- * (En algunos servidores PATH_INFO llega vacío)
- */
-if (!isset($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] === '') {
-    if (isset($_GET['PATH_INFO'])) {
-        $_SERVER['PATH_INFO'] = $_GET['PATH_INFO'];
-    } elseif (isset($_GET['url'])) {
-        $_SERVER['PATH_INFO'] = $_GET['url'];
-    } else {
-        $_SERVER['PATH_INFO'] = '/';
-    }
-}
-
-// Si tu Router usa $_GET['url'], asegúralo también:
-if (!isset($_GET['url']) && isset($_SERVER['PATH_INFO'])) {
-    $_GET['url'] = $_SERVER['PATH_INFO'];
-}
-
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/app.php';
 
 use Controllers\ApartamentoController;
+use Controllers\ApiBusquedaController;
 use Controllers\FincaController;
 use Controllers\LocalController;
 use MVC\Router;
@@ -79,21 +54,17 @@ $router->post('/propiedades/actualizar-local', [LocalController::class, 'actuali
 
 $router->post('/propiedades/eliminar', [PropiedadController::class, 'eliminar']);
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 //Login y Autenticacion
 $router->get('/login', [LoginController::class, 'login']);
 $router->post('/login', [LoginController::class, 'login']);
 $router->get('/logout', [LoginController::class, 'logout']);
 
-<<<<<<< HEAD
+//API DE BUSQUEDA
+$router->get('/api/buscar', [ApiBusquedaController::class, 'buscar']);
+
 
 $router->comprobarRutas();
 
 ?>
 
-=======
-$router->comprobarRutas();
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
+

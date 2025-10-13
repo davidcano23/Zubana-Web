@@ -1,686 +1,130 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
-<<<<<<< HEAD
 @use 'sass:color';
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
 
-.filtros-busqueda {
-    width: 90%;
-    padding: 0 2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-<<<<<<< HEAD
-    margin: 0 auto;
-=======
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-    margin-top: 2rem;
-    margin-bottom: 2.5rem;
+// ---------- FORM + INPUT ----------
+.filtros_header {
+  .form_busqueda {
+    position: relative;        // ancla para el dropdown
+    width: max-content;        // el dropdown tomará este ancho (el del input)
+    font-family: v.$texto;
+  }
 
-    @include m.desktop {
-        display: flex;
-        flex-direction: row;
-        padding: 0 4rem;
+  .filtros_computadora_header {
+    .barra_por_ubicaciones {
+      width: 40rem;
+      height: 4rem;
+      padding: 0 1.2rem;
+      font-size: 1.6rem;
+      line-height: 4rem;
+      color: v.$arenaclaro;
+      background: v.$grisgrafito;
+      border: 1px solid v.$grisniebla;
+      border-radius: 1.2rem;
+      outline: none;
+
+      // sutil glow al focus
+      &:focus {
+        border-color: v.$azulniebla;
+        box-shadow: 0 0 0 3px rgba(164,200,216,.25);
+      }
+
+      // placeholder suave
+      &::placeholder {
+        color: color.scale(v.$arenaclaro, $lightness: -35%);
+        opacity: .9;
+      }
     }
+  }
+}
 
-    .barra-ubicacion {
-        width: 100%;
-<<<<<<< HEAD
-        margin: 0 auto;
-        margin-bottom: 1.5rem;
-        outline: none;
-        
-=======
-        margin-bottom: 1.5rem;
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-        @include m.desktop {
-            width: auto;
-            margin: 0;
-        }
-
-<<<<<<< HEAD
-        input {
-            width: 100%;
-            padding: 1rem 2rem;
-            margin: 0 auto;
-=======
-
-        input {
-            width: 100%;
-            padding: 1rem 2rem;
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-
-            @include m.desktop {
-                width: auto;
-                padding: 1.5rem 3rem;
-            }
-        }
-    }
-
-    .demas-filtros {
-        display: flex;
-<<<<<<< HEAD
-        flex-direction: column;
-        justify-content: space-between;
-        align-items: center;
-        width: auto;
-
-        @include m.desktop {
-            flex-direction: row;
-        }
-    }
-
-    .opciones_resultados_filtros {
-        display: flex;
-        margin-top: 1rem;
-
-        @include m.desktop {
-            flex-direction: column;
-            margin-top: 0;
-            gap: 1.5rem;
-        }
-    }
-=======
-        justify-content: space-between;
-        align-items: center;
-        width: auto;
-        }
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-
-    .filtros-trio {
-        display: none;
-
-        @include m.desktop {
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-
-<<<<<<< HEAD
-            // 🎯 Estilo moderno tipo FincaRaiz
-.choices {
-  width: 22rem;
-  font-family: v.$texto;
-  font-size: 1.5rem;
+// ---------- DROPDOWN ----------
+.resultados_busqueda {
+  display: none;               // JS la setea a 'block'
+  position: absolute;
+  top: calc(100% + .6rem);     // justo debajo del input
+  left: 0;
+  width: 100%;
+  max-height: 28rem;
+  overflow-y: auto;
+  background: v.$grisgrafito;
   color: v.$arenaclaro;
-  position: relative;
+  border: 1px solid v.$grisniebla;
+  border-radius: 1.2rem;
+  box-shadow: 0 12px 28px rgba(0,0,0,.35);
+  z-index: 50;
 
-  // Contenedor principal (lo que se ve cerrado)
-  .choices__inner {
-    background-color: rgba(v.$grisgrafito, 0.7);
-    backdrop-filter: blur(6px);
-    border: 1.8px solid rgba(v.$arenaclaro, 0.4);
-    border-radius: 1rem;
-    min-height: 4.2rem;
-    padding: 0.5rem 1rem;
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      border-color: v.$verdeesmeralda;
-    }
+  // “notch” que une visualmente con el input
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 2.4rem;             // ajústalo si quieres centrarlo
+    width: 16px;
+    height: 16px;
+    background: v.$grisgrafito;
+    border-left: 1px solid v.$grisniebla;
+    border-top: 1px solid v.$grisniebla;
+    transform: rotate(45deg);
   }
 
-  // Si no hay elementos seleccionados → quita borde y muestra placeholder
-  &.choices__value--placeholder,
-  &.is-empty .choices__inner {
-    border: 1.8px solid rgba(v.$arenaclaro, 0.3);
-    color: rgba(v.$arenaclaro, 0.7);
+  // scroll minimal
+  &::-webkit-scrollbar { width: 10px; }
+  &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+  &::-webkit-scrollbar-track { background: #181818; }
+}
+
+// Cada item del dropdown
+.resultado-item {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  align-items: center;
+  gap: .8rem;
+  padding: 1.1rem 1.2rem 1.1rem 1.2rem;
+  cursor: pointer;
+  font-family: v.$texto;
+  border-top: 1px solid rgba(255,255,255,.06);
+
+  // primera fila sin borde superior
+  &:first-child { border-top: 0; }
+
+  // icono a la izquierda con SVG inline (ubicación)
+  &::before {
+    content: '';
+    width: 1.6rem;
+    height: 1.6rem;
+    justify-self: center;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 1.6rem 1.6rem;
+    // pin SVG usando currentColor (toma el color del texto)
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1 1 18 0Z'/%3E%3Ccircle cx='12' cy='10.5' r='3'/%3E%3C/svg%3E");
+    opacity: .85;
   }
 
-  // Chips seleccionados (etiquetas)
-  .choices__list--multiple .choices__item {
-    background-color: rgba(v.$verdeesmeralda, 0.15);
-    border: 1px solid v.$verdeesmeralda;
-    color: v.$arenaclaro;
-    border-radius: 1rem;
-    padding: 0.2rem 0.8rem;
-    font-size: 1.3rem;
-    margin: 0.2rem;
-    transition: all 0.2s ease;
+  // texto
+  span { font-size: 1.45rem; }
 
-    &:hover {
-      background-color: rgba(v.$verdeesmeralda, 0.25);
-      transform: scale(1.02);
-    }
-
-    .choices__button {
-      color: v.$arenaclaro;
-      opacity: 0.8;
-      font-weight: bold;
-      margin-left: 0.4rem;
-      &:hover {
-        opacity: 1;
-      }
-    }
+  // hover y foco desde teclado
+  &:hover,
+  &.activo {
+    background: color.scale(v.$grisgrafito, $lightness: 8%);
   }
 
-  // Dropdown (lista de opciones)
-  .choices__list--dropdown {
-    background-color: rgba(v.$grisgrafito, 0.96);
-    backdrop-filter: blur(8px);
-    border: 1.8px solid rgba(v.$arenaclaro, 0.4);
-    border-radius: 0 0 1rem 1rem;
-    margin-top: 0.3rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-    z-index: 9999;
-    overflow: hidden;
-
-    .choices__item--selectable {
-      padding: 1rem 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      font-size: 1.4rem;
-      cursor: pointer;
-      color: v.$arenaclaro;
-      transition: background-color 0.2s ease;
-
-      // casilla vacía
-      &::before {
-        content: '';
-        width: 1.4rem;
-        height: 1.4rem;
-        border: 2px solid rgba(v.$arenaclaro, 0.5);
-        border-radius: 0.3rem;
-        transition: all 0.2s ease;
-      }
-
-      // casilla seleccionada (✔ verde)
-      &.is-selected::before {
-        background-color: v.$verdeesmeralda;
-        border-color: v.$verdeesmeralda;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 12 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23fff' d='M4.2 7.6L1.3 4.7 0 6l4.2 4L12 2.2 10.7.8z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: center;
-      }
-
-      &:hover {
-        background-color: rgba(v.$grisniebla, 0.1);
-      }
-    }
-  }
-
-  // Placeholder por defecto
-  .choices__placeholder {
-    color: rgba(v.$arenaclaro, 0.8);
-    font-size: 1.45rem;
-    text-align: center;
-    opacity: 0.9;
+  // estado “muted” (sin resultados)
+  &.muted {
+    cursor: default;
+    color: rgba(255,255,255,.55);
+    &::before { display: none; }
   }
 }
-        }
-    }
 
-    input, select {
-=======
-
-
-        // Estilos personalizados para Choices.js
-        .choices {
-            width: 20rem;
-            max-width: 100%;
-            margin: 0;
-            display: flex !important;
-
-            .choices__inner {
-                background-color: v.$grisniebla;
-                border: 2px solid v.$arenaclaro;
-                border-radius: 1.5rem;
-                width: 200px;
-                transition: all 0.5s ease;
-
-                &:hover {
-                border-color: v.$arenaclaro;
-                }
-            }
-
-            // Cuando el select está abierto
-            &.is-open .choices__inner {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                border-bottom: none; // Elimina borde inferior para que se una al dropdown
-                // transition: all 0.5s ease;
-            }
-
-            .choices__list--dropdown {
-                z-index: 9999 !important;
-                font-family: v.$texto;
-                background-color: rgba(v.$grisniebla, 0.6);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 2px solid v.$arenaclaro;
-                border-top: none; // Elimina borde superior para que se una al input
-                color: v.$arenaclaro;
-                border-radius: 0 0 1rem 1rem;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .choices__item--choice {
-                padding: 0.5rem 1rem;
-                cursor: pointer;
-
-                &:hover {
-                background-color: rgba(v.$grisniebla, 0.8);
-                }
-            }
-
-            .choices__placeholder {
-                color: v.$arenaclaro;
-                font-size: 1.6rem;
-                text-align: center;
-            }
-            }
-                    }
-    }
-        
-    
-
-    input,select {
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-        padding: 1.5rem 3rem;
-        background-color: v.$grisniebla;
-        border: solid 2px v.$arenaclaro;
-        color: v.$arenaclaro;
-        border-radius: 1.5rem;
-        font-size: 2rem;
-        font-family: v.$texto;
-        margin: 0 1.2rem;
-        width: 200px;
-    }
-<<<<<<< HEAD
-
-    button {
-        @include m.boton(v.$grisniebla, v.$verdeesmeralda, flex);
-        border-radius: 1.5rem;
-        margin: 0 1.2rem;
-    }
-
-    .btn-filtros {
-        @include m.boton(v.$grisniebla, v.$arenaclaro, flex);
-        border-radius: 1.5rem;
-        margin: 0 1.2rem;
-
-        &:hover {
-            background-color: v.$grisniebla;
-        }
-    }
-
-    .filtro-modal {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(v.$grisgrafito, 0.5);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        z-index: 1000;
-        justify-content: center;
-        align-items: center;
-
-        &.mostrar {
-            display: flex;
-        }
-
-        .filtro-contenido {
-            background-color: rgba(v.$grisgrafito, 0.6);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 4rem;
-            border-radius: 1.5rem;
-            width: 90%;
-            max-width: 650px;
-            height: 500px;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 0 8px rgba(v.$arenaclaro, 0.2);
-
-            h3 {
-                color: v.$arenaclaro;
-                font-family: v.$secundaria;
-                font-weight: v.$bold;
-                font-size: 2.8rem;
-                margin-bottom: 2rem;
-                text-transform: uppercase;
-            }
-
-            label {
-                display: block;
-                color: v.$arenaclaro;
-                font-family: v.$secundaria;
-                font-size: 1.8rem;
-                margin-top: 2rem;
-            }
-
-            input {
-                width: 100%;
-                padding: 1.2rem 2rem;
-                border-radius: 1rem;
-                border: solid 2px v.$arenaclaro;
-                background-color: v.$grisgrafito;
-                color: v.$arenaclaro;
-                margin-top: 0.5rem;
-                font-size: 1.6rem;
-                font-family: v.$texto;
-            }
-
-            select {
-                padding: 1rem 1.5rem;
-                background-color: v.$grisgrafito;
-                border: solid 2px v.$arenaclaro;
-                color: v.$arenaclaro;
-                border-radius: 1rem;
-                font-size: 2rem;
-                font-family: v.$texto;
-                margin: 0 1.2rem;
-                margin-bottom: 1rem;
-                width: 100%;
-            }
-
-            .cerrar-modal {
-                position: absolute;
-                top: 2rem;
-                right: 2rem;
-                font-size: 3rem;
-                color: v.$arenaclaro;
-                cursor: pointer;
-            }
-
-            .botonGuardar {
-                margin: 0 auto;
-                margin-top: 1.5rem;
-                background-color: transparent;
-            }
-
-            .filtros-trio-movil-tablet {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                margin-top: 1.5rem;
-
-                @include m.desktop {
-                    display: none;
-                }
-            }
-        }
-    }
-
-    // Diseño Google Autocomplete
-    .pac-container {
-        z-index: 9999 !important;
-        font-family: v.$texto;
-        background-color: rgba(v.$grisniebla, 0.6);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border-radius: 1.5rem;
-        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        overflow: hidden;
-        border: 1px solid #e0e0e0;
-
-        .pac-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 14px 16px;
-            transition: background-color 0.2s ease-in-out;
-
-            &:hover {
-                background-color: rgba(v.$grisgrafito, 0.6);
-            }
-
-            .pac-icon {
-                display: none;
-            }
-
-            .pac-item-query {
-                font-weight: 600;
-                color: #111;
-                font-size: 15px;
-            }
-
-            span {
-                color: v.$arenaclaro;
-                font-size: 16px;
-            }
-        }
-    }
-
-    body.no-scroll {
-        overflow: hidden;
-    }
+// Responsive
+@media (max-width: v.$tablet) {
+  .filtros_header .filtros_computadora_header .barra_por_ubicaciones {
+    width: min(90vw, 40rem);
+  }
+  .resultados_busqueda {
+    max-height: 50vh;
+  }
 }
-=======
-    button {
-        @include m.boton(v.$grisniebla, v.$verdeesmeralda, flex);
-        border-radius: 1.5rem;
-        margin: 0 1.2rem
-    }
-
-    
-.btn-filtros {
-    @include m.boton(v.$grisniebla, v.$arenaclaro, flex);
-    border-radius: 1.5rem;
-    margin: 0 1.2rem;
-
-    &:hover {
-        background-color: v.$grisniebla;
-    }
-}
-
-.filtro-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(v.$grisgrafito, 0.5); // Fondo semitransparente
-    backdrop-filter: blur(10px);               // Difumina lo que está detrás
-    -webkit-backdrop-filter: blur(10px); 
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-
-    &.mostrar {
-        display: flex;
-    }
-
-    .filtro-contenido {
-        background-color: rgba(v.$grisgrafito, 0.6); // Fondo semitransparente
-        backdrop-filter: blur(10px);               // Difumina lo que está detrás
-        -webkit-backdrop-filter: blur(10px); 
-        padding: 4rem;
-        border-radius: 1.5rem;
-        width: 90%;
-        max-width: 650px;
-        height: 500px; // altura fija
-        overflow-y: auto; // scroll interno
-        position: relative;
-        box-shadow: 0 0 8px rgba(v.$arenaclaro, 0.2);
-
-        h3 {
-            color: v.$arenaclaro;
-            font-family: v.$secundaria;
-            font-weight: v.$bold;
-            font-size: 2.8rem;
-            margin-bottom: 2rem;
-            text-transform: uppercase;
-        }
-
-        label {
-            display: block;
-            color: v.$arenaclaro;
-            font-family: v.$secundaria;
-            font-size: 1.8rem;
-            margin-top: 2rem;
-        }
-
-        input {
-            width: 100%;
-            padding: 1.2rem 2rem;
-            border-radius: 1rem;
-            border: solid 2px v.$arenaclaro;
-            background-color: v.$grisgrafito;
-            color: v.$arenaclaro;
-            margin-top: 0.5rem;
-            font-size: 1.6rem;
-            font-family: v.$texto;
-        }
-
-        select {
-            padding: 1rem 1.5rem;
-            background-color: v.$grisgrafito;
-            border: solid 2px v.$arenaclaro;
-            color: v.$arenaclaro;
-            border-radius: 1rem;
-            font-size: 2rem;
-            font-family: v.$texto;
-            margin: 0 1.2rem;
-            margin-bottom: 1rem;
-            width: 100%;
-        }
-
-        .cerrar-modal {
-            position: absolute;
-            top: 2rem;
-            right: 2rem;
-            font-size: 3rem;
-            color: v.$arenaclaro;
-            cursor: pointer;
-        }
-
-        .botonGuardar {
-            margin: 0 auto;
-            margin-top: 1.5rem;
-            background-color: transparent;
-        }
-
-        .filtros-trio-movil-tablet {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin-top: 1.5rem;
-
-            @include m.desktop {
-                display: none;
-            }
-        }
-    }
-
-
-    // Estilos personalizados para Choices.js
-        .choices {
-            width: 100%;
-            max-width: 100%;
-            margin: 0;
-            display: flex !important;
-
-        .choices__inner {
-            background-color: v.$grisgrafito;
-            border: 2px solid v.$arenaclaro;
-            border-radius: 1.5rem;
-            width: 100%;
-            color: v.$arenaclaro;
-            transition: all 0.5s ease;
-
-            &:hover {
-            border-color: none;
-            }
-        }
-
-        // Cuando el select está abierto
-        &.is-open .choices__inner {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-            border-bottom: none; // Elimina borde inferior para que se una al dropdown
-            // transition: all 0.5s ease;
-        }
-
-        .choices__list--dropdown {
-            z-index: 9999 !important;
-            font-family: v.$texto;
-            background-color: rgba(v.$grisgrafito, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 2px solid v.$arenaclaro;
-            border-top: none; // Elimina borde superior para que se una al input
-            color: v.$arenaclaro;
-            border-radius: 0 0 1rem 1rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .choices__item--choice {
-            padding: 0.5rem 1rem;
-            cursor: pointer;
-
-            &:hover {
-            background-color: rgba(v.$grisniebla, 0.8);
-            }
-        }
-
-        .choices__placeholder {
-            color: v.$arenaclaro;
-            font-size: 1.6rem;
-            text-align: center;
-        }
-        }
-}
-
-
-}
-
-    // DISEÑO EXCLUSIVO PARA LA BARRA DE BUSQUEDA POR UBICACIONES
-        .pac-container {
-            z-index: 9999 !important;
-            font-family: v.$texto;
-            background-color: rgba(v.$grisniebla, 0.6); // Fondo semitransparente
-            backdrop-filter: blur(10px);               // Difumina lo que está detrás
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 1.5rem;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
-            border: 1px solid #e0e0e0;
-
-            .pac-item {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                padding: 14px 16px;
-                transition: background-color 0.2s ease-in-out;
-
-                &:hover {
-                background-color: rgba(v.$grisgrafito, 0.6);
-                }
-
-                .pac-icon {
-                display: none; // Oculta los íconos de Google si aparecen
-                }
-
-                .pac-item-query {
-                font-weight: 600;
-                color: #111;
-                font-size: 15px;
-                }
-
-                span {
-                color: v.$arenaclaro;
-                font-size: 16px;
-                }
-            }
-            }
-
-
-            body.no-scroll {
-                overflow: hidden;
-            }
-        
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
