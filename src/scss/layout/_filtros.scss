@@ -8,6 +8,10 @@
     position: relative;        // ancla para el dropdown
     width: max-content;        // el dropdown tomará este ancho (el del input)
     font-family: v.$texto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
   }
 
   .filtros_computadora_header {
@@ -25,8 +29,8 @@
 
       // sutil glow al focus
       &:focus {
-        border-color: v.$azulniebla;
-        box-shadow: 0 0 0 3px rgba(164,200,216,.25);
+        border-color: v.$rojotierra;
+        box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.377);
       }
 
       // placeholder suave
@@ -53,6 +57,7 @@
   border-radius: 1.2rem;
   box-shadow: 0 12px 28px rgba(0,0,0,.35);
   z-index: 50;
+  
 
   // “notch” que une visualmente con el input
   &::before {
@@ -125,6 +130,118 @@
     width: min(90vw, 40rem);
   }
   .resultados_busqueda {
+    max-height: 50vh;
+  }
+}
+
+.filtro_tipo {
+  position: relative;
+  display: inline-block;
+  margin-top: 0; // ajusta si quieres que quede pegado al input
+
+  .tipo_trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    height: 4rem;
+    padding: 0 1.2rem;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    font-family: v.$texto;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 4rem;
+
+    &:focus {
+      outline: none;
+      border-color: v.$azulniebla;
+      box-shadow: 0 0 0 3px rgba(164,200,216,.25);
+    }
+
+    &__badge {
+      min-width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 999px;
+      padding: 0 .4rem;
+      background: color.scale(v.$grisgrafito, $lightness: 15%);
+      border: 1px solid v.$grisniebla;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    &__chev {
+      opacity: .75;
+      transition: transform .15s ease;
+    }
+
+    &[aria-expanded="true"] .tipo_trigger__chev {
+      transform: rotate(180deg);
+    }
+  }
+
+  .tipo_panel {
+    display: none; // JS alterna a block
+    position: absolute;
+    top: calc(100% + .6rem);
+    left: 0;
+    width: 28rem; // o 100% si quieres que iguale al trigger
+    max-height: 28rem;
+    overflow-y: auto;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
+    z-index: 60; // por encima del dropdown de ubicaciones (que está en 50)
+
+    // notch
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px; left: 2.4rem;
+      width: 16px; height: 16px;
+      background: v.$grisgrafito;
+      border-left: 1px solid v.$grisniebla;
+      border-top: 1px solid v.$grisniebla;
+      transform: rotate(45deg);
+    }
+
+    // scroll minimal
+    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+    &::-webkit-scrollbar-track { background: #181818; }
+  }
+
+  .tipo_opcion {
+    display: grid;
+    grid-template-columns: 1.8rem 1fr;
+    align-items: center;
+    gap: .8rem;
+    padding: .9rem 1.2rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+    cursor: pointer;
+    user-select: none;
+
+    &:first-child { border-top: 0; }
+
+    input[type="checkbox"] {
+      width: 1.6rem; height: 1.6rem; cursor: pointer;
+      accent-color: v.$azulniebla; // soporte moderno, sino deja default
+    }
+
+    span { font-size: 1.4rem; }
+
+    &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); }
+  }
+}
+
+@media (max-width: v.$tablet) {
+  .filtro_tipo .tipo_panel {
+    width: min(90vw, 28rem);
     max-height: 50vh;
   }
 }

@@ -24,18 +24,42 @@ class PaginaController {
         $porPagina = 33;
         $offset = ($paginaActual - 1) * $porPagina;
 
+        $link = conectarDB();
+
         // --- FILTROS ---
         $busqueda = $_GET['busqueda'] ?? null;
+        if (is_array($busqueda)) {
+            // Elige: a) quedarte con el primero, b) unirlos, c) vaciar
+            $busqueda = implode(' ', $busqueda); // o $busqueda = reset($busqueda);
+        }
+        $tipos = $_GET['tipo'] ?? [];
+
+        // 2) lista blanca para evitar inyecciones
+        $TIPOS_VALIDOS = [
+        'casa','apartamento','casa campestre','finca',
+        'lote campestre','lote urbano','lote bodega',
+        'local','apartaestudio','apartaoficina'
+        ];
+
+        // Normaliza a array y cruza con la whitelist
+        if (!is_array($tipos)) $tipos = [];
+        $tipos = array_values(array_intersect($tipos, $TIPOS_VALIDOS));
+
+        // 3) Construimos condiciones dinámicamente (independientes y combinables)
+        $condiciones = [];
 
         // --- CONSULTAS BASE ---
         if ($busqueda) {
-            $busqueda = trim($busqueda);
-            $busqueda = mysqli_real_escape_string(conectarDB(), $busqueda);
-
-            $where = "WHERE ubicacion LIKE '%$busqueda%' OR barrio LIKE '%$busqueda%'";
-        } else {
-            $where = "";
+        $safe = mysqli_real_escape_string($link, trim($busqueda));
+        $condiciones[] = "(ubicacion LIKE '%$safe%' OR barrio LIKE '%$safe%')";
         }
+
+        if (!empty($tipos)) {
+        $tiposEsc = array_map(fn($t) => "'" . mysqli_real_escape_string($link, $t) . "'", $tipos);
+        $condiciones[] = "tipo IN (" . implode(',', $tiposEsc) . ")";
+        }
+
+        $where = $condiciones ? 'WHERE ' . implode(' AND ', $condiciones) : '';
 
         // --- CONSULTAS POR TABLA ---
         $casas = Casa::consultarSQL("SELECT * FROM casa $where ORDER BY id DESC");
@@ -49,6 +73,9 @@ class PaginaController {
 
         $totalPropiedades = count($todas);
         $totalPaginas = ceil($totalPropiedades / $porPagina);
+        if ($totalPaginas > 0 && $paginaActual > $totalPaginas) {
+            $paginaActual = $totalPaginas;
+        }
 
         $propiedades = array_slice($todas, $offset, $porPagina);
 
@@ -67,11 +94,13 @@ class PaginaController {
         }
 
         // --- Construir la base de la query ---
-        $queryBase = '';
+        $params = $_GET;
 
-        if ($busqueda) {
-            $queryBase .= 'busqueda=' . urlencode($busqueda) . '&';
-        }
+        // siempre quita pagina para reconstruirla en los links
+        unset($params['pagina']);
+
+        $queryBase = http_build_query($params);
+        $queryBase = $queryBase ? $queryBase . '&' : '';
 
         // --- RENDERIZAR ---
         $router->render('paginas/index', [

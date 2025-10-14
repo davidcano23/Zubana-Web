@@ -27,13 +27,23 @@ $queryBase = $queryString ? $queryString . '&' : ''; // si hay otros filtros, ag
                 </select>
 
                 <?php 
-                // Mantenemos los otros filtros ocultos
-                foreach ($_GET as $clave => $valor) {
-                    if ($clave !== 'ordenar' && $clave !== 'pagina') {
-                        echo '<input type="hidden" name="' . htmlspecialchars($clave) . '" value="' . htmlspecialchars($valor) . '">';
+                    // Mantenemos los otros filtros ocultos (soporta arrays tipo tipo[])
+                    foreach ($_GET as $clave => $valor) {
+                        if ($clave === 'ordenar' || $clave === 'pagina') continue;
+
+                        if (is_array($valor)) {
+                            // Ej: tipo[] = ['casa','apartamento']
+                            foreach ($valor as $v) {
+                                echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '[]"
+                                    value="' . htmlspecialchars((string)$v, ENT_QUOTES) . '">';
+                            }
+                        } else {
+                            echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '"
+                                value="' . htmlspecialchars((string)$valor, ENT_QUOTES) . '">';
+                        }
                     }
-                }
-                ?>
+                    ?>
+
             </div>
         </form>
 

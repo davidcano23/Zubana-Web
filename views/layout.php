@@ -102,6 +102,55 @@
                         inputmode="search"/>
                     </div>
                     <div class="resultados_busqueda"></div>
+
+                    <!-- TIPOS DE PROPIEDAD (multiselección) -->
+                    <div class="filtro_tipo">
+                    <!-- Botón/trigger que muestra el estado actual -->
+                    <?php
+                        $tiposValidos = [
+                        'casa','apartamento','casa campestre','finca',
+                        'lote campestre','lote urbano','lote bodega',
+                        'local','apartaestudio','apartaoficina'
+                        ];
+                        $seleccionados = isset($_GET['tipo']) && is_array($_GET['tipo']) ? $_GET['tipo'] : [];
+                        $hasTipos = !empty($seleccionados);
+                        $labelTipos = $hasTipos ? implode(', ', array_map('ucfirst', $seleccionados)) : 'Tipo de propiedad';
+                    ?>
+                    <button type="button" class="tipo_trigger" aria-haspopup="listbox" aria-expanded="false">
+                        <span class="tipo_trigger__text"><?= htmlspecialchars($labelTipos, ENT_QUOTES) ?></span>
+                        <span class="tipo_trigger__badge" <?= $hasTipos ? '' : 'style="display:none;"' ?>>
+                        <?= count($seleccionados) ?>
+                        </span>
+                        <svg class="tipo_trigger__chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+
+                    <!-- Panel desplegable con las opciones -->
+                    <div class="tipo_panel" role="listbox" tabindex="-1" aria-label="Tipo de propiedad">
+                        <label class="tipo_opcion">
+                        <input type="checkbox" id="tipo_todas" <?= empty($_GET['tipo']) ? 'checked' : '' ?>>
+                        <span>Todos</span>
+                        </label>
+
+                        <?php foreach ($tiposValidos as $t): ?>
+                        <label class="tipo_opcion">
+                            <input
+                            type="checkbox"
+                            name="tipo[]"
+                            value="<?= htmlspecialchars($t, ENT_QUOTES); ?>"
+                            <?= in_array($t, $seleccionados, true) ? 'checked' : '' ?>
+                            >
+                            <span><?= ucfirst($t) ?></span>
+                        </label>
+                        <?php endforeach; ?>
+
+                        <!-- Para resetear paginación a 1 al cambiar -->
+                        <input type="hidden" name="pagina" id="pagina_hidden" value="1">
+                    </div>
+                    </div>
+
+
                 </form>
             </div>
 
