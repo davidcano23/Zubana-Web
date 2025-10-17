@@ -4,6 +4,7 @@ require_once __DIR__ . '/../includes/app.php';
 
 use Controllers\ApartamentoController;
 use Controllers\ApiBusquedaController;
+use Controllers\ApiPropiedadesController;
 use Controllers\FincaController;
 use Controllers\LocalController;
 use MVC\Router;
@@ -61,6 +62,7 @@ $router->get('/logout', [LoginController::class, 'logout']);
 
 //API DE BUSQUEDA
 $router->get('/api/buscar', [ApiBusquedaController::class, 'buscar']);
+// $router->get('/api/propiedades', [ApiPropiedadesController::class, 'index']);
 
 
 $router->comprobarRutas();

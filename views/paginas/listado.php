@@ -36,7 +36,7 @@
             </div>
         <?php endif; ?>
 
-        <?php if ($propiedad->{'tipo'} === 'Lote' || $propiedad->{'tipo'} === 'Lote Urbanizable' || $propiedad->{'tipo'} === 'Lote Rural' || $propiedad->{'tipo'} === 'Lote Bodega') : ?>  
+        <?php if ($propiedad->{'tipo'} === 'Lote Campestre' || $propiedad->{'tipo'} === 'Lote Urbanizable' || $propiedad->{'tipo'} === 'Lote Rural' || $propiedad->{'tipo'} === 'Lote Bodega') : ?>  
             <div class="carac">
                 <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
             </div>

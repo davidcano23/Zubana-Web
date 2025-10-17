@@ -16,104 +16,165 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class PaginaController {
     public static function index(Router $router) {
-        $inicio = true;
-        $footer = true;
+            $inicio = true;
+            $footer = true;
 
-        // --- PAGINACIÓN ---
-        $paginaActual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
-        $porPagina = 33;
-        $offset = ($paginaActual - 1) * $porPagina;
+            // --- PAGINACIÓN (sanitize) ---
+            $porPagina    = 33;
+            $paginaActual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
 
-        $link = conectarDB();
+            $link = conectarDB();
 
-        // --- FILTROS ---
-        $busqueda = $_GET['busqueda'] ?? null;
-        if (is_array($busqueda)) {
-            // Elige: a) quedarte con el primero, b) unirlos, c) vaciar
-            $busqueda = implode(' ', $busqueda); // o $busqueda = reset($busqueda);
+            // --- FILTROS BASE ---
+            $busqueda = $_GET['busqueda'] ?? null;
+            if (is_array($busqueda)) $busqueda = implode(' ', $busqueda);
+
+            $TIPOS_VALIDOS = [
+                'casa','apartamento','casa campestre','finca',
+                'lote campestre','lote urbano','lote bodega',
+                'local','apartaestudio','apartaoficina'
+            ];
+            $tipos = $_GET['tipo'] ?? [];
+            if (!is_array($tipos)) $tipos = [];
+            $tipos = array_values(array_intersect($tipos, $TIPOS_VALIDOS));
+
+            // precio
+            $precioMin = $_GET['precio_min'] ?? '';
+            $precioMax = $_GET['precio_max'] ?? '';
+            $precioMinNum = $precioMin !== '' ? (int)preg_replace('/\D+/', '', $precioMin) : null;
+            $precioMaxNum = $precioMax !== '' ? (int)preg_replace('/\D+/', '', $precioMax) : null;
+            if (!is_null($precioMinNum) && !is_null($precioMaxNum) && $precioMinNum > $precioMaxNum) {
+                [$precioMinNum, $precioMaxNum] = [$precioMaxNum, $precioMinNum];
+            }
+
+            // Habs & Baños
+            $hab        = isset($_GET['hab']) ? (int)$_GET['hab'] : 0;
+            $banos      = isset($_GET['banos']) ? (int)$_GET['banos'] : 0;
+            $habExact   = !empty($_GET['hab_exact']);
+            $banosExact = !empty($_GET['banos_exact']);
+
+
+            // Estrato
+            $estrato = isset($_GET['estrato']) ? (int)$_GET['estrato'] : 0;
+
+            // === 1) LEE LOS NUEVOS PARÁMETROS ===
+            $areaTipo = $_GET['area_tipo'] ?? ''; // '' | 'privada' | 'construida'
+            $areaMin  = isset($_GET['area_min']) ? (int)preg_replace('/\D+/', '', $_GET['area_min']) : null;
+            $areaMax  = isset($_GET['area_max']) ? (int)preg_replace('/\D+/', '', $_GET['area_max']) : null;
+
+            // Normaliza swap min/max si vienen invertidos
+            if (!is_null($areaMin) && !is_null($areaMax) && $areaMin > $areaMax) {
+                [$areaMin, $areaMax] = [$areaMax, $areaMin];
+            }
+
+            // --- CONDICIONES COMUNES ---
+            $condBase = [];
+            if ($busqueda) {
+                $safe = mysqli_real_escape_string($link, trim($busqueda));
+                $condBase[] = "(ubicacion LIKE '%{$safe}%' OR barrio LIKE '%{$safe}%')";
+            }
+            if (!empty($tipos)) {
+                $tiposEsc = array_map(fn($t) => "'" . mysqli_real_escape_string($link, $t) . "'", $tipos);
+                $condBase[] = "tipo IN (" . implode(',', $tiposEsc) . ")";
+            }
+            if (!is_null($precioMinNum)) $condBase[] = "precio >= {$precioMinNum}";
+            if (!is_null($precioMaxNum)) $condBase[] = "precio <= {$precioMaxNum}";
+
+            $buildWhere = static function(array $conds): string {
+                return $conds ? 'WHERE ' . implode(' AND ', $conds) : '';
+            };
+
+            // --- INCLUSIÓN POR TABLA SEGÚN FILTROS HABS/BAÑOS ---
+            $includeCasa   = true;
+            $includeApart  = true;
+            $includeLocal  = true;
+            $includeLote   = true;
+
+            if ($hab > 0) {               // habitaciones ⇒ no tiene sentido Local ni Lote
+                $includeLocal = false;
+                $includeLote  = false;
+            }
+            if ($banos > 0) {             // baños ⇒ Lote fuera (no tiene)
+                $includeLote  = false;
+            }
+
+            // ... después de armar $condBase con busqueda/tipos/precio:
+            if ($estrato > 0) {
+                $condBase[] = "estrato = {$estrato}";
+            }
+
+            // --- CONDICIONES POR TABLA ---
+            // Casa
+            $condCasa = $condBase;
+            if ($hab > 0)   $condCasa[] = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
+            if ($banos > 0) $condCasa[] = $banosExact ? "banos = {$banos}"       : "banos >= {$banos}";
+            $whereCasa = $buildWhere($condCasa);
+
+            // Apartamento
+            $condApart = $condBase;
+            if ($hab > 0)   $condApart[] = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
+            if ($banos > 0) $condApart[] = $banosExact ? "banos = {$banos}"       : "banos >= {$banos}";
+            $whereApart = $buildWhere($condApart);
+
+            // Local (solo baños)
+            $condLocal = $condBase;
+            if ($banos > 0) $condLocal[] = $banosExact ? "banos = {$banos}" : "banos >= {$banos}";
+            $whereLocal = $buildWhere($condLocal);
+
+            // Lote (sin habs/baños)
+            $whereLotes = $buildWhere($condBase);
+
+            // --- CONSULTAS POR TABLA (solo si están incluidas) ---
+            $casas        = $includeCasa  ? Casa::consultarSQL("SELECT * FROM casa {$whereCasa} ORDER BY id DESC") : [];
+            $apartamentos = $includeApart ? Apartamento::consultarSQL("SELECT * FROM apartamento {$whereApart} ORDER BY id DESC") : [];
+            $locales      = $includeLocal ? Local::consultarSQL("SELECT * FROM local {$whereLocal} ORDER BY id DESC") : [];
+            $lotes        = $includeLote  ? Lote::consultarSQL("SELECT * FROM lotes {$whereLotes} ORDER BY id DESC") : [];
+
+            // --- COMBINAR, ORDENAR, PAGINAR ---
+            $todas = array_merge($casas, $apartamentos, $locales, $lotes);
+            usort($todas, fn($a, $b) => $b->id <=> $a->id);
+
+            $totalPropiedades = count($todas);
+            $totalPaginas     = max(1, (int)ceil($totalPropiedades / $porPagina));
+            if ($paginaActual > $totalPaginas) $paginaActual = $totalPaginas;
+            $offset = ($paginaActual - 1) * $porPagina;
+
+            $propiedades = array_slice($todas, $porPagina ? $offset : 0, $porPagina);
+
+            // --- IMÁGENES ---
+            $imagenesTodas = array_merge(
+                ImagenCasa::todas(),
+                ImagenApart::todas(),
+                ImagenLocal::todas(),
+                ImagenLotes::todas()
+            );
+            $imagenesPorCasa = [];
+            foreach ($imagenesTodas as $imagen) {
+                $id = $imagen->getPropiedadId();
+                $imagenesPorCasa[$id][] = $imagen->nombre;
+            }
+
+            // --- QUERY BASE PARA PAGINACIÓN ---
+            $params = $_GET;
+            unset($params['pagina']);
+            foreach ($params as $k => $v) if (is_array($v)) $params[$k] = array_values($v);
+            $queryBase = http_build_query($params);
+            $queryBase = $queryBase ? $queryBase . '&' : '';
+
+            // --- RENDER ---
+            $router->render('paginas/index', [
+                'inicio'          => $inicio,
+                'footer'          => $footer,
+                'propiedades'     => $propiedades,
+                'paginaActual'    => $paginaActual,
+                'totalPaginas'    => $totalPaginas,
+                'imagenesPorCasa' => $imagenesPorCasa,
+                'busqueda'        => $busqueda,
+                'queryBase'       => $queryBase
+            ]);
         }
-        $tipos = $_GET['tipo'] ?? [];
 
-        // 2) lista blanca para evitar inyecciones
-        $TIPOS_VALIDOS = [
-        'casa','apartamento','casa campestre','finca',
-        'lote campestre','lote urbano','lote bodega',
-        'local','apartaestudio','apartaoficina'
-        ];
 
-        // Normaliza a array y cruza con la whitelist
-        if (!is_array($tipos)) $tipos = [];
-        $tipos = array_values(array_intersect($tipos, $TIPOS_VALIDOS));
-
-        // 3) Construimos condiciones dinámicamente (independientes y combinables)
-        $condiciones = [];
-
-        // --- CONSULTAS BASE ---
-        if ($busqueda) {
-        $safe = mysqli_real_escape_string($link, trim($busqueda));
-        $condiciones[] = "(ubicacion LIKE '%$safe%' OR barrio LIKE '%$safe%')";
-        }
-
-        if (!empty($tipos)) {
-        $tiposEsc = array_map(fn($t) => "'" . mysqli_real_escape_string($link, $t) . "'", $tipos);
-        $condiciones[] = "tipo IN (" . implode(',', $tiposEsc) . ")";
-        }
-
-        $where = $condiciones ? 'WHERE ' . implode(' AND ', $condiciones) : '';
-
-        // --- CONSULTAS POR TABLA ---
-        $casas = Casa::consultarSQL("SELECT * FROM casa $where ORDER BY id DESC");
-        $apartamentos = Apartamento::consultarSQL("SELECT * FROM apartamento $where ORDER BY id DESC");
-        $locales = Local::consultarSQL("SELECT * FROM local $where ORDER BY id DESC");
-        $lotes = Lote::consultarSQL("SELECT * FROM lotes $where ORDER BY id DESC");
-
-        // --- COMBINAR Y PAGINAR ---
-        $todas = array_merge($casas, $apartamentos, $locales, $lotes);
-        usort($todas, fn($a, $b) => $b->id <=> $a->id);
-
-        $totalPropiedades = count($todas);
-        $totalPaginas = ceil($totalPropiedades / $porPagina);
-        if ($totalPaginas > 0 && $paginaActual > $totalPaginas) {
-            $paginaActual = $totalPaginas;
-        }
-
-        $propiedades = array_slice($todas, $offset, $porPagina);
-
-        // --- IMÁGENES ---
-        $imagenesTodas = array_merge(
-            ImagenCasa::todas(),
-            ImagenApart::todas(),
-            ImagenLocal::todas(),
-            ImagenLotes::todas()
-        );
-
-        $imagenesPorCasa = [];
-        foreach ($imagenesTodas as $imagen) {
-            $id = $imagen->getPropiedadId();
-            $imagenesPorCasa[$id][] = $imagen->nombre;
-        }
-
-        // --- Construir la base de la query ---
-        $params = $_GET;
-
-        // siempre quita pagina para reconstruirla en los links
-        unset($params['pagina']);
-
-        $queryBase = http_build_query($params);
-        $queryBase = $queryBase ? $queryBase . '&' : '';
-
-        // --- RENDERIZAR ---
-        $router->render('paginas/index', [
-            'inicio' => $inicio,
-            'footer' => $footer,
-            'propiedades' => $propiedades,
-            'paginaActual' => $paginaActual,
-            'totalPaginas' => $totalPaginas,
-            'imagenesPorCasa' => $imagenesPorCasa,
-            'busqueda' => $busqueda, // 👈 importante para conservarla en la vista
-            'queryBase' => $queryBase
-        ]);
-    }
 
 
 

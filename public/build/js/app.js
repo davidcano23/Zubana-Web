@@ -9821,6 +9821,10 @@
     initGalerias();
     buscadorUbicacion();
     buscadorPorTipo();
+    initFiltroPrecio();
+    initPrecioMiles();
+    initFiltroHB();
+    initMasFiltros();
   });
 
 
@@ -10168,6 +10172,379 @@
         pagina.value = '1';
         form.submit(); // GET con filtros activos
       });
+    });
+  }
+
+
+  function initFiltroPrecio() {
+    const form    = document.querySelector('.form_busqueda');
+    const trigger = document.querySelector('.precio_trigger');
+    const panel   = document.querySelector('.precio_panel');
+    if (!form || !trigger || !panel) return;
+
+    const inputMin = panel.querySelector('.precio_min');
+    const inputMax = panel.querySelector('.precio_max');
+    const btnFiltrar = panel.querySelector('.precio_filtrar');
+    const btnLimpiar = panel.querySelector('.precio_limpiar');
+    const paginaHidden = panel.querySelector('.precio_pagina_hidden');
+    const labelText = trigger.querySelector('.precio_trigger__text');
+
+    // Abrir/cerrar
+    function openPanel() {
+      panel.style.display = 'block';
+      trigger.setAttribute('aria-expanded', 'true');
+      setTimeout(() => {
+        document.addEventListener('mousedown', onDocClick);
+        document.addEventListener('keydown', onEsc);
+      }, 0);
+    }
+    function closePanel() {
+      panel.style.display = 'none';
+      trigger.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('mousedown', onDocClick);
+      document.removeEventListener('keydown', onEsc);
+    }
+    function onDocClick(e) {
+      if (!panel.contains(e.target) && !trigger.contains(e.target)) closePanel();
+    }
+    function onEsc(e) { if (e.key === 'Escape') closePanel(); }
+
+    trigger.addEventListener('click', () => {
+      const open = trigger.getAttribute('aria-expanded') === 'true';
+      open ? closePanel() : openPanel();
+    });
+
+    // Helper: limpia no-dígitos (solo deja números)
+    function onlyDigits(str) {
+      return (str || '').replace(/\D+/g, '');
+    }
+
+    // Botón Filtrar → normaliza, corrige rango y envía
+    btnFiltrar.addEventListener('click', () => {
+      const rawMin = onlyDigits(inputMin.value);
+      const rawMax = onlyDigits(inputMax.value);
+
+      // setea los values “limpios” en los inputs del form (GET)
+      inputMin.value = rawMin;
+      inputMax.value = rawMax;
+
+      // swap si ambos están y min > max
+      if (rawMin && rawMax && Number(rawMin) > Number(rawMax)) {
+        inputMin.value = rawMax;
+        inputMax.value = rawMin;
+      }
+
+      // Reset a página 1
+      if (paginaHidden) paginaHidden.value = '1';
+
+      // Envía GET con todos los filtros activos
+      form.submit();
+    });
+
+    // Botón Limpiar → elimina precio_min / precio_max de la URL y recarga
+    btnLimpiar.addEventListener('click', () => {
+      inputMin.value = '';
+      inputMax.value = '';
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete('precio_min');
+      url.searchParams.delete('precio_max');
+      url.searchParams.set('pagina', '1'); // reset
+
+      window.location.href = url.toString();
+    });
+
+    // Enter en inputs = Filtrar
+    [inputMin, inputMax].forEach(inp => {
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          btnFiltrar.click();
+        }
+      });
+    });
+
+    // Actualiza el texto del trigger con el rango actual (si existe)
+    const currentMin = onlyDigits(inputMin.value);
+    const currentMax = onlyDigits(inputMax.value);
+    if (currentMin || currentMax) {
+      const minTxt = currentMin ? '$' + currentMin : '—';
+      const maxTxt = currentMax ? '$' + currentMax : '—';
+      labelText.textContent = `${minTxt} — ${maxTxt}`;
+    } else {
+      labelText.textContent = 'Precio';
+    }
+  }
+
+  function initPrecioMiles() {
+    const minEl = document.querySelector('.precio_min');
+    const maxEl = document.querySelector('.precio_max');
+    [minEl, maxEl].forEach(el => el && bindMilesMask(el));
+  }
+
+  function bindMilesMask(input) {
+    const fmt = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
+
+    input.addEventListener('input', () => {
+      const selStart = input.selectionStart ?? input.value.length;
+      const raw = input.value;
+
+      // 1) Mantén solo dígitos
+      const digits = raw.replace(/\D+/g, '').replace(/^0+/, '');
+      if (digits === '') {
+        input.value = '';
+        return;
+      }
+
+      // 2) Cuenta cuántos dígitos había a la izquierda del caret
+      const leftRaw = raw.slice(0, selStart);
+      const leftDigitsCount = (leftRaw.match(/\d/g) || []).length;
+
+      // 3) Formatea con puntos de miles
+      const formatted = fmt.format(Number(digits));
+
+      // 4) Coloca el caret donde queden esos mismos dígitos
+      let newCaret = 0, seen = 0;
+      for (let i = 0; i < formatted.length; i++) {
+        if (/\d/.test(formatted[i])) {
+          seen++;
+          if (seen === leftDigitsCount) { newCaret = i + 1; break; }
+        }
+        // si no alcanza, queda al final
+        if (i === formatted.length - 1) newCaret = formatted.length;
+      }
+
+      input.value = formatted;
+      // Reaplica caret (en móviles algunos navegadores lo ignoran, no pasa nada)
+      try { input.setSelectionRange(newCaret, newCaret); } catch {}
+    });
+
+    // Enter aplica filtro (por si no lo tienes ya en initFiltroPrecio)
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const panel = input.closest('.precio_panel');
+        panel?.querySelector('.precio_filtrar')?.click();
+      }
+    });
+
+    // Limpia ceros sobrantes al perder foco (opcional)
+    input.addEventListener('blur', () => {
+      const digits = input.value.replace(/\D+/g, '').replace(/^0+/, '');
+      input.value = digits ? new Intl.NumberFormat('es-CO').format(Number(digits)) : '';
+    });
+  }
+
+
+  function initFiltroHB() {
+    const form    = document.querySelector('.form_busqueda');
+    const trigger = document.querySelector('.hb_trigger');
+    const panel   = document.querySelector('.hb_panel');
+    if (!form || !trigger || !panel) return;
+
+    const hiddenHab   = panel.querySelector('.hb_hidden_hab');
+    const hiddenBanos = panel.querySelector('.hb_hidden_banos');
+    const exactBoxes  = panel.querySelectorAll('.hb_exact');
+    const btnApply    = panel.querySelector('.hb_apply');
+    const btnClear    = panel.querySelector('.hb_clear');
+    const paginaHid   = panel.querySelector('.hb_pagina_hidden');
+    const labelText   = trigger.querySelector('.hb_trigger__text');
+
+    // abrir/cerrar
+    function openPanel() {
+      panel.style.display = 'block';
+      trigger.setAttribute('aria-expanded', 'true');
+      setTimeout(() => {
+        document.addEventListener('mousedown', docClose);
+        document.addEventListener('keydown', onEsc);
+      }, 0);
+    }
+    function closePanel() {
+      panel.style.display = 'none';
+      trigger.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('mousedown', docClose);
+      document.removeEventListener('keydown', onEsc);
+    }
+    function docClose(e) {
+      if (!panel.contains(e.target) && !trigger.contains(e.target)) closePanel();
+    }
+    function onEsc(e) { if (e.key === 'Escape') closePanel(); }
+
+    trigger.addEventListener('click', () => {
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      isOpen ? closePanel() : openPanel();
+    });
+
+    // seleccionar opción (hab o baños)
+    panel.querySelectorAll('.hb_group').forEach(group => {
+      group.addEventListener('click', (e) => {
+        const btn = e.target.closest('.hb_opt');
+        if (!btn) return;
+        const kind = btn.dataset.kind;         // 'hab' | 'banos'
+        const val  = parseInt(btn.dataset.val, 10) || 0;
+
+        // activar visualmente
+        group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // setear hidden
+        if (kind === 'hab')   hiddenHab.value = String(val);
+        if (kind === 'banos') hiddenBanos.value = String(val);
+
+        // actualizar etiqueta del trigger (preview)
+        updateTriggerText();
+      });
+    });
+
+    // actualizar texto del trigger
+    function updateTriggerText() {
+      const hab   = parseInt(hiddenHab.value || '0', 10);
+      const banos = parseInt(hiddenBanos.value || '0', 10);
+      const habExact   = panel.querySelector('input[name="hab_exact"]')?.checked;
+      const banosExact = panel.querySelector('input[name="banos_exact"]')?.checked;
+
+      const parts = [];
+      if (hab > 0)   parts.push(`Habs: ${hab}${habExact ? '' : '+'}`);
+      if (banos > 0) parts.push(`Baños: ${banos}${banosExact ? '' : '+'}`);
+
+      labelText.textContent = parts.length ? parts.join(', ') : 'Habs. y baños';
+    }
+    updateTriggerText();
+
+    // aplicar
+    btnApply.addEventListener('click', () => {
+      // Si ambos están en 0 y los exact en false → limpiar parámetros
+      parseInt(hiddenHab.value || '0', 10);
+      parseInt(hiddenBanos.value || '0', 10);
+
+      // reset paginación
+      if (paginaHid) paginaHid.value = '1';
+
+      form.submit();
+    });
+
+    // limpiar
+    btnClear.addEventListener('click', () => {
+      hiddenHab.value = '0';
+      hiddenBanos.value = '0';
+      exactBoxes.forEach(cb => { cb.checked = false; });
+
+      // limpiar visual de botones
+      panel.querySelectorAll('.hb_group').forEach(group => {
+        group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
+        const first = group.querySelector('.hb_opt[data-val="0"]'); // "Todos"
+        first && first.classList.add('active');
+      });
+
+      updateTriggerText();
+
+      // quitar params de la URL y reset a página 1
+      const url = new URL(window.location.href);
+      url.searchParams.delete('hab');
+      url.searchParams.delete('banos');
+      url.searchParams.delete('hab_exact');
+      url.searchParams.delete('banos_exact');
+      url.searchParams.set('pagina', '1');
+      window.location.href = url.toString();
+    });
+
+    // Enter dentro del panel => aplicar
+    panel.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); btnApply.click(); }
+    });
+  }
+
+  function initMasFiltros() {
+    const form    = document.querySelector('.form_busqueda');
+    const trigger = document.querySelector('.mas_trigger');
+    const overlay = document.querySelector('.mas_overlay');
+    const modal   = document.querySelector('.mas_modal');
+    if (!form || !trigger || !overlay || !modal) return;
+
+    const closeBtn  = modal.querySelector('.mas_close');
+    const btnApply  = modal.querySelector('.mas_apply');
+    const btnClear  = modal.querySelector('.mas_clear');
+    const pageInput = modal.querySelector('.mas_pagina_hidden');
+    const labelText = trigger.querySelector('.mas_trigger__text');
+
+    const estratoHidden = modal.querySelector('.mf_hidden_estrato');
+    const estratoGroup  = modal.querySelector('.mf_group[data-kind="estrato"]');
+
+    function openModal() {
+      overlay.hidden = false;
+      modal.hidden = false;
+      overlay.classList.add('is-open');
+      modal.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+
+      // listeners para cerrar
+      setTimeout(() => {
+        document.addEventListener('keydown', onEsc);
+        overlay.addEventListener('click', closeModal, { once: true });
+      }, 0);
+    }
+
+    function closeModal() {
+      overlay.classList.remove('is-open');
+      modal.classList.remove('is-open');
+      overlay.hidden = true;
+      modal.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      document.removeEventListener('keydown', onEsc);
+    }
+
+    // Al cargar, fuerza cerrado por si venías de una recarga
+    (function forceClosedOnLoad(){
+      overlay.classList.remove('is-open');
+      modal.classList.remove('is-open');
+      overlay.hidden = true;
+      modal.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    })();
+
+    function onEsc(e) { if (e.key === 'Escape') closeModal(); }
+
+    trigger.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    // Selección de Estrato (chips)
+    estratoGroup.addEventListener('click', (e) => {
+      const btn = e.target.closest('.mf_opt');
+      if (!btn) return;
+      estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      estratoHidden.value = String(parseInt(btn.dataset.val || '0', 10) || 0);
+      updateTriggerText();
+    });
+
+    // Actualiza el texto del trigger según estado
+    function updateTriggerText() {
+      const eVal = parseInt(estratoHidden.value || '0', 10);
+      labelText.textContent = eVal > 0 ? `Más filtros (Estrato ${eVal})` : 'Más filtros';
+    }
+    updateTriggerText();
+
+    // Aplicar → submit GET conservando demás filtros
+    btnApply.addEventListener('click', () => {
+      if (pageInput) pageInput.value = '1';
+      form.submit();
+    });
+
+    // Limpiar → quitar estrato de la URL y reset a pág 1
+    btnClear.addEventListener('click', () => {
+      estratoHidden.value = '0';
+      estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+      const first = estratoGroup.querySelector('.mf_opt[data-val="0"]');
+      first && first.classList.add('active');
+      updateTriggerText();
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete('estrato');
+      url.searchParams.set('pagina', '1');
+      window.location.href = url.toString();
     });
   }
 

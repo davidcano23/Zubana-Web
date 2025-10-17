@@ -245,3 +245,596 @@
     max-height: 50vh;
   }
 }
+
+/* === PRECIO (trigger + panel) === */
+.filtro_precio {
+  position: relative;
+  display: inline-block;
+
+  /* Botón/trigger (igual al de Tipo) */
+  .precio_trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    height: 4rem;
+    padding: 0 1.2rem;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    font-family: v.$texto;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 4rem;
+
+    /* el texto del rango puede crecer: recórtalo elegante */
+    .precio_trigger__text {
+      max-width: 18rem;          /* ajusta si necesitas más */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: v.$rojotierra;
+      box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.25);
+    }
+
+    &__chev { opacity: .75; transition: transform .15s ease; }
+    &[aria-expanded="true"] .precio_trigger__chev { transform: rotate(180deg); }
+  }
+
+  /* Panel desplegable */
+  .precio_panel {
+    display: none;                 /* JS alterna a block */
+    position: absolute;
+    top: calc(100% + .6rem);
+    left: 0;
+    width: 26rem;                  /* 100% si quieres igual al trigger */
+    padding: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
+    z-index: 60;
+
+    /* notch para unirse al trigger */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px; left: 2.4rem;
+      width: 16px; height: 16px;
+      background: v.$grisgrafito;
+      border-left: 1px solid v.$grisniebla;
+      border-top: 1px solid v.$grisniebla;
+      transform: rotate(45deg);
+    }
+  }
+
+  /* Inputs apilados */
+  .precio_inputs {
+    display: grid;
+    gap: .8rem;
+
+    label { display: grid; gap: .4rem; }
+
+    span { font-size: 1.2rem; color: rgba(255,255,255,.7); }
+
+    input {
+      height: 3.2rem;
+      padding: 0 .9rem;
+      border-radius: .8rem;
+      border: 1px solid v.$grisniebla;
+      background: #222;            /* tono más oscuro que el panel */
+      color: v.$arenaclaro;
+      font-size: 1.4rem;
+      outline: none;
+
+      &::placeholder {
+        color: rgba(255,255,255,.45);
+      }
+
+      &:focus {
+        border-color: v.$rojotierra;
+        box-shadow: 0 0 0 3px rgba(247,142,142,.20);
+      }
+    }
+  }
+
+  /* Acciones (Limpiar / Filtrar) */
+  .precio_acciones {
+    display: flex;
+    gap: .8rem;
+    justify-content: flex-end;
+    margin-top: .8rem;
+
+    button {
+      height: 3.2rem;
+      padding: 0 1.1rem;
+      border-radius: .8rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform .05s ease, box-shadow .15s ease;
+    }
+
+    .precio_limpiar {
+      background: transparent;
+      color: v.$arenaclaro;
+      border: 1px solid v.$grisniebla;
+
+      &:hover { background: rgba(255,255,255,.05); }
+      &:active { transform: translateY(1px); }
+    }
+
+    .precio_filtrar {
+      background: v.$rojotierra;
+      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
+      color: white;
+      box-shadow: 0 6px 16px rgba(193,68,46,.25);
+
+      &:hover { box-shadow: 0 8px 20px rgba(193,68,46,.35); }
+      &:active { transform: translateY(1px); }
+    }
+  }
+}
+
+/* Orden horizontal entre filtros (como ya tienes) */
+.filtros_header .form_busqueda {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsive */
+@media (max-width: v.$tablet) {
+  .filtro_precio .precio_panel { width: min(90vw, 26rem); }
+  .filtro_precio .precio_trigger .precio_trigger__text { max-width: 40vw; }
+}
+
+
+
+/* ========= HABS & BAÑOS (trigger + panel) ========= */
+.filtro_hb {
+  position: relative;
+  display: inline-block;
+
+  /* Botón/trigger (idéntico a Tipo/Precio) */
+  .hb_trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    height: 4rem;
+    padding: 0 1.2rem;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    font-family: v.$texto;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 4rem;
+
+    .hb_trigger__text {
+      max-width: 18rem;          // recorte elegante si hay texto largo
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: v.$rojotierra;
+      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+    }
+
+    &__chev { opacity: .75; transition: transform .15s ease; }
+    &[aria-expanded="true"] .hb_trigger__chev { transform: rotate(180deg); }
+  }
+
+  /* Panel desplegable */
+  .hb_panel {
+    display: none;                 // JS alterna a 'block'
+    position: absolute;
+    top: calc(100% + .6rem);
+    left: 0;
+    width: 34rem;                  // suficiente para los “chips”
+    padding: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    box-shadow: 0 12px 28px rgba(0,0,0,.35);
+    z-index: 60;
+
+    /* notch para unirse al trigger */
+    &::before {
+      content: '';
+      position: absolute;
+      top: -8px; left: 2.4rem;
+      width: 16px; height: 16px;
+      background: v.$grisgrafito;
+      border-left: 1px solid v.$grisniebla;
+      border-top: 1px solid v.$grisniebla;
+      transform: rotate(45deg);
+    }
+  }
+
+  /* Titulares de sección */
+  .hb_title {
+    margin: .2rem 0 .8rem 0;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: rgba(255,255,255,.9);
+  }
+
+  /* Separador sutil entre bloques */
+  .hb_divider {
+    border: 0;
+    border-top: 1px solid rgba(255,255,255,.06);
+    margin: 1rem 0 1.2rem 0;
+  }
+
+  /* Grupos de opciones (chips 0,1,2,3,4,5) */
+  .hb_group {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: .6rem;
+    margin-bottom: .8rem;
+  }
+
+  .hb_opt {
+    height: 3.2rem;
+    padding: 0 .8rem;
+    border-radius: .8rem;
+    border: 1px solid v.$grisniebla;
+    background: #262626;
+    color: v.$arenaclaro;
+    font-size: 1.35rem;
+    line-height: 3.2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background .12s ease, box-shadow .12s ease, border-color .12s ease;
+
+    &:hover { background: #2e2e2e; }
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+      border-color: v.$rojotierra;
+    }
+
+    &.active {
+      background: color.scale(v.$rojotierra, $lightness: -5%);
+      border-color: color.scale(v.$rojotierra, $lightness: -12%);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(193,68,46,.25);
+    }
+  }
+
+  /* Toggle “número exacto” (switch minimal) */
+  .hb_exact_label {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    font-size: 1.25rem;
+    color: rgba(255,255,255,.8);
+    user-select: none;
+
+    input[type="checkbox"] {
+      /* switch custom */
+      appearance: none;
+      width: 42px; height: 24px;
+      border-radius: 999px;
+      background: #2a2a2a;
+      border: 1px solid v.$grisniebla;
+      position: relative;
+      cursor: pointer;
+      transition: background .15s ease, border-color .15s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 2px; left: 2px;
+        width: 18px; height: 18px;
+        border-radius: 50%;
+        background: #bbb;
+        transition: transform .15s ease, background .15s ease;
+      }
+
+      &:checked {
+        background: color.scale(v.$rojotierra, $lightness: -5%);
+        border-color: color.scale(v.$rojotierra, $lightness: -12%);
+      }
+      &:checked::after {
+        transform: translateX(18px);
+        background: #fff;
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+      }
+    }
+  }
+
+  /* Acciones (Limpiar / Aplicar) */
+  .hb_actions {
+    display: flex;
+    gap: .8rem;
+    justify-content: flex-end;
+    margin-top: 1.2rem;
+
+    button {
+      height: 3.2rem;
+      padding: 0 1.1rem;
+      border-radius: .8rem;
+      font-size: 1.3rem;
+      cursor: pointer;
+      transition: transform .05s ease, box-shadow .15s ease;
+    }
+
+    .hb_clear {
+      background: transparent;
+      color: v.$arenaclaro;
+      border: 1px solid v.$grisniebla;
+
+      &:hover { background: rgba(255,255,255,.05); }
+      &:active { transform: translateY(1px); }
+    }
+
+    .hb_apply {
+      background: v.$rojotierra;
+      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
+      color: #fff;
+      box-shadow: 0 6px 16px rgba(193,68,46,.25);
+
+      &:hover { box-shadow: 0 8px 20px rgba(193,68,46,.35); }
+      &:active { transform: translateY(1px); }
+    }
+  }
+}
+
+/* Cohesión con layout de filtros */
+.filtros_header .form_busqueda {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Responsive */
+@media (max-width: v.$tablet) {
+  .filtro_hb .hb_panel { width: min(90vw, 34rem); }
+  .filtro_hb .hb_trigger .hb_trigger__text { max-width: 40vw; }
+  .filtro_hb .hb_group { grid-template-columns: repeat(6, 1fr); } // se mantiene en 6 columnas
+}
+
+
+/* ======= TRIGGER “Más filtros” ======= */
+.filtro_mas {
+  position: relative;
+  display: inline-block;
+
+  .mas_trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: .6rem;
+    height: 4rem;
+    padding: 0 1.2rem;
+    border: 1px solid v.$grisniebla;
+    border-radius: 1.2rem;
+    background: v.$grisgrafito;
+    color: v.$arenaclaro;
+    font-family: v.$texto;
+    font-size: 1.4rem;
+    line-height: 4rem;
+    cursor: pointer;
+
+    .mas_trigger__text {
+      max-width: 18rem; /* recorte elegante si muestra estado */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &__chev { opacity: .75; transition: transform .15s ease; }
+    &[aria-expanded="true"] .mas_trigger__chev { transform: rotate(180deg); }
+
+    &:focus {
+      outline: none;
+      border-color: v.$rojotierra;
+      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+    }
+  }
+}
+
+/* ======= OVERLAY + MODAL ======= */
+.mas_overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(2px);
+  z-index: 120; /* por encima de todo */
+}
+
+.mas_modal {
+  position: fixed;
+  z-index: 130;
+  inset: 50% auto auto 50%;
+  transform: translate(-50%, -50%);
+  width: min(92vw, 720px);
+  max-height: min(86vh, 760px);
+  display: flex;
+  flex-direction: column;
+
+  background: v.$grisgrafito;
+  color: v.$arenaclaro;
+  border: 1px solid v.$grisniebla;
+  border-radius: 1.2rem;
+  box-shadow: 0 18px 48px rgba(0,0,0,.5);
+
+  /* cabecera */
+  .mas_head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+
+    h3 {
+      margin: 0;
+      font-family: v.$texto;
+      font-weight: 700;
+      font-size: 1.6rem;
+      letter-spacing: .2px;
+      color: rgba(255,255,255,.95);
+    }
+
+    .mas_close {
+      width: 3.2rem; height: 3.2rem;
+      border-radius: .8rem;
+      border: 1px solid v.$grisniebla;
+      background: #262626;
+      color: v.$arenaclaro;
+      cursor: pointer;
+      transition: background .12s ease;
+      &:hover { background: #2e2e2e; }
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+        border-color: v.$rojotierra;
+      }
+    }
+  }
+
+  /* cuerpo con scroll */
+  .mas_body {
+    padding: 1.2rem 1.4rem;
+    overflow: auto;
+    flex: 1;
+
+    /* scroll minimal oscuro */
+    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
+    &::-webkit-scrollbar-track { background: #181818; }
+  }
+
+  /* acciones */
+  .mas_actions {
+    padding: 1rem 1.4rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid rgba(255,255,255,.06);
+
+    .mas_clear,
+    .mas_apply {
+      height: 3.4rem;
+      padding: 0 1.2rem;
+      border-radius: .8rem;
+      font-size: 1.35rem;
+      cursor: pointer;
+      transition: transform .05s ease, box-shadow .15s ease, background .12s ease, border-color .12s ease;
+    }
+
+    .mas_clear {
+      background: transparent;
+      color: v.$arenaclaro;
+      border: 1px solid v.$grisniebla;
+      &:hover { background: rgba(255,255,255,.05); }
+      &:active { transform: translateY(1px); }
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(164,200,216,.25);
+        border-color: v.$azulniebla;
+      }
+    }
+
+    .mas_apply {
+      margin-left: auto; /* se pega a la derecha */
+      background: v.$rojotierra;
+      color: #fff;
+      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
+      box-shadow: 0 8px 20px rgba(193,68,46,.28);
+      &:hover { box-shadow: 0 10px 24px rgba(193,68,46,.38); }
+      &:active { transform: translateY(1px); }
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
+      }
+    }
+  }
+}
+
+/* ======= SECCIONES Y CHIPS (Estrato) ======= */
+.mf_section {
+  padding: .6rem 0 1.2rem 0;
+  & + .mf_section {
+    border-top: 1px solid rgba(255,255,255,.06);
+    margin-top: 1rem;
+  }
+}
+
+.mf_title {
+  margin: .2rem 0 .9rem 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.9);
+}
+
+.mf_group {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr)); /* Todos + 1..6 */
+  gap: .6rem;
+}
+
+.mf_opt {
+  height: 3.2rem;
+  padding: 0 .8rem;
+  border-radius: .8rem;
+  border: 1px solid v.$grisniebla;
+  background: #262626;
+  color: v.$arenaclaro;
+  font-size: 1.35rem;
+  line-height: 3.2rem;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background .12s ease, box-shadow .12s ease, border-color .12s ease;
+
+  &:hover { background: #2e2e2e; }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(164,200,216,.25);
+    border-color: v.$azulniebla;
+  }
+
+  &.active {
+    background: color.scale(v.$rojotierra, $lightness: -5%);
+    border-color: color.scale(v.$rojotierra, $lightness: -12%);
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(193,68,46,.25);
+  }
+}
+
+/* ======= RESPONSIVE ======= */
+@media (max-width: v.$tablet) {
+  .mas_modal { width: min(96vw, 640px); }
+  .mf_group { grid-template-columns: repeat(7, 1fr); }
+}
+
+@media (max-width: 520px) {
+  .mf_group { grid-template-columns: repeat(4, 1fr); } /* se parte en 2 filas */
+  .filtro_mas .mas_trigger .mas_trigger__text { max-width: 40vw; }
+}
+
+/* Estado por defecto: oculto */
+.mas_overlay,
+.mas_modal { display: none; }
+
+/* Cuando está abierto */
+.mas_overlay.is-open { display: block; }
+.mas_modal.is-open   { display: flex; }  /* <— usa flex para mantener el layout interno */
+
+
+
+
+
