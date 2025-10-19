@@ -144,11 +144,8 @@
     </fieldset>
 
     <fieldset>
-<<<<<<< HEAD
+
         <legend>Descripcion de la Propiedad</legend>
-=======
-        <legend>Descripcion de la Unidad</legend>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         <textarea name="propiedad[descripcion]" id="descripcion"> <?php echo s($propiedad->descripcion); ?> </textarea>
     </fieldset>
 

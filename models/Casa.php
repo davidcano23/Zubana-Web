@@ -6,7 +6,7 @@ class Casa extends ActiveRecord {
     
     protected static $tabla = 'casa';
 
-    protected static $columnasDB = ['id', 'area_total', 'habitaciones', 'sala', 'zona_ropa', 'banos', 'nombre', 'imagen', 'precio','ubicacion', 'direccion', 'tipo', 'propietario', 'contacto', 'codigo', 'modalidad', 'area_construida', 'estrato', 'cocina', 'garaje', 'tipo_unidad', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha','actualizacion','descripcion','barrio'];
+    protected static $columnasDB = ['id', 'area_total', 'habitaciones', 'sala', 'zona_ropa', 'banos', 'nombre', 'imagen', 'precio','ubicacion', 'direccion', 'tipo', 'propietario', 'contacto', 'codigo', 'modalidad', 'area_construida', 'estrato', 'cocina', 'garaje', 'tipo_unidad', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha','actualizacion','descripcion','barrio', 'administracion', 'corregimiento', 'palabra_clave'];
 
     public $id;
     public $area_total;
@@ -39,6 +39,9 @@ class Casa extends ActiveRecord {
     public $actualizacion;
     public $descripcion;
     public $barrio;
+    public $administracion;
+    public $corregimiento;
+    public $palabra_clave;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -77,6 +80,9 @@ class Casa extends ActiveRecord {
     $this->actualizacion = $args['actualizacion'] ?? '';
     $this->descripcion = $args['descripcion'] ?? '';
     $this->barrio = $args['barrio'] ?? '';
+    $this->administracion = $args['administracion'] ?? '';
+    $this->corregimiento = $args['corregimiento'] ?? '';
+    $this->palabra_clave = $args['palabra_clave'] ?? '';
     }
 
 
@@ -210,6 +216,9 @@ class Casa extends ActiveRecord {
         }
         if(strlen($this->barrio) > 255) {
             self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
+        }
+        if(!$this->administracion){
+            $this->administracion = 0;
         }
 
         return self::$errores;

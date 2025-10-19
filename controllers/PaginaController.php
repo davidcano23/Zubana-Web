@@ -71,7 +71,7 @@ class PaginaController {
             $condBase = [];
             if ($busqueda) {
                 $safe = mysqli_real_escape_string($link, trim($busqueda));
-                $condBase[] = "(ubicacion LIKE '%{$safe}%' OR barrio LIKE '%{$safe}%')";
+                $condBase[] = "(ubicacion LIKE '%{$safe}%' OR barrio LIKE '%{$safe}%' OR corregimiento LIKE '%{$safe}%' OR palabra_clave LIKE '%{$safe}%')";
             }
             if (!empty($tipos)) {
                 $tiposEsc = array_map(fn($t) => "'" . mysqli_real_escape_string($link, $t) . "'", $tipos);

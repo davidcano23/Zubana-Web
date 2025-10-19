@@ -63,8 +63,8 @@
             @include m.desktop {
                 display: flex;
                 width: auto;
-                height: 6rem;
-                margin: 0.5rem 0;
+                height: 5rem;
+                margin: 1rem 0;
             }
         }
 
@@ -96,38 +96,98 @@
         }
         }
         
+        /* Reemplazar todo el bloque existente de .botones-login por esto */
         .botones-login {
-            display: flex;
-            column-gap: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem; /* más compacto para verse discreto */
 
-            .admin_movil {
-                padding: 1.5rem;
-                img {
-                    width: 5rem;
-                    height: 5rem;
-                }
-                p {
-                    display: none;
-                }
-            @include m.boton(v.$grisniebla,v.$rojo,flex);   
-                width: auto;
-                height: 60px;
+        .admin_movil {
+            /* Layout base */
+            display: inline-flex;
+            align-items: center;
+            gap: .6rem;
 
+            /* Tamaño minimal */
+            height: 36px;
+            padding: 0 .9rem;
+            border-radius: 10px;
+
+            /* Estética “quiet” que se funde con el header */
+            color: color-mix(in srgb, v.$arenaclaro 92%, white 8%);
+            background: transparent;
+            border: 1px solid color-mix(in srgb, v.$arenaclaro 20%, transparent);
+
+            /* Tipografía sobria */
+            text-decoration: none;
+            font-size: 1.45rem;
+            font-weight: 400;
+            letter-spacing: .01em;
+
+            /* Transiciones sutiles y accesibles */
+            transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .06s ease;
+
+            /* Icono */
+            img {
+            width: 18px;
+            height: 18px;
+            margin-right: .5rem;
+            filter: brightness(1) opacity(.9);
+            }
+
+            /* Texto: oculto en móvil para look ultra minimal */
+            p {
+            display: none;
+            margin: 0;
+            }
+
+            /* Hover/Focus: apenas perceptible, profesional */
+            &:hover {
+            background-color: color-mix(in srgb, v.$grisgrafito 92%, black);
+            border-color: color-mix(in srgb, v.$arenaclaro 32%, transparent);
+            color: color-mix(in srgb, v.$arenaclaro 98%, white 2%);
+            }
+            &:focus-visible {
+            outline: none;
+            /* anillo muy tenue con tu rojotierra */
+            box-shadow: 0 0 0 .2rem color-mix(in srgb, v.$rojotierra 22%, transparent);
+            border-color: v.$rojotierra;
+            }
+            &:active { transform: translateY(0); }
+
+            /* Variante discreta para “logout” (acento rojizo sin gritar) */
+            &[href*="/logout"] {
+            border-color: color-mix(in srgb, v.$rojotierra 26%, transparent);
+            color: color-mix(in srgb, v.$arenaclaro 90%, v.$rojotierra 10%);
+            &:hover {
+                background-color: color-mix(in srgb, v.$rojotierra 10%, v.$grisgrafito 90%);
+                border-color: color-mix(in srgb, v.$rojotierra 38%, transparent);
+            }
+            &:focus-visible {
+                box-shadow: 0 0 0 .2rem color-mix(in srgb, v.$rojotierra 28%, transparent);
+            }
+            }
+
+            /* Desktop: muestra texto y mantiene la sutileza */
             @include m.desktop {
-                width: 160px;
-                height: 5.5rem;
-                padding: 0;
-
-                img {
-                    display: none;
-                }
-                p {
-                    display: flex;
-                    font-size: 1.8rem;
-                }
+            height: 38px;
+            padding: 0 1.1rem;
+            p { display: inline; }
+            img { width: 16px; height: 16px; opacity: .85; }
+            /* nada de ancho fijo; dejamos fluir el contenido para más elegancia */
             }
+        }
 
-            }
+        /* Si llevas el header muy oscuro, este ajuste ayuda a integrarlo aún más */
+        /* (Opcional) oscurece un toque el contorno cuando el header tiene sombra */
+        &.on-dark .admin_movil {
+            border-color: color-mix(in srgb, v.$arenaclaro 16%, transparent);
+        }
+
+        /* Respeto preferencias de movimiento */
+        @media (prefers-reduced-motion: reduce) {
+            .admin_movil { transition: none; }
+        }
         }
 
         

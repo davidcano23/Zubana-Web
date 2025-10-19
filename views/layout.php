@@ -52,14 +52,14 @@
 
             <div class="botones-login">
 
-            <!-- <?php if(!$auth): ?>
-            <a class="admin_movil" href="/login">
-                <div class="contenido-a">
-                    <img src="/img/admin_header.png" loading="lazy" alt="Imagen Admin">
-                <p>Admin</p>
-                </div>
-            </a>
-            <?php endif; ?> -->
+            <?php if(!$auth): ?>
+                <button type="button" class="admin_movil js-open-login">
+                    <div class="contenido-a">
+                        <p>Ingresar</p>
+                    </div>
+                </button>
+            <?php endif; ?>
+
 
 
             <?php if($auth):?>
@@ -71,7 +71,7 @@
 
                     <a href="/logout" class="admin_movil">
                         <img src="/img/cerrar_sesion.png" loading="lazy" alt="Imagen Admin">    
-                        <p>Cerrar Sesión</p>
+                        <p>Salir</p>
                     </a>
                     
             <?php endif; ?>
@@ -433,6 +433,54 @@
 
         <p class="copyright">© 2025 Z Bien Raíz. Todos los derechos reservados. | Aviso Legal | Política de Privacidad | Sitio web &copy;</p>
     </footer>
+
+    <?php
+        // leer “flash” de errores si los puso el controlador
+        session_start();
+        $loginErrors = $_SESSION['login_errors'] ?? [];
+        unset($_SESSION['login_errors']); // consumirlos una vez
+
+        // fuerza abrir el modal si vienen errores o ?login=open
+        $shouldOpenLogin = !empty($loginErrors) || (isset($_GET['login']) && $_GET['login'] === 'open');
+        ?>
+        <div class="login-overlay <?= $shouldOpenLogin ? 'is-open' : '' ?>" id="loginOverlay" hidden></div>
+
+        <div class="login-modal <?= $shouldOpenLogin ? 'is-open' : '' ?>" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" hidden>
+        <button type="button" class="login-close" id="loginClose" aria-label="Cerrar">×</button>
+
+        <div class="login-header">
+            <img src="/img/logo_ZB.png" alt="Zubana BienRaíz" class="login-logo">
+            <h3 id="loginTitle">Ingresar</h3>
+            <p class="login-sub">Accede para continuar</p>
+        </div>
+
+        <?php if(!empty($loginErrors)): ?>
+            <div class="login-errors">
+            <?php foreach($loginErrors as $err): ?>
+                <div class="alerta error"><?= htmlspecialchars($err, ENT_QUOTES) ?></div>
+            <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="/login" method="POST" class="login-form" id="loginForm" novalidate>
+            <div class="form-row">
+            <label for="login_email">Correo electrónico</label>
+            <input type="email" id="login_email" name="email" placeholder="Ingresa tu correo" required autocomplete="username">
+            </div>
+
+            <div class="form-row">
+            <label for="login_password">Contraseña</label>
+            <input type="password" id="login_password" name="password" placeholder="Ingresa tu contraseña" required autocomplete="current-password">
+            </div>
+
+            <!-- opcional: volver a la misma URL tras iniciar sesión -->
+            <input type="hidden" name="redirect_to" value="<?= htmlspecialchars($_SERVER['REQUEST_URI'] ?? '/', ENT_QUOTES) ?>">
+            <div class="auth-errors" id="auth-errors" aria-live="polite"></div>
+
+            <button type="submit" class="login-submit">Continuar</button>
+        </form>
+        </div>
+
 
     <script src="../build/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

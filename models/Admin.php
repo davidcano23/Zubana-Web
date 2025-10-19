@@ -83,22 +83,25 @@ class Admin extends ActiveRecord {
     }
 
 
-    public function autenticar() {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
+        // NUEVO: solo crea sesión (sin redirigir)
+        public function iniciarSesion(): void {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            session_regenerate_id(true);
+            $_SESSION['usuario'] = $this->email ?? null;
+            $_SESSION['login']   = true;
         }
 
-        // 🔐 Evita fijación de sesión (session fixation)
-        session_regenerate_id(true);
+        // (Opcional legado) si algún lugar aún llama a autenticarTo, lo dejamos,
+        // pero internamente ya no forzamos redirección en flujos AJAX.
+        public function autenticarTo(string $redirect = '/admin'): void {
+            $this->iniciarSesion();
+            header('Location: ' . $redirect);
+            exit;
+        }
 
-        // Asignar datos del usuario a la sesión
-        $_SESSION['usuario'] = $this->email ?? null;
-        $_SESSION['login'] = true;
 
-        // Redirigir al usuario
-        header('Location: /admin');
-        exit;
-    }
 
 
 }

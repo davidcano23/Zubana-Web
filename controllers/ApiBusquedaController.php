@@ -40,30 +40,49 @@ class ApiBusquedaController {
 
 
 
-        private static function sugerenciasTabla($link, string $tabla, string $q): array {
-            // Trae coincidencias de ubicacion y barrio y etiqueta la fuente
+       private static function sugerenciasTabla($link, string $tabla, string $q): array {
             $sql = "
-                (SELECT DISTINCT ubicacion AS texto, 'ubicacion' AS fuente
+                (SELECT DISTINCT TRIM(ubicacion) AS texto, 'ubicacion' AS fuente
                 FROM {$tabla}
-                WHERE ubicacion LIKE CONCAT('%', ?, '%')
+                WHERE ubicacion IS NOT NULL
+                AND ubicacion <> ''
+                AND ubicacion LIKE CONCAT('%', ?, '%')
                 LIMIT 5)
                 UNION ALL
-                (SELECT DISTINCT barrio AS texto, 'barrio' AS fuente
+                (SELECT DISTINCT TRIM(barrio) AS texto, 'barrio' AS fuente
                 FROM {$tabla}
-                WHERE barrio LIKE CONCAT('%', ?, '%')
+                WHERE barrio IS NOT NULL
+                AND barrio <> ''
+                AND barrio LIKE CONCAT('%', ?, '%')
+                LIMIT 5)
+                UNION ALL
+                (SELECT DISTINCT TRIM(corregimiento) AS texto, 'corregimiento' AS fuente
+                FROM {$tabla}
+                WHERE corregimiento IS NOT NULL
+                AND corregimiento <> ''
+                AND corregimiento LIKE CONCAT('%', ?, '%')
+                LIMIT 5)
+                UNION ALL
+                (SELECT DISTINCT TRIM(palabra_clave) AS texto, 'palabra_clave' AS fuente
+                FROM {$tabla}
+                WHERE palabra_clave IS NOT NULL
+                AND palabra_clave <> ''
+                AND palabra_clave LIKE CONCAT('%', ?, '%')
                 LIMIT 5)
             ";
 
             $stmt = mysqli_prepare($link, $sql);
             if (!$stmt) return [];
 
-            mysqli_stmt_bind_param($stmt, 'ss', $q, $q);
+            // 👈 OJO: ahora son CUATRO parámetros
+            mysqli_stmt_bind_param($stmt, 'ssss', $q, $q, $q, $q);
+
             mysqli_stmt_execute($stmt);
             $res = mysqli_stmt_get_result($stmt);
 
             $out = [];
             while ($row = mysqli_fetch_assoc($res)) {
-                $texto = trim($row['texto'] ?? '');
+                $texto  = trim($row['texto'] ?? '');
                 $fuente = $row['fuente'] ?? '';
                 if ($texto !== '') {
                     $out[] = ['texto' => $texto, 'fuente' => $fuente, 'tipo' => $tabla];

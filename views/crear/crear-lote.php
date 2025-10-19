@@ -1,3 +1,7 @@
+<?php
+    $actualizar = true;
+?>
+
 <main class="contenedor crear">
 
     <h1>Crear Lotes</h1>
@@ -22,13 +26,8 @@
         <label for="tipo-propiedad">Tipo de Propiedad</label>
         <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]">
             <option value="" disabled <?php echo empty($propiedad?->tipo) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
-<<<<<<< HEAD
             <option value="Lote Campestre" <?php echo ($propiedad?->tipo === 'Lote Campestre') ? 'selected' : ''; ?>>Lote Campestre</option>
-=======
-            <option value="Lote" <?php echo ($propiedad?->tipo === 'Lote') ? 'selected' : ''; ?>>Lote</option>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
-            <option value="Lote Urbanizable" <?php echo ($propiedad?->tipo === 'Lote Urbanizable') ? 'selected' : ''; ?>>Lote Urbanizable</option>
-            <option value="Lote Rural" <?php echo ($propiedad?->tipo === 'Lote Rural') ? 'selected' : ''; ?>>Lote Rural</option>
+            <option value="Lote Urbano" <?php echo ($propiedad?->tipo === 'Lote Urbanizable') ? 'selected' : ''; ?>>Lote Urbanizable</option>
             <option value="Lote Bodega" <?php echo ($propiedad?->tipo === 'Lote Bodega') ? 'selected' : ''; ?>>Lote Bodega</option>
         </select>
 
@@ -67,11 +66,8 @@
     </fieldset>
 
     <fieldset>
-<<<<<<< HEAD
+
         <legend>Descripcion de la Propiedad</legend>
-=======
-        <legend>Descripcion de la Unidad</legend>
->>>>>>> 72a07a4c28173280a46861e54708ada0f935a189
         <textarea name="propiedad[descripcion]" id="descripcion"> <?php echo s($propiedad->descripcion); ?> </textarea>
     </fieldset>
 

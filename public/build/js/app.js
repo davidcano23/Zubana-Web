@@ -9825,8 +9825,125 @@
     initPrecioMiles();
     initFiltroHB();
     initMasFiltros();
+    initLoginModalSubmit();
+    initLoginModal();
+    
   });
 
+
+  function initLoginModal() {
+    const btnOpen = document.querySelector('.js-open-login');
+    const overlay = document.getElementById('loginOverlay');
+    const modal   = document.getElementById('loginModal');
+    const btnClose= document.getElementById('loginClose');
+    const email   = document.getElementById('login_email');
+
+    if (!overlay || !modal) return;
+
+    const open = () => {
+      overlay.hidden = false;
+      modal.hidden   = false;
+      overlay.classList.add('is-open');
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => email?.focus(), 50);
+    };
+
+    const close = () => {
+      overlay.classList.remove('is-open');
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+      overlay.hidden = true;
+      modal.hidden   = true;
+    };
+
+    btnOpen?.addEventListener('click', (e) => {
+      e.preventDefault();
+      open();
+    });
+
+    btnClose?.addEventListener('click', close);
+    overlay?.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
+    });
+
+    // auto-abrir si el backend lo pide (clase is-open ya la pone PHP)
+    if (modal.classList.contains('is-open')) {
+      overlay.hidden = false;
+      modal.hidden   = false;
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+
+  function initLoginModalSubmit() {
+    const form = document.getElementById('loginForm'); // <form id="loginForm">
+    if (!form) return;
+
+    const errorsBox = document.getElementById('auth-errors'); // <div id="auth-errors">
+
+    function renderErrors(errs) {
+      if (!errorsBox) return;
+      if (!Array.isArray(errs) || errs.length === 0) {
+        errorsBox.innerHTML = '';
+        errorsBox.style.display = 'none';
+        return;
+      }
+      errorsBox.innerHTML = errs.map(e => `<div class="alerta error" role="alert">${String(e)}</div>`).join('');
+      errorsBox.style.display = 'block';
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault(); // ← evita navegación a /login
+      renderErrors([]);
+
+      const btn = form.querySelector('.login-submit') || form.querySelector('button[type="submit"]');
+      const original = btn ? btn.textContent : null;
+      if (btn) { btn.disabled = true; btn.textContent = 'Ingresando…'; }
+
+      try {
+        const fd = new FormData(form);
+        const resp = await fetch('/login', {
+          method: 'POST',
+          body: fd,
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+          },
+          credentials: 'same-origin'
+        });
+
+        const text = await resp.text();
+        let data = null;
+        try { data = JSON.parse(text); } catch {}
+
+        if (!resp.ok || !data) {
+          renderErrors(['Error inesperado. Intenta nuevamente.']);
+          return;
+        }
+
+        if (data.ok) {
+          // éxito -> redirige (o reload)
+          window.location.href = data.redirect || '/';
+        } else {
+          renderErrors(data.errors || ['Credenciales inválidas']);
+        }
+      } catch (err) {
+        console.error(err);
+        renderErrors(['No se pudo conectar con el servidor.']);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = original || 'Continuar'; }
+      }
+    });
+  }
+
+  // Llama las 2 funciones al cargar
+  document.addEventListener('DOMContentLoaded', () => {
+    initLoginModal();
+    initLoginModalSubmit();
+  });
 
 
   // ------------------------- SWIPER RECOMENDADOS -------------------------
