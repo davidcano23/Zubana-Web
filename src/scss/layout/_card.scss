@@ -14,7 +14,8 @@
     }
 
     @include m.desktop {
-        grid-template-columns: repeat(3, 1fr);
+        display: flex;
+        flex-direction: column;
     }
 
     .card-propiedad {
@@ -35,9 +36,11 @@
         }
 
         @include m.desktop {
-            height: 57rem;
-            width: 40rem;
-            padding-bottom: 1rem;
+            flex-direction: row;
+            height: 30rem;
+            width: 85%;
+            padding-bottom: 0rem;
+            margin: 1.5rem auto;
         }
 
         // 🔽 Contenedor de carrusel y zoom (actualizado)
@@ -47,6 +50,12 @@
     border-radius: 1.5rem 1.5rem 0 0;
     height: 27rem; // Asegura altura fija
     width: 100%;
+
+    @include m.desktop {
+        width: 38rem;
+        height: 100%;
+        border-radius: 1.5rem 0 0 1.5rem;
+    }
 
     .swiper-wrapper {
         height: 100%; // Hace que los slides se ajusten a este contenedor
@@ -62,6 +71,10 @@
             image-rendering: crisp-edges;
             image-rendering: -webkit-optimize-contrast;
             transition: ease .5s;
+
+            @include m.desktop {
+                width: 38rem;
+            }
         }
 
         &:hover img {
@@ -93,6 +106,10 @@
     }
 }
 
+    .contenedor_padre_computador_informacion_card {
+        width: 70%;
+    }
+
 
         h3 {
             font-family: v.$secundaria;
@@ -116,6 +133,27 @@
         .carac {
             display: flex;
             padding: 0 1rem;
+            margin: 1rem 0;
+
+        .contenedor_caracteristicas {
+            display: flex;
+            img {
+                display: none;
+            }
+            @include m.desktop{            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 1rem;
+
+            img {
+                display: flex;
+                width: 2.5rem;
+                height: 2.5rem;
+                filter: invert(1);
+            }
+        }
+        
 
             p {
                 font-family: v.$texto;
@@ -134,9 +172,16 @@
                 }
             }
         }
+        }
 
         .metros-descripcion {
             padding: 0 1rem;
+            
+            .area_movil {
+                @include m.desktop {
+                    display: none;
+                }
+            }
 
             p {
                 font-family: v.$texto;
@@ -165,8 +210,25 @@
             margin: 1rem auto 0 auto;
         }
 
+        .texto_computador_informacion_tipo_ubicacion_barrio {
+            display: none;
+
+            @include m.desktop {
+                display: flex;
+            }
+        }
+
+        .texto_movil_informacion_tipo_ubicacion_barrio {
+            @include m.desktop {
+                display: none;
+            }
+        }
+
         .ubicacion {
             padding: 0 1rem;
+            @include m.desktop {
+                display: none;
+            }
 
             p {
                 color: v.$rojotierra;
