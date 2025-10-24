@@ -131,7 +131,7 @@ class Lote extends ActiveRecord {
         if(strlen($this->descripcion) < 50) {
             self::$errores[] = "El campo descripcion es obligatorio y debe contener al menos 50 caracteres";
         }
-        if(strlen($this->descripcion) > 500) {
+        if(strlen($this->descripcion) > 700) {
             self::$errores[] = "El campo descripcion no puede superar los 500 caracteres";
         }
         if(!$this->barrio) {
@@ -141,7 +141,7 @@ class Lote extends ActiveRecord {
             self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
         }
         if(!$this->administracion){
-            self::$errores[] = "El campo Administración es obligatorio. Si no aplica, ingresa 0";
+                    $this->administracion = 0;
         }
 
         return self::$errores;

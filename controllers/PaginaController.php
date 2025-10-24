@@ -16,6 +16,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class PaginaController {
     public static function index(Router $router) {
+            $resultado = $_GET['Resultado'] ?? null;
             $inicio = true;
             $footer = true;
 
@@ -170,7 +171,8 @@ class PaginaController {
                 'totalPaginas'    => $totalPaginas,
                 'imagenesPorCasa' => $imagenesPorCasa,
                 'busqueda'        => $busqueda,
-                'queryBase'       => $queryBase
+                'queryBase'       => $queryBase,
+                'resultado' => $resultado
             ]);
         }
 

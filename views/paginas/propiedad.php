@@ -399,7 +399,7 @@
             $mensaje_url = urlencode($mensaje);
         ?>
 
-        <a href="https://wa.me/573103817479?text=<?php echo $mensaje_url; ?>" target="_blank" class="whatsapp-button">
+        <a href="https://wa.me/573117856360?text=<?php echo $mensaje_url; ?>" target="_blank" class="whatsapp-button">
 
             <img src="https://img.icons8.com/ios-filled/50/25D366/whatsapp.png" alt="WhatsApp">
             ¿Estás interesado en esta propiedad? ¡No dudes en contactarnos!

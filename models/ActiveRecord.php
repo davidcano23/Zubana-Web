@@ -43,7 +43,7 @@ public function crear() {
         //MENSAJE DE EXITO
         if($resultado) {
             $this->{'id'} = self::$db->insert_id; 
-            header('location: /admin?Resultado=1');
+            header('location: /?Resultado=1');
         }
 }
 
@@ -66,7 +66,7 @@ public function actualizar() {
     $resultado = self::$db->query($query);
 
     if($resultado) {
-            header('location: /admin?Resultado=2');
+            header('location: /?Resultado=2');
         }
 }
 
@@ -79,7 +79,7 @@ public function actualizar() {
 
     if($resultado) {
         $this->borrarImagen();
-            header('location: /admin?Resultado=3');
+            header('location: /?Resultado=3');
         }
     }
 

@@ -26,7 +26,7 @@
         <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]">
             <option value="" disabled <?php echo empty($propiedad?->tipo) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
             <option value="Lote Campestre" <?php echo ($propiedad?->tipo === 'Lote Campestre') ? 'selected' : ''; ?>>Lote Campestre</option>
-            <option value="Lote Urbano" <?php echo ($propiedad?->tipo === 'Lote Urbanizable') ? 'selected' : ''; ?>>Lote Urbanizable</option>
+            <option value="Lote Urbano" <?php echo ($propiedad?->tipo === 'Lote Urbano') ? 'selected' : ''; ?>>Lote Urbano</option>
             <option value="Lote Bodega" <?php echo ($propiedad?->tipo === 'Lote Bodega') ? 'selected' : ''; ?>>Lote Bodega</option>
         </select>
 

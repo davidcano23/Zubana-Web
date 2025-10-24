@@ -7,6 +7,17 @@ $queryString = http_build_query($queryActual); // convierte array en query strin
 $queryBase = $queryString ? $queryString . '&' : ''; // si hay otros filtros, agregamos '&'
 ?>
 
+
+    <?php
+    if ($resultado) {
+        $mensaje = mostrarNotificacion(intval($resultado)); 
+
+            if($mensaje) {?>
+                <p class="alerta exito"> <?php echo s($mensaje); ?>  </p>
+   <?php }
+            
+        } ?>
+
 <main class="contenedor">
     <div class="superior-inicio">
 

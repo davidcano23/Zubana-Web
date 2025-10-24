@@ -20,8 +20,8 @@
 
     .card-propiedad {
         background-color: v.$grisniebla;
-        width: 32rem;
-        height: 45rem;
+        width: 90%;
+        height: 50rem;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -30,8 +30,8 @@
         overflow: hidden;
 
         @include m.tablet {
-            width: 32rem;
-            height: 44.5rem;
+            width: 90%;
+            height: 50rem;
             
         }
 
@@ -107,7 +107,130 @@
 }
 
     .contenedor_padre_computador_informacion_card {
-        width: 70%;
+        width: 100%;
+        padding: 1rem 0;
+        margin: 0 auto;
+
+        @include m.desktop {
+            width: 70%;
+        }
+
+        .descripcion_computador_informacion_card {
+            display: block;
+            width: auto;
+            padding:  0 2rem;
+
+            .titulo_descripcion_computador {
+                margin: 0;
+                font-size: 1.6rem;
+                font-family: v.$secundaria;
+                color: v.$rojotierra;
+                font-weight: v.$regular;
+                margin-bottom: -10px;
+
+                @include m.tablet {
+                    font-size: 1.8rem;
+                }
+
+                @include m.desktop {
+                    font-size: 2rem;
+                }
+            }
+
+            .parrafo_descripcion_computador {
+                font-size: 1.4rem;
+                line-height: 1.3;
+                height: 5.5rem;
+                overflow: hidden;
+
+                @include m.tablet {
+                    height: 6rem;
+                    font-size: 1.6rem;
+                }
+
+                @include m.desktop {
+                    font-size: 1.8rem;
+                    height: 7rem;
+                }
+            }
+        }
+
+        .botones_contacto_actualizacion_eliminar_propiedad {
+            width: auto;
+            margin-top: .5rem;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            gap: .5rem;
+
+            @include m.tablet {
+                gap: .5rem;
+            }
+
+            @include m.desktop {
+                margin-top: 1rem;
+                gap: 1rem;
+            }
+            .boton_whatsapp_card {
+                display: flex;
+                width: 10rem;
+                height: 4rem;
+                font-size: 1.4rem;
+                border: solid 2px v.$verdeesmeralda;
+                border-radius: 1rem;
+                margin: 0;
+                background-color: transparent;
+                transition: ease .7s;
+                text-transform: none;
+                text-align: center;
+                padding: .5rem;
+
+                @include m.tablet {
+                    width: 11rem;
+                    height: 4rem;
+                    font-size: 1.6rem;
+                }
+
+                @include m.desktop {
+                    width: 15rem;
+                    height: 4rem;
+                    font-size: 1.8rem;
+                    padding: 0;
+                }
+
+                &:hover {
+                    background-color: v.$verdeesmeralda;
+                    transition: ease .7s;
+                }
+
+                img {
+                    width: 1.5rem;
+                    height: 1.5rem;
+                    margin-right: .5rem;
+
+                    @include m.tablet {
+                        width: 2rem;
+                        height: 2rem;
+                    }
+
+                    @include m.desktop {
+                        width: 2.5rem;
+                        height: 2.5rem;
+                    }
+                }
+            }
+
+            .boton_eliminacion {
+                border: solid 2px v.$rojotierra;
+                padding: .5;
+
+                &:hover {
+                    background-color: v.$rojotierra;
+                    transition: ease .7s;
+                }
+            }
+        }
     }
 
 
@@ -119,26 +242,44 @@
             text-align: left;
             padding: 0 2rem;
             margin: 0;
+            margin-bottom: -1.5rem;
             height: 4.2rem;
 
             @include m.tablet {
                 font-size: 2.6rem;
+                margin-bottom: -.8rem;
+                
             }
 
             @include m.desktop {
                 font-size: 3rem;
+                margin-bottom: 0;
             }
         }
 
         .carac {
             display: flex;
-            padding: 0 1rem;
-            margin: 1rem 0;
+            padding: 0 1.5rem;
+            margin: .5rem 0;
+
+            @include m.tablet {
+                padding:  0 2rem;
+            }
+
+            @include m.desktop {
+                padding:  0 1rem;
+            }
 
         .contenedor_caracteristicas {
             display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 .5rem;
             img {
-                display: none;
+                display: flex;
+                width: 1.5rem;
+                height: 1.5rem;
+                filter: invert(1);
             }
             @include m.desktop{            
             display: flex;
@@ -148,8 +289,8 @@
 
             img {
                 display: flex;
-                width: 2.5rem;
-                height: 2.5rem;
+                width: 2rem;
+                height: 2rem;
                 filter: invert(1);
             }
         }
@@ -161,17 +302,24 @@
                 color: v.$arenaclaro;
                 font-weight: v.$regular;
                 margin: 0 0.5rem;
-                padding: 0 0.5rem;
+                // padding: 0 0.5rem;
 
                 @include m.tablet {
                     font-size: 1.6rem;
                 }
 
                 @include m.desktop {
-                    font-size: 2rem;
+                    font-size: 1.8rem;
                 }
             }
         }
+    .area_computador_total {
+        display: none;
+
+            @include m.desktop {
+                display: flex;
+            }
+            }
         }
 
         .metros-descripcion {
@@ -206,47 +354,54 @@
         .linea-blanca {
             width: 95%;
             height: 1px;
-            background-color: white;
-            margin: 1rem auto 0 auto;
+            background-color: rgba(255, 255, 255, 0.301);
+            margin: .7rem auto 0 auto;
         }
 
         .texto_computador_informacion_tipo_ubicacion_barrio {
-            display: none;
+            display: flex;
+            font-size: 1.4rem;
+            padding: 0 2rem;
+            margin: 0;
 
-            @include m.desktop {
-                display: flex;
-            }
-        }
-
-        .texto_movil_informacion_tipo_ubicacion_barrio {
-            @include m.desktop {
-                display: none;
-            }
-        }
-
-        .ubicacion {
-            padding: 0 1rem;
-            @include m.desktop {
-                display: none;
-            }
-
-            p {
-                color: v.$rojotierra;
+            @include m.tablet {
                 font-size: 1.4rem;
-                font-family: v.$texto;
-                font-weight: v.$regular;
-                padding: 0 1rem;
-                margin: 0;
+            }
 
-                @include m.tablet {
-                    font-size: 1.6rem;
-                }
-
-                @include m.desktop {
-                    font-size: 2rem;
-                }
+            @include m.desktop {
+                font-size: 2rem;
             }
         }
+
+        // .texto_movil_informacion_tipo_ubicacion_barrio {
+        //     @include m.desktop {
+        //         display: none;
+        //     }
+        // }
+
+        // .ubicacion {
+        //     padding: 0 1rem;
+        //     @include m.desktop {
+        //         display: none;
+        //     }
+
+        //     p {
+        //         color: v.$rojotierra;
+        //         font-size: 1.4rem;
+        //         font-family: v.$texto;
+        //         font-weight: v.$regular;
+        //         padding: 0 1rem;
+        //         margin: 0;
+
+        //         @include m.tablet {
+        //             font-size: 1.6rem;
+        //         }
+
+        //         @include m.desktop {
+        //             font-size: 2rem;
+        //         }
+        //     }
+        // }
 
         a {
             @include m.boton(v.$grisgrafito, v.$grisgrafito, flex);

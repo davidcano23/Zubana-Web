@@ -169,17 +169,19 @@
   grid-template-columns: auto 1fr auto;
   align-items: start;
   gap: 1rem;
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   padding: 1.2rem 1.4rem;
   border-radius: 1.2rem;
   border: 1px solid color-mix(in srgb, v.$arenaclaro 20%, transparent);
-  background: color-mix(in srgb, v.$grisgrafito 85%, v.$negrocarbon);
+  background: color-mix(in srgb, v.$verdeesmeralda 85%, v.$negrocarbon);
   color: v.$arenaclaro;
   font-size: 1.6rem;
   line-height: 1.4;
   box-shadow: 0 6px 18px rgba(0,0,0,.18);
   animation: alerta-in .18s ease-out both;
   margin-bottom: .8rem;
+  margin-top: .8rem;
 
   // contenedor de múltiples alertas (ej: #auth-errors .alerta + .alerta ...)
   & + .alerta { margin-top: .8rem; margin-bottom: .8rem; }

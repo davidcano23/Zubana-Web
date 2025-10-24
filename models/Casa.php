@@ -208,7 +208,7 @@ class Casa extends ActiveRecord {
         if(strlen($this->descripcion) < 50) {
             self::$errores[] = "El campo descripcion es obligatorio y debe contener al menos 50 caracteres";
         }
-        if(strlen($this->descripcion) > 500) {
+        if(strlen($this->descripcion) > 700) {
             self::$errores[] = "El campo descripcion no puede superar los 500 caracteres";
         }
         if(!$this->barrio) {
