@@ -172,7 +172,8 @@
                 margin-top: 1rem;
                 gap: 1rem;
             }
-            .boton_whatsapp_card {
+           .boton_whatsapp_card {
+            @include m.boton(v.$grisgrafito, v.$verdeesmeralda, flex);
                 display: flex;
                 width: 10rem;
                 height: 4rem;
@@ -403,29 +404,7 @@
         //     }
         // }
 
-        a {
-            @include m.boton(v.$grisgrafito, v.$grisgrafito, flex);
-            width: 95%;
-            height: 4.5rem;
-            margin: 0 auto;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            text-transform: uppercase;
-            font-family: v.$secundaria;
-            font-weight: v.$regular;
-
-            @include m.tablet {
-                height: 5.5rem;
-                font-size: 2.2rem;
-            }
-
-            @include m.desktop {
-                height: 6rem;
-                font-size: 2.6rem;
-                margin-bottom: 0;
-                margin-top: 1rem;
-            }
-        }
+        
     }
 
 

@@ -64,9 +64,9 @@
 
             <?php if($auth):?>
                         
-                    <a href="/admin" class="admin_movil">
+                    <a href="/tipo-propiedad" class="admin_movil">
                         <img src="/img/admin_header.png" loading="lazy" alt="Imagen Admin">    
-                        <p>Admin</p>
+                        <p>Crear</p>
                     </a>
 
                     <a href="/logout" class="admin_movil">
@@ -436,7 +436,7 @@
 
     <?php
         // leer “flash” de errores si los puso el controlador
-        session_start();
+        // session_start();
         $loginErrors = $_SESSION['login_errors'] ?? [];
         unset($_SESSION['login_errors']); // consumirlos una vez
 

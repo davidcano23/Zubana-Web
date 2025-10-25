@@ -20,7 +20,6 @@ $router->get('/', [PaginaController::class, 'index']);
 $router->get('/propiedad', [PaginaController::class, 'propiedad']);
 
 //ZONA PRIVADA
-$router->get('/admin', [PropiedadController::class, 'admin']);
 $router->get('/tipo-propiedad', [PropiedadController::class, 'tipoPropiedad']);
 
 //PROPIEDADES

@@ -13,40 +13,6 @@ use Model\Lote;
 
 class PropiedadController {
 
-    public static function admin(Router $router) {
-    $resultado = $_GET['Resultado'] ?? null;
-
-        $filtros = $_GET ?? [];
-
-        $hayFiltros =   !empty($filtros['codigo_filtro'])
-                        || !empty($filtros['modalidad_filtros'])
-                        || !empty($filtros['nombre_propietario'])
-                        || !empty($filtros['tipo'])
-                        || !empty($filtros['barrio']);
-
-        if($hayFiltros) {
-            $casas = Casa::filtrar($filtros);
-            $apartamentos = Apartamento::filtrar($filtros);
-            $local = Local::filtrar($filtros);
-            $lotes = Lote::filtrar($filtros);
-        } else {
-            // Consultar cada tipo de propiedad
-            $casas = Casa::get(5);
-            $apartamentos = Apartamento::get(5);
-            $lotes = Lote::get(5);
-            $local = Local::get(5);
-        }
-
-    // Unir todas en un solo array
-    $propiedades = array_merge($casas, $apartamentos,$lotes,$local);
-
-    // Renderizar vista
-    $router->render('propiedades/admin', [
-        'propiedades' => $propiedades,
-        'resultado' => $resultado
-    ]);
-}
-
     public static function tipoPropiedad(Router $router) {
         // Renderizar vista
     $router->render('propiedades/tipo-propiedad', [

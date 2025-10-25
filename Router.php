@@ -23,7 +23,6 @@ class Router {
 
         //Arreglo de rutas protegidas
         $rutas_protegidas = [
-            '/admin',
             '/tipo-propiedad',
 
             '/propiedades/crear-casa',

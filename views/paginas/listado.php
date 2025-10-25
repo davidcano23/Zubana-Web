@@ -3,7 +3,7 @@
 ?>
 
 <?php foreach($propiedades as $propiedad){ ?>
-    <!-- <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>" class="boton boton-amarillo-block"> -->
+    <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>">
         <div class="card-propiedad">
             <div class="swiper img-container">
                 <div class="swiper-wrapper">
@@ -148,7 +148,7 @@
         </div>
             
                 
-            <!-- </a> -->
+            </a>
 
         </div>
 
