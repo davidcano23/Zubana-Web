@@ -9827,8 +9827,168 @@
     initMasFiltros();
     initLoginModalSubmit();
     initLoginModal();
+    initOrdenar();
+    initFiltrosResponsive();
     
   });
+
+  /* ---- Filtros: bottom-sheet + cierre a 1 toque ---- */
+  function initFiltrosResponsive() {
+    const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+
+    let overlay = document.querySelector('.filtros_overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'filtros_overlay';
+      document.body.appendChild(overlay);
+    }
+
+    const lock   = () => document.body.classList.add('bsheet-lock');
+    const unlock = () => document.body.classList.remove('bsheet-lock');
+
+    const closeAll = () => {
+      document.querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
+        .forEach(el => el.classList.remove('is-open'));
+      overlay.classList.remove('is-open');
+      unlock();
+    };
+
+    const openRoot = ($root) => {
+      $root.classList.add('is-open');
+      overlay.classList.add('is-open');
+      lock();
+    };
+
+    const pairs = [
+      { root: '.filtro_tipo',   trigger: '.tipo_trigger'   },
+      { root: '.filtro_precio', trigger: '.precio_trigger' },
+      { root: '.filtro_hb',     trigger: '.hb_trigger'     },
+      { root: '.filtro_mas',    trigger: '.mas_trigger'    },
+    ];
+
+    let isToggling = false;
+    const withGuard = (fn) => {
+      if (isToggling) return;
+      isToggling = true;
+      try { fn(); } finally { setTimeout(() => { isToggling = false; }, 120); }
+    };
+
+    pairs.forEach(({ root, trigger }) => {
+      const $root = document.querySelector(root);
+      const $trg  = $root?.querySelector(trigger);
+      if (!$root || !$trg) return;
+
+      $trg.addEventListener('click', (e) => {
+        if (!isMobile()) return;             // desktop no se toca
+        e.preventDefault();
+        e.stopPropagation();
+        withGuard(() => {
+          const opened = $root.classList.contains('is-open');
+          closeAll();
+          if (!opened) openRoot($root);
+        });
+      });
+    });
+
+    overlay.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); closeAll(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+    window.addEventListener('resize', () => { if (!isMobile()) closeAll(); });
+
+    // asegurar que el scroller empieza a la izquierda
+    const scroller = document.querySelector('.filtros_scroller');
+    if (scroller) {
+      const reset = () => { scroller.scrollLeft = 0; };
+      reset();
+      window.addEventListener('resize', reset);
+    }
+  }
+
+  /* ---- Ordenar: tarjeta centrada en móvil + overlay + 1 toque para cerrar ---- */
+  function initOrdenar() {
+    const BP = 1024; // ajusta a tu v.$tablet si cambia
+    const isMobile = () => window.innerWidth <= BP;
+
+    const form   = document.getElementById('formOrdenar');
+    const select = document.getElementById('ordenarPor');
+    const toggle = form?.querySelector('.ordenar__toggle');
+    const menu   = form?.querySelector('.ordenar__menu');
+    if (!form || !select || !toggle || !menu) return;
+
+    // overlay para ordenar en móvil
+    let overlay = document.querySelector('.ui_overlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.className = 'ui_overlay';
+      document.body.appendChild(overlay);
+    }
+
+    // Desktop: onchange del select envía
+    select.addEventListener('change', () => form.submit());
+
+    const markActive = () => {
+      const current = select.value || 'mas_recientes';
+      menu.querySelectorAll('.ordenar__opt').forEach(btn => {
+        btn.classList.toggle('is-active', btn.dataset.value === current);
+      });
+    };
+
+    const open = () => {
+      form.classList.add('is-open');
+      toggle.setAttribute('aria-expanded', 'true');
+      markActive();
+      if (isMobile()) {
+        overlay.classList.add('is-open');
+        document.body.classList.add('ui-lock');
+      }
+    };
+    const close = () => {
+      form.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      overlay.classList.remove('is-open');
+      document.body.classList.remove('ui-lock');
+    };
+
+    let isToggling = false;
+    const safeToggle = () => {
+      if (isToggling) return;
+      isToggling = true;
+      form.classList.contains('is-open') ? close() : open();
+      setTimeout(() => { isToggling = false; }, 120);
+    };
+
+    toggle.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); safeToggle(); });
+
+    menu.addEventListener('click', (e) => {
+      const btn = e.target.closest('.ordenar__opt');
+      if (!btn) return;
+      const val = btn.dataset.value;
+      if (val) {
+        select.value = val;
+        close();
+        form.submit();
+      }
+    });
+
+    // Cerrar con overlay
+    overlay.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); close(); });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+
+    // ✅ Cerrar al tocar cualquier parte fuera del botón/menú
+    document.addEventListener('click', (e) => {
+      if (!form.classList.contains('is-open')) return;
+      const target = e.target;
+      const clickedInside = form.contains(target);
+      if (!clickedInside) close();
+    });
+
+    // Si cambian a desktop, cerramos
+    window.addEventListener('resize', () => { if (!isMobile()) close(); });
+  }
+
+
+
 
 
   function initLoginModal() {

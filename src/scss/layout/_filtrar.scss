@@ -54,76 +54,74 @@
         }
     }
 
-    .filtrar {
+       .ordenar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 
-    // Estilos personalizados para Choices.js
-        .choices {
-            width: 15rem;
-            max-width: 100%;
-            margin: 0;
-            margin-right: 2rem;
-            display: flex !important;
+  &__toggle {
+    display: inline-flex; align-items: center; gap: .75rem;
+    padding: .8rem 1.2rem; border-radius: 1.5rem; border: 2px solid v.$arenaclaro;
+    background: v.$grisgrafito; color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem;
+    cursor: pointer; transition: transform .2s, box-shadow .2s, border-color .2s;
 
-            @include m.tablet {
-                width: 20rem;
-            }
+    &:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
+    &:active { transform: translateY(0); box-shadow: none; }
 
-            .choices__inner {
-                background-color: v.$grisgrafito;
-                border: 2px solid v.$arenaclaro;
-                border-radius: 1.5rem;
-                width: 150px;
-                color: v.$arenaclaro;
-                font-size: 1.4rem;
-                transition: all 0.5s ease;
+    .ordenar__icon { flex: 0 0 auto; display: block; }
+    .ordenar__label { display: none; @include m.desktop { display: inline; } }
+  }
 
-                @include m.tablet{
-                    width: 200px;
-                    
-                }
+  &__selectWrap {
+    display: none; @include m.desktop { display: inline-block; }
+    select{
+      width:20rem; max-width:100%; padding:.9rem 1.2rem; border-radius:1.5rem; border:2px solid v.$arenaclaro;
+      background:v.$grisgrafito; color:v.$arenaclaro; font-family:v.$texto; font-size:1.4rem; appearance:none;
+      transition: box-shadow .2s, border-color .2s;
+      &:hover{ box-shadow:0 2px 8px rgba(0,0,0,.2); }
+      &:focus{ outline:none; border-color:v.$grisniebla; }
+    }
+  }
 
-                &:hover {
-                border-color: none;
-                }
-            }
+  &__menu {
+    position: absolute; top: calc(100% + .6rem); left:0; min-width:22rem;
+    background: rgba(v.$grisgrafito,.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border:2px solid v.$arenaclaro; border-radius:1rem; box-shadow:0 12px 28px rgba(0,0,0,.35);
+    padding:.6rem; display:none; z-index:50;
+    @include m.desktop { display:none !important; }
+  }
 
-            // Cuando el select está abierto
-            &.is-open .choices__inner {
-                border-bottom-left-radius: 0;
-                border-bottom-right-radius: 0;
-                border-bottom: none; // Elimina borde inferior para que se una al dropdown
-                // transition: all 0.5s ease;
-            }
+  &__opt {
+    width:100%; text-align:left; padding:.9rem 1rem; border:0; border-radius:.8rem; background:transparent;
+    color:v.$arenaclaro; font-family:v.$texto; font-size:1.4rem; cursor:pointer; transition: background .15s, transform .05s;
+    &:hover{ background:rgba(v.$grisniebla,.25); }
+    &:active{ transform:scale(.995); }
+    &.is-active{ background:rgba(v.$grisniebla,.35); }
+  }
 
-            .choices__list--dropdown {
-                z-index: 9999 !important;
-                font-family: v.$texto;
-                background-color: rgba(v.$grisgrafito, 0.8);
-                backdrop-filter: blur(10px);
-                -webkit-backdrop-filter: blur(10px);
-                border: 2px solid v.$arenaclaro;
-                border-top: none; // Elimina borde superior para que se una al input
-                color: v.$arenaclaro;
-                border-radius: 0 0 1rem 1rem;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            }
-
-            .choices__item--choice {
-                padding: 0.5rem 1rem;
-                cursor: pointer;
-
-                &:hover {
-                background-color: rgba(v.$grisniebla, 0.8);
-                }
-            }
-
-            .choices__placeholder {
-                color: v.$arenaclaro;
-                font-size: 1.6rem;
-                text-align: center;
-                text-transform: uppercase;
-            }
-            }
+  &.is-open { .ordenar__menu{ display:block; } .ordenar__toggle{ border-color: v.$grisniebla; } }
 }
+
+/* Overlay y tarjeta centrada para móvil/tablet */
+@media (max-width: v.$tablet) {
+  .ui_overlay{ position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(2px); z-index:200; display:none; }
+  .ui_overlay.is-open{ display:block; }
+  body.ui-lock{ overflow:hidden; }
+
+  /* Convertimos el menú en tarjeta centrada al fondo */
+  .ordenar .ordenar__menu{
+    position: fixed !important;
+    left:50% !important; transform: translateX(-50%) !important;
+    bottom:16px !important; top:auto !important;
+    width:min(92vw, 360px) !important; max-height:60vh !important; overflow:auto;
+    border-radius:12px !important; border:1px solid v.$grisniebla !important;
+    background: rgba(v.$grisgrafito,.96) !important; box-shadow:0 18px 48px rgba(0,0,0,.45) !important;
+    z-index:210; display:none;
+  }
+  #formOrdenar.is-open .ordenar__menu{ display:block; }
+}
+
+
 
 }

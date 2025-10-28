@@ -27,36 +27,52 @@ $queryBase = $queryString ? $queryString . '&' : ''; // si hay otros filtros, ag
             <p>Más de 400 Propiedades Disponibles</p>
         </div>
 
-        <form method="GET" id="formOrdenar">
-            <div class="filtrar">
-                <select name="ordenar" id="ordenarPor" onchange="document.getElementById('formOrdenar').submit();">
-                    <option value="">Ordenar Por</option>
-                    <option value="mayor_precio" <?= ($_GET['ordenar'] ?? '') === 'mayor_precio' ? 'selected' : '' ?>>Mayor precio</option>
-                    <option value="menor_precio" <?= ($_GET['ordenar'] ?? '') === 'menor_precio' ? 'selected' : '' ?>>Menor precio</option>
-                    <option value="menor_m2" <?= ($_GET['ordenar'] ?? '') === 'menor_m2' ? 'selected' : '' ?>>Menor m²</option>
-                    <option value="mayor_m2" <?= ($_GET['ordenar'] ?? '') === 'mayor_m2' ? 'selected' : '' ?>>Mayor m²</option>
+        <form method="GET" id="formOrdenar" class="ordenar">
+            <!-- Botón responsive (icono + label desktop / solo icono móvil) -->
+            <button type="button" class="ordenar__toggle" aria-haspopup="listbox" aria-expanded="false" aria-controls="ordenarMenu">
+                <!-- SVG icono “ordenar” -->
+                <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" class="ordenar__icon">
+                <path d="M3 6h14M3 12h10M3 18h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span class="ordenar__label">Ordenar por</span>
+            </button>
+
+            <!-- Select: fuente de verdad (visible en desktop, oculto en móvil) -->
+            <div class="ordenar__selectWrap">
+                <select name="ordenar" id="ordenarPor">
+                <option value="">Ordenar Por</option>
+                <option value="mayor_precio" <?= ($_GET['ordenar'] ?? '') === 'mayor_precio' ? 'selected' : '' ?>>Mayor precio</option>
+                <option value="menor_precio" <?= ($_GET['ordenar'] ?? '') === 'menor_precio' ? 'selected' : '' ?>>Menor precio</option>
+                <option value="mas_recientes" <?= ($_GET['ordenar'] ?? 'mas_recientes') === 'mas_recientes' ? 'selected' : '' ?>>Más recientes</option>
+                <option value="mayor_m2" <?= ($_GET['ordenar'] ?? '') === 'mayor_m2' ? 'selected' : '' ?>>Mayor m²</option>
                 </select>
-
-                <?php 
-                    // Mantenemos los otros filtros ocultos (soporta arrays tipo tipo[])
-                    foreach ($_GET as $clave => $valor) {
-                        if ($clave === 'ordenar' || $clave === 'pagina') continue;
-
-                        if (is_array($valor)) {
-                            // Ej: tipo[] = ['casa','apartamento']
-                            foreach ($valor as $v) {
-                                echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '[]"
-                                    value="' . htmlspecialchars((string)$v, ENT_QUOTES) . '">';
-                            }
-                        } else {
-                            echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '"
-                                value="' . htmlspecialchars((string)$valor, ENT_QUOTES) . '">';
-                        }
-                    }
-                    ?>
-
             </div>
+
+            <!-- Menú overlay para tablet/móvil -->
+            <div id="ordenarMenu" class="ordenar__menu" role="listbox" tabindex="-1">
+                <button type="button" role="option" data-value="mayor_precio"  class="ordenar__opt">Mayor precio</button>
+                <button type="button" role="option" data-value="menor_precio"  class="ordenar__opt">Menor precio</button>
+                <button type="button" role="option" data-value="mas_recientes" class="ordenar__opt">Más recientes</button>
+                <button type="button" role="option" data-value="mayor_m2"     class="ordenar__opt">Mayor m²</button>
+            </div>
+
+            <!-- Mantén tus inputs ocultos de filtros existentes -->
+            <?php 
+                foreach ($_GET as $clave => $valor) {
+                if ($clave === 'ordenar' || $clave === 'pagina') continue;
+                if (is_array($valor)) {
+                    foreach ($valor as $v) {
+                    echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '[]"
+                            value="' . htmlspecialchars((string)$v, ENT_QUOTES) . '">';
+                    }
+                } else {
+                    echo '<input type="hidden" name="' . htmlspecialchars($clave, ENT_QUOTES) . '"
+                        value="' . htmlspecialchars((string)$valor, ENT_QUOTES) . '">';
+                }
+                }
+            ?>
         </form>
+
 
     </div>
 

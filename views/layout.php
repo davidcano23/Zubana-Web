@@ -87,6 +87,7 @@
         <div class="linea-blanca"></div>
 
             <div class="contenedor filtros_header">
+                <div class="filtros_scroller">
                 <form method="get" class="form_busqueda" autocomplete="off">
 
                     <div class="filtros_computadora_header">
@@ -360,6 +361,7 @@
                         </div>
 
                 </form>
+                </div>
             </div>
 
     <?php endif; ?>

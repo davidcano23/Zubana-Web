@@ -198,33 +198,62 @@ public function sanetizarAtributos() {
 
     //FUNCTION ORDENAR PROPIEDADES
 
-    public static function ordenarResultados($propiedades, $criterio) {
-        switch ($criterio) {
-            case 'mayor_precio':
-                usort($propiedades, function ($a, $b) {
-                    $precioA = (int) str_replace('.', '', $a->precio);
-                    $precioB = (int) str_replace('.', '', $b->precio);
-                    return $precioB <=> $precioA;
-                });
-                break;
+    // En tu clase base ActiveRecord (o en un helper estático que puedas llamar)
+        public static function ordenarResultados(array $propiedades, string $criterio): array
+        {
+            $parsePrecio = static function($p): int {
+                if ($p === null) return 0;
+                if (is_int($p)) return $p;
+                // acepta "1.200.000" o "1200000"
+                $num = preg_replace('/\D+/', '', (string)$p);
+                return $num !== '' ? (int)$num : 0;
+            };
 
-            case 'menor_precio':
-                usort($propiedades, function ($a, $b) {
-                    $precioA = (int) str_replace('.', '', $a->precio);
-                    $precioB = (int) str_replace('.', '', $b->precio);
-                    return $precioA <=> $precioB;
-                });
-                break;
-            case 'mayor_m2':
-                usort($propiedades, fn($a, $b) => $b->area_total <=> $a->area_total);
-                break;
-            case 'menor_m2':
-                usort($propiedades, fn($a, $b) => $a->area_total <=> $b->area_total);
-                break;
+            $getArea = static function($obj): int|float {
+                // Si algún modelo usa otro nombre, mapéalo aquí.
+                // Por ahora asumo 'area_total'; si no existe, 0.
+                return isset($obj->area_total) && $obj->area_total !== null ? (float)$obj->area_total : 0;
+            };
+
+            $cmpIdDesc = static function($a, $b) {
+                return ($b->id ?? 0) <=> ($a->id ?? 0);
+            };
+
+            switch ($criterio) {
+                case 'mayor_precio':
+                    usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
+                        $pa = $parsePrecio($a->precio ?? null);
+                        $pb = $parsePrecio($b->precio ?? null);
+                        $r = $pb <=> $pa;
+                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                    });
+                    break;
+
+                case 'menor_precio':
+                    usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
+                        $pa = $parsePrecio($a->precio ?? null);
+                        $pb = $parsePrecio($b->precio ?? null);
+                        $r = $pa <=> $pb;
+                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                    });
+                    break;
+
+                case 'mayor_m2':
+                    usort($propiedades, function ($a, $b) use ($getArea, $cmpIdDesc) {
+                        $r = $getArea($b) <=> $getArea($a);   // DESC
+                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                    });
+                    break;
+
+                case 'mas_recientes':
+                default:
+                    usort($propiedades, $cmpIdDesc); // id DESC
+                    break;
+            }
+
+            return $propiedades;
         }
 
-        return $propiedades;
-    }
 
 
     //Lista todas las registros

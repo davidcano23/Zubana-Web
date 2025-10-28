@@ -15,18 +15,18 @@ use MVC\Router;
 use PHPMailer\PHPMailer\PHPMailer;
 
 class PaginaController {
-    public static function index(Router $router) {
+        public static function index(Router $router) {
             $resultado = $_GET['Resultado'] ?? null;
             $inicio = true;
             $footer = true;
 
-            // --- PAGINACIÓN (sanitize) ---
+            // --- PAGINACIÓN ---
             $porPagina    = 33;
             $paginaActual = isset($_GET['pagina']) ? max(1, (int)$_GET['pagina']) : 1;
 
             $link = conectarDB();
 
-            // --- FILTROS BASE ---
+            // --- FILTROS BASE (tu código tal cual) ---
             $busqueda = $_GET['busqueda'] ?? null;
             if (is_array($busqueda)) $busqueda = implode(' ', $busqueda);
 
@@ -48,24 +48,26 @@ class PaginaController {
                 [$precioMinNum, $precioMaxNum] = [$precioMaxNum, $precioMinNum];
             }
 
-            // Habs & Baños
             $hab        = isset($_GET['hab']) ? (int)$_GET['hab'] : 0;
             $banos      = isset($_GET['banos']) ? (int)$_GET['banos'] : 0;
             $habExact   = !empty($_GET['hab_exact']);
             $banosExact = !empty($_GET['banos_exact']);
 
-
-            // Estrato
             $estrato = isset($_GET['estrato']) ? (int)$_GET['estrato'] : 0;
 
-            // === 1) LEE LOS NUEVOS PARÁMETROS ===
-            $areaTipo = $_GET['area_tipo'] ?? ''; // '' | 'privada' | 'construida'
+            // Áreas (si las usas en otros filtros)
+            $areaTipo = $_GET['area_tipo'] ?? '';
             $areaMin  = isset($_GET['area_min']) ? (int)preg_replace('/\D+/', '', $_GET['area_min']) : null;
             $areaMax  = isset($_GET['area_max']) ? (int)preg_replace('/\D+/', '', $_GET['area_max']) : null;
-
-            // Normaliza swap min/max si vienen invertidos
             if (!is_null($areaMin) && !is_null($areaMax) && $areaMin > $areaMax) {
                 [$areaMin, $areaMax] = [$areaMax, $areaMin];
+            }
+
+            // === ORDENAMIENTO (leer parámetro y validar) ===
+            $ORDENES_VALIDOS = ['mayor_precio','menor_precio','mas_recientes','mayor_m2'];
+            $ordenar = $_GET['ordenar'] ?? 'mas_recientes';
+            if (!in_array($ordenar, $ORDENES_VALIDOS, true)) {
+                $ordenar = 'mas_recientes';
             }
 
             // --- CONDICIONES COMUNES ---
@@ -80,69 +82,60 @@ class PaginaController {
             }
             if (!is_null($precioMinNum)) $condBase[] = "precio >= {$precioMinNum}";
             if (!is_null($precioMaxNum)) $condBase[] = "precio <= {$precioMaxNum}";
+            if ($estrato > 0)           $condBase[] = "estrato = {$estrato}";
 
             $buildWhere = static function(array $conds): string {
                 return $conds ? 'WHERE ' . implode(' AND ', $conds) : '';
             };
 
-            // --- INCLUSIÓN POR TABLA SEGÚN FILTROS HABS/BAÑOS ---
+            // --- INCLUSIÓN POR TABLA SEGÚN HABS/BAÑOS ---
             $includeCasa   = true;
             $includeApart  = true;
             $includeLocal  = true;
             $includeLote   = true;
-
-            if ($hab > 0) {               // habitaciones ⇒ no tiene sentido Local ni Lote
-                $includeLocal = false;
-                $includeLote  = false;
-            }
-            if ($banos > 0) {             // baños ⇒ Lote fuera (no tiene)
-                $includeLote  = false;
-            }
-
-            // ... después de armar $condBase con busqueda/tipos/precio:
-            if ($estrato > 0) {
-                $condBase[] = "estrato = {$estrato}";
-            }
+            if ($hab > 0) { $includeLocal = false; $includeLote  = false; }
+            if ($banos > 0) { $includeLote  = false; }
 
             // --- CONDICIONES POR TABLA ---
-            // Casa
-            $condCasa = $condBase;
-            if ($hab > 0)   $condCasa[] = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
-            if ($banos > 0) $condCasa[] = $banosExact ? "banos = {$banos}"       : "banos >= {$banos}";
-            $whereCasa = $buildWhere($condCasa);
-
-            // Apartamento
+            $condCasa  = $condBase;
             $condApart = $condBase;
-            if ($hab > 0)   $condApart[] = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
-            if ($banos > 0) $condApart[] = $banosExact ? "banos = {$banos}"       : "banos >= {$banos}";
-            $whereApart = $buildWhere($condApart);
-
-            // Local (solo baños)
             $condLocal = $condBase;
-            if ($banos > 0) $condLocal[] = $banosExact ? "banos = {$banos}" : "banos >= {$banos}";
-            $whereLocal = $buildWhere($condLocal);
 
-            // Lote (sin habs/baños)
+            if ($hab > 0) {
+                $condCasa[]  = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
+                $condApart[] = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
+            }
+            if ($banos > 0) {
+                $condCasa[]  = $banosExact ? "banos = {$banos}" : "banos >= {$banos}";
+                $condApart[] = $banosExact ? "banos = {$banos}" : "banos >= {$banos}";
+                $condLocal[] = $banosExact ? "banos = {$banos}" : "banos >= {$banos}";
+            }
+
+            $whereCasa  = $buildWhere($condCasa);
+            $whereApart = $buildWhere($condApart);
+            $whereLocal = $buildWhere($condLocal);
             $whereLotes = $buildWhere($condBase);
 
-            // --- CONSULTAS POR TABLA (solo si están incluidas) ---
+            // --- CONSULTAS POR TABLA (pueden venir ya ORDER BY id DESC, da igual porque re-ordenamos luego) ---
             $casas        = $includeCasa  ? Casa::consultarSQL("SELECT * FROM casa {$whereCasa} ORDER BY id DESC") : [];
             $apartamentos = $includeApart ? Apartamento::consultarSQL("SELECT * FROM apartamento {$whereApart} ORDER BY id DESC") : [];
             $locales      = $includeLocal ? Local::consultarSQL("SELECT * FROM local {$whereLocal} ORDER BY id DESC") : [];
             $lotes        = $includeLote  ? Lote::consultarSQL("SELECT * FROM lotes {$whereLotes} ORDER BY id DESC") : [];
 
-            // --- COMBINAR, ORDENAR, PAGINAR ---
+            // --- COMBINAR Y ORDENAR (global, antes de paginar) ---
             $todas = array_merge($casas, $apartamentos, $locales, $lotes);
-            usort($todas, fn($a, $b) => $b->id <=> $a->id);
 
+            // Usa tu función del ActiveRecord para ordenar (ver sección 2 de abajo)
+            $todas = ModelActiveRecord::ordenarResultados($todas, $ordenar);
+
+            // --- PAGINAR DESPUÉS DE ORDENAR (consistencia entre páginas) ---
             $totalPropiedades = count($todas);
             $totalPaginas     = max(1, (int)ceil($totalPropiedades / $porPagina));
             if ($paginaActual > $totalPaginas) $paginaActual = $totalPaginas;
             $offset = ($paginaActual - 1) * $porPagina;
-
             $propiedades = array_slice($todas, $porPagina ? $offset : 0, $porPagina);
 
-            // --- IMÁGENES ---
+            // --- IMÁGENES (igual) ---
             $imagenesTodas = array_merge(
                 ImagenCasa::todas(),
                 ImagenApart::todas(),
@@ -155,7 +148,7 @@ class PaginaController {
                 $imagenesPorCasa[$id][] = $imagen->nombre;
             }
 
-            // --- QUERY BASE PARA PAGINACIÓN ---
+            // --- QUERY BASE PARA PAGINACIÓN (conservar filtros y 'ordenar') ---
             $params = $_GET;
             unset($params['pagina']);
             foreach ($params as $k => $v) if (is_array($v)) $params[$k] = array_values($v);
@@ -172,9 +165,12 @@ class PaginaController {
                 'imagenesPorCasa' => $imagenesPorCasa,
                 'busqueda'        => $busqueda,
                 'queryBase'       => $queryBase,
-                'resultado' => $resultado
+                'resultado'       => $resultado,
+                // por si lo quieres en la vista
+                'ordenar'         => $ordenar,
             ]);
         }
+
 
 
 
