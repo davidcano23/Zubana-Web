@@ -9846,11 +9846,44 @@
     const lock   = () => document.body.classList.add('bsheet-lock');
     const unlock = () => document.body.classList.remove('bsheet-lock');
 
+    // ✅ FIX — Declarar SIEMPRE antes de usar
+    const ubicInput = document.querySelector('.barra_por_ubicaciones');
+    const ubicList  = document.querySelector('.resultados_busqueda');
+
+    function positionUbicacionesDropdown() {
+      if (!ubicInput || !ubicList) return;
+
+      const visible = getComputedStyle(ubicList).display !== 'none';
+      if (!visible) return;
+
+      if (!isMobile()) {
+        ubicList.classList.remove('is-floating');
+        ubicList.style.removeProperty('--ub-left');
+        ubicList.style.removeProperty('--ub-top');
+        ubicList.style.removeProperty('--ub-width');
+        return;
+      }
+
+      const r = ubicInput.getBoundingClientRect();
+      ubicList.classList.add('is-floating');
+      ubicList.style.setProperty('--ub-left',  `${Math.round(r.left)}px`);
+      ubicList.style.setProperty('--ub-top',   `${Math.round(r.bottom + 6)}px`);
+      ubicList.style.setProperty('--ub-width', `${Math.round(r.width)}px`);
+    }
+
+    function hideUbicacionesDropdown() {
+      if (!ubicList) return;
+      ubicList.classList.remove('is-floating');
+    }
+
     const closeAll = () => {
-      document.querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
+      document
+        .querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
         .forEach(el => el.classList.remove('is-open'));
+
       overlay.classList.remove('is-open');
       unlock();
+      hideUbicacionesDropdown(); // ✅ cerrar si estaba flotando
     };
 
     const openRoot = ($root) => {
@@ -9879,7 +9912,7 @@
       if (!$root || !$trg) return;
 
       $trg.addEventListener('click', (e) => {
-        if (!isMobile()) return;             // desktop no se toca
+        if (!isMobile()) return;
         e.preventDefault();
         e.stopPropagation();
         withGuard(() => {
@@ -9890,18 +9923,91 @@
       });
     });
 
-    overlay.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); closeAll(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
-    window.addEventListener('resize', () => { if (!isMobile()) closeAll(); });
+    overlay.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeAll();
+    });
 
-    // asegurar que el scroller empieza a la izquierda
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAll();
+    });
+    window.addEventListener('resize', () => {
+      if (!isMobile()) closeAll();
+    });
+
     const scroller = document.querySelector('.filtros_scroller');
     if (scroller) {
       const reset = () => { scroller.scrollLeft = 0; };
       reset();
       window.addEventListener('resize', reset);
     }
+
+    // ==============================
+    // ✅ WIRING Ubicaciones
+    // ==============================
+    if (ubicInput && ubicList) {
+      ['focus', 'input', 'click'].forEach(evt =>
+        ubicInput.addEventListener(evt, positionUbicacionesDropdown, { passive: true })
+      );
+
+      ubicList.addEventListener('click', () => {
+        hideUbicacionesDropdown();
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!ubicList.classList.contains('is-floating')) return;
+        const inside = ubicList.contains(e.target) || ubicInput.contains(e.target);
+        if (!inside) hideUbicacionesDropdown();
+      });
+
+      const reflow = () => {
+        if (ubicList.classList.contains('is-floating')) positionUbicacionesDropdown();
+      };
+      window.addEventListener('resize', reflow, { passive: true });
+      window.addEventListener('scroll', reflow, { passive: true });
+    }
   }
+
+
+  // === Ubicaciones: posicionamiento seguro en móvil/tablet ===
+  function positionUbicacionesDropdown() {
+    const input = document.querySelector('.barra_por_ubicaciones');
+    const list  = document.querySelector('.resultados_busqueda');
+    if (!input || !list) return;
+
+    const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+
+    // Asegura que exista y esté visible
+    list.style.display = 'block';
+
+    if (!isMobile()) {
+      // Desktop: comportamiento normal (absoluto relativo al form)
+      list.classList.remove('is-floating');
+      list.style.removeProperty('--ub-left');
+      list.style.removeProperty('--ub-top');
+      list.style.removeProperty('--ub-width');
+      return;
+    }
+
+    // Móvil/Tablet: anclar al viewport
+    const r = input.getBoundingClientRect();
+    list.classList.add('is-floating');
+    list.style.setProperty('--ub-left',  `${Math.round(r.left)}px`);
+    list.style.setProperty('--ub-top',   `${Math.round(r.bottom + 6)}px`);
+    list.style.setProperty('--ub-width', `${Math.round(r.width)}px`);
+  }
+
+  // Recalcular al rotar/resize/scroll (mientras esté abierto)
+  (function wireUbicacionesReflow() {
+    const reflow = () => {
+      const list = document.querySelector('.resultados_busqueda');
+      if (list && list.classList.contains('is-floating')) positionUbicacionesDropdown();
+    };
+    window.addEventListener('resize', reflow, { passive: true });
+    window.addEventListener('scroll', reflow, { passive: true });
+  })();
+
 
   /* ---- Ordenar: tarjeta centrada en móvil + overlay + 1 toque para cerrar ---- */
   function initOrdenar() {

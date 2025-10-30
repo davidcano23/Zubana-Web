@@ -3,8 +3,9 @@
 ?>
 
 <?php foreach($propiedades as $propiedad){ ?>
-    <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>">
+    
         <div class="card-propiedad">
+            <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>">
             <div class="swiper img-container">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide">
@@ -144,11 +145,11 @@
 
                 <?php endif; ?>
             </div>
-
+                    </a>
         </div>
             
                 
-            </a>
+            
 
         </div>
 

@@ -55,16 +55,21 @@
     }
 
        .ordenar {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-right: 2rem;
 
   &__toggle {
     display: inline-flex; align-items: center; gap: .75rem;
     padding: .8rem 1.2rem; border-radius: 1.5rem; border: 2px solid v.$arenaclaro;
     background: v.$grisgrafito; color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem;
     cursor: pointer; transition: transform .2s, box-shadow .2s, border-color .2s;
+
+    @include m.desktop {
+      display: none;
+    }
 
     &:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,.2); }
     &:active { transform: translateY(0); box-shadow: none; }

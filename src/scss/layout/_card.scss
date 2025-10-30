@@ -1,5 +1,6 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
+@use 'sass:color';
 
 .card-propiedades {
     display: grid;
@@ -18,10 +19,12 @@
         flex-direction: column;
     }
 
+    
+    
     .card-propiedad {
         background-color: v.$grisniebla;
         width: 90%;
-        height: 50rem;
+        height: auto;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -31,8 +34,7 @@
 
         @include m.tablet {
             width: 90%;
-            height: 50rem;
-            
+            height: auto;
         }
 
         @include m.desktop {
@@ -48,7 +50,7 @@
     position: relative;
     overflow: hidden;
     border-radius: 1.5rem 1.5rem 0 0;
-    height: 27rem; // Asegura altura fija
+    height: 30rem; // Asegura altura fija
     width: 100%;
 
     @include m.desktop {
@@ -146,11 +148,13 @@
                 @include m.tablet {
                     height: 6rem;
                     font-size: 1.6rem;
+                    margin-bottom: .8rem;
                 }
 
                 @include m.desktop {
                     font-size: 1.8rem;
                     height: 7rem;
+                    margin-bottom: 0;
                 }
             }
         }
@@ -408,26 +412,72 @@
     }
 
 
+}
 
 .paginacion {
-    text-align: center;
-    margin-top: 2rem;
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+  font-family: v.$texto;
 }
 
-.paginacion a {
-    margin: 0 5px;
-    padding: 8px 12px;
-    background-color: transparent;
-    text-decoration: none;
-    border-radius: 5px;
-    color: v.$arenaclaro;
-    border: 2px solid v.$arenaclaro;
+.paginacion a,
+.paginacion span {
+  min-width: 3rem;
+  height: 3rem;
+  padding: 0 .8rem;
+  border-radius: .75rem;
+  font-size: 1.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+  color: v.$arenaclaro;
+  background: rgba(#1c1c1c, .35);
+  border: 1px solid rgba(v.$arenaclaro, .12);
+  backdrop-filter: blur(8px);
+
+  &:hover {
+    background: rgba(v.$grisniebla, .20);
+    border-color: rgba(v.$arenaclaro, .35);
+  }
 }
 
-.paginacion a.pagina-actual {
-    background-color: v.$rojotierra;
-    color: v.$arenaclaro;
-    font-weight: v.$bold;
+.paginacion .pagina-actual {
+  background: v.$rojotierra;
+  border-color: color.scale(v.$rojotierra, $lightness: -10%);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(193,68,46,.25);
+
+  &:hover { background: color.scale(v.$rojotierra, $lightness: 5%); }
 }
 
+.paginacion .disabled {
+  opacity: .35;
+  pointer-events: none;
+  border-style: dashed;
+}
+
+/* NUEVO: estilo del separador “…” */
+.paginacion .ellipsis {
+  background: transparent;
+  border: 0;
+  cursor: default;
+  opacity: .6;
+  padding: 0 .4rem;
+}
+
+@media (max-width: 480px) {
+  .paginacion { gap: .3rem; }
+  .paginacion a, .paginacion span {
+    min-width: 2.6rem;
+    height: 2.6rem;
+    font-size: 1.2rem;
+  }
 }

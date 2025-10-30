@@ -134,6 +134,9 @@ class PaginaController {
             if ($paginaActual > $totalPaginas) $paginaActual = $totalPaginas;
             $offset = ($paginaActual - 1) * $porPagina;
             $propiedades = array_slice($todas, $porPagina ? $offset : 0, $porPagina);
+            $mostrandoDesde   = $totalPropiedades === 0 ? 0 : ($offset + 1);
+            $mostrandoHasta   = $offset + count($propiedades); // ya respeta cuando hay menos de 33
+            $masDeDisponibles = $totalPropiedades; // tu regla de "resta 1"
 
             // --- IMÁGENES (igual) ---
             $imagenesTodas = array_merge(
@@ -168,6 +171,10 @@ class PaginaController {
                 'resultado'       => $resultado,
                 // por si lo quieres en la vista
                 'ordenar'         => $ordenar,
+                'totalPropiedades'  => $totalPropiedades,
+                'mostrandoDesde'    => $mostrandoDesde,
+                'mostrandoHasta'    => $mostrandoHasta,
+                'masDeDisponibles'  => $masDeDisponibles,
             ]);
         }
 

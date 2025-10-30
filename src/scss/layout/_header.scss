@@ -48,9 +48,9 @@
 
         .logo-principal {
             display: flex;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto;
+            width: 75px;
+            height: 75px;
+            margin: 0;
 
             
             @include m.desktop {
@@ -137,8 +137,9 @@
 
             /* Texto: oculto en móvil para look ultra minimal */
             p {
-            display: none;
+            display: block;
             margin: 0;
+            font-size: 1.4rem;
             }
 
             /* Hover/Focus: apenas perceptible, profesional */
@@ -172,7 +173,7 @@
             @include m.desktop {
             height: 38px;
             padding: 0 1.1rem;
-            p { display: inline; }
+            p { display: inline; font-size: 1.6rem; }
             img { width: 16px; height: 16px; opacity: .85; }
             /* nada de ancho fijo; dejamos fluir el contenido para más elegancia */
             }
