@@ -319,6 +319,7 @@
                     width: 25px;
                     height: 25px;
                     margin-right: 1rem;
+                    filter: invert(1);
 
                     @include m.tablet {
                         width: 35px;

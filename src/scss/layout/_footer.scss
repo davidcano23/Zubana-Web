@@ -1,270 +1,162 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.footer {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 0 4rem;
-
-    @include m.desktop {
-        padding: 0 2rem;
-    }
-
-    p {
-        font-size: 1.6rem;
-        text-align: center;
-        margin-top: 2rem;
-
-        @include m.tablet {
-            font-size: 1.8rem;
-        }
-        @include m.desktop {
-            font-size: 2.2rem;
-        }
-    }
-
-    .admin_movil {
-        padding: 1.5rem;
-        width: 100%;
-            p {
-                display: flex;
-                font-size: 1.8rem;
-                color: v.$grisniebla;
-                text-transform: uppercase;
-            }
-        }
+/* ====== BASE ====== */
+.zf-footer{
+  color: v.$arenaclaro;
+  padding-inline: 1.6rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+  @include m.tablet { padding-inline: 2.4rem; }
+  @include m.desktop { padding-inline: 4rem; }
 }
 
-.contenedo {
-    width: 100%;
+/* ====== CINTA SUPERIOR ====== */
+.zf-footer__bar{
+  display:grid; gap:1rem; align-items:center;
+  grid-template-columns: 1fr;
+  padding-block: 2rem;
+  border-bottom: 1px dashed rgba(255,255,255,.08);
+
+  @include m.tablet{
+    grid-template-columns: auto 1fr auto;
+    gap: 2rem;
+  }
 }
 
-.navegacion {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: space-between;
-    margin-top: 2rem;
-
-    .titulo-redes {
-        display: none;
-    }
-
-    @include m.desktop {
-        flex-direction: row;
-        align-items: start;
-        justify-content: center;
-
-        .titulo-redes {
-            display: flex;
-        }
-    }
-
-    .propiedades-venta {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto;
-
-        @include m.tablet {
-            flex-direction: row;
-            align-items: start;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-        }
-
-        @include m.desktop {
-            margin: 0;
-        }
-    }
-
-    .card-footer {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: start;
-        text-align: left;
-        margin: 1.5rem 0;
-        width: 100%;
-
-        @include m.tablet {
-            margin: 0 1rem;
-            width: auto;
-        }
-
-        @include m.desktop {
-           margin: 0 4.5rem; 
-           width: 28rem;
-        }
-
-        img {
-            width: 250px;
-            height: 250px;
-            margin: 0 auto;
-        }
-
-        .parrafo_img {
-            font-size: 1.6rem;
-            text-align: center;
-            margin: 0 auto;
-            text-transform: uppercase;
-        }
-
-        p {
-            font-family: v.$secundaria;
-            font-size: 1.8rem;
-            color: v.$rojotierra;
-            margin: 0;
-            text-align: left;
-        }
-
-        .nosotros_text {
-            width: auto;
-            height: 15rem;
-            text-align: left;
-            line-height: 1.5;
-            font-size: 1.6rem;
-            color: v.$arenaclaro;
-
-        }
-
-        .sub_hijo_card_footer {
-            display: flex;
-            align-items: end;
-            justify-content: left;
-            width: auto;
-            margin: .5rem 0;
-
-            img {
-                width: 3rem;
-                height: 3rem;
-                margin: 0;
-            }
-
-            a {
-                font-size: 1.4rem;
-                margin-left: 1rem;
-            }
-        }
-
-        .parrafo_footer {
-            text-decoration: none;
-            color: v.$arenaclaro;
-            margin: 0;
-            font-size: 1.8rem;
-
-        }
-
-        @include m.tablet {
-            .nosotros_text {
-                font-size: 1.6rem;
-            }
-            .sub_hijo_card_footer {
-                .parrafo_footer {
-                    font-size: 1.6rem;
-                }
-            }
-            p {
-                font-size: 2rem;
-                text-align: left;
-            }
-            a {
-                font-size: 1.6rem;
-            }
-        }
-
-        @include m.desktop {
-            .nosotros_text {
-                font-size: 1.8rem;
-            }
-            .sub_hijo_card_footer {
-                .parrafo_footer {
-                    font-size: 1.8rem;
-                }
-            }
-            p {
-                font-size: 3rem;
-            }
-            a {
-                font-size: 1.6rem;
-            }
-        }
-    }
-
-
-    .redes-footer {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        justify-content: left;
-        margin: 1rem 0;
-        img {
-            width: 30px;
-            height: 30px;
-            margin: 0;
-            margin-right: .5rem;
-        }
-
-        p {
-            font-size: 1.6rem;
-            color: v.$arenaclaro;
-        }
-
-        @include m.tablet {
-            flex-direction: row;
-            align-items: end;
-            img {
-                width: 35px;
-                height: 35px;
-                margin-right: 1rem;
-            }
-            p {
-                margin: 1.5rem o;
-                font-size: 1.8rem;
-            }
-        }
-
-        @include m.desktop {
-            flex-direction: row;
-            align-items: end;
-            img {
-                width: 50px;
-                height: 50px;
-                margin-right: 1rem;
-            }
-            p {
-                margin: 1.5rem o;
-                font-size: 2.2rem;
-            }
-        }
-    }
-
+.zf-brand{
+  display:inline-flex; align-items:center; gap:.8rem; text-decoration:none;
+  &__logo{ display:block; width: 10rem; height: auto;  }
+  &__name{ font-weight:700; letter-spacing:.2px; color: v.$arenaclaro; }
+  &:focus-visible{ outline:2px solid v.$rojotierra; outline-offset:3px; }
 }
 
-.mi-alerta {
-    font-family: v.$secundaria;
-    border-radius: 12px;
-    background: v.$arenaclaro;
+.zf-tagline{
+  margin:0; font-size:1.4rem; opacity:.8; text-align:left;
+  @include m.desktop{ font-size:1.6rem; }
 }
 
-.mi-boton-confirmar {
-    background-color: v.$rojotierra !important;
-    color: v.$arenaclaro;
-    font-weight: v.$bold;
-    padding: 6px 16px;
-    border-radius: 6px;
+.zf-cta{
+  justify-self:start;
+  display:inline-flex; align-items:center; gap:.6rem;
+  border:1px solid rgba(255,255,255,.12);
+  padding:.8rem 1.2rem; border-radius:999px;
+  font-size:1.4rem; text-decoration:none; color:v.$arenaclaro;
+  transition: transform .15s ease, border-color .15s ease, background-color .15s ease;
+  &:hover{ transform: translateY(-1px); border-color: v.$rojotierra; background: rgba(255,255,255,.03); }
+  &:focus-visible{ outline:2px solid v.$rojotierra; outline-offset:3px; }
 }
 
-.mi-boton-cancelar {
-    background-color: v.$grisniebla !important;
-    color: v.$arenaclaro;
-    font-weight: v.$bold;
-    padding: 6px 16px;
-    border-radius: 6px;
+/* ====== GRID PRINCIPAL ====== */
+.zf-footer__grid{
+  display:grid; gap:1.6rem; padding-block:2.4rem;
+  grid-template-columns: 1fr;
+  width: 90%;
+  margin: 0 auto;
+  @include m.tablet{ grid-template-columns: 1.2fr 1fr 1fr 1fr; gap:2.4rem; }
+  @include m.desktop{ gap:3.2rem; }
+}
+
+/* Columna/acordeón */
+.zf-col{
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.06);
+  border-radius: 12px;
+  padding: 1.2rem 1.4rem;
+  width: 90%;
+  height: auto;
+  margin: 0 auto;
+
+  @include m.tablet { width: auto; }
+
+  /* reset summary */
+  & > summary{
+    list-style:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:.8rem; padding:.2rem 0;
+    &::-webkit-details-marker{ display:none; }
+  }
+
+  /* título */
+  .zf-col__title{
+    margin:0; font-family: v.$secundaria;
+    font-size:1.4rem; letter-spacing:.3px; color:v.$arenaclaro;
+  }
+
+  /* contenido */
+  .zf-col__text{ margin:.6rem 0 0; font-size:1.5rem; line-height:1.6; color:rgba(255,255,255,.75); }
+
+  /* abrir/cerrar solo afecta en móvil, en desktop forzamos abierto */
+  @include m.tablet{
+    &[open] .zf-col__text,
+    &[open] .zf-list,
+    &[open] .zf-links,
+    &[open] .zf-social,
+    &[open] .zf-address{ display:block; }
+    summary{ cursor:default; }
+  }
+}
+
+/* Listas de contacto */
+.zf-list{
+  display:grid; gap:.8rem; margin:.6rem 0 0; padding:0; list-style:none;
+  &__item{ display:inline-flex; align-items:center; gap:.8rem; }
+  .zf-ico{ width:18px; height:18px; fill:currentColor; color:v.$rojotierra; opacity:.9; flex:0 0 18px; }
+  a{
+    color:v.$arenaclaro; text-decoration:none; font-size:1.5rem;
+    border-bottom:1px dashed transparent; transition:border-color .15s ease;
+    &:hover{ border-color:rgba(255,255,255,.25); }
+    &:focus-visible{ outline:2px solid v.$rojotierra; outline-offset:3px; }
+  }
+}
+
+/* Enlaces rápidos */
+.zf-links{
+  display:grid; grid-auto-rows:min-content; gap:.6rem; margin:.6rem 0 0;
+  a{
+    font-size:1.5rem; color:rgba(255,255,255,.85); text-decoration:none;
+    border-bottom:1px dashed transparent; padding:.1rem 0;
+    &:hover{ border-color:rgba(255,255,255,.2); }
+  }
+}
+
+/* Redes */
+.zf-social{
+  display:inline-flex; gap:.8rem; margin:.6rem 0 0;
+  a{
+    display:grid; place-items:center; width:38px; height:38px; border-radius:10px;
+    border:1px solid rgba(255,255,255,.12); text-decoration:none;
+    transition: transform .15s ease, border-color .15s ease, background-color .15s ease;
+    svg{ width:20px; height:20px; fill:currentColor; color:v.$arenaclaro; }
+    &:hover{ transform:translateY(-1px); border-color:v.$rojotierra; background:rgba(255,255,255,.03); }
+    &:focus-visible{ outline:2px solid v.$rojotierra; outline-offset:3px; }
+  }
+}
+
+.zf-address{ margin:.8rem 0 0; font-style:normal; font-size:1.4rem; color:rgba(255,255,255,.7); }
+
+/* ====== FRANJA LEGAL ====== */
+.zf-legal{
+  border-top:1px dashed rgba(255,255,255,.08);
+  padding-block:1.6rem;
+  display:grid; gap:1rem;
+  @include m.tablet{ grid-template-columns: 1fr auto; align-items:center; }
+}
+
+.zf-legal__links{
+  display:inline-flex; gap:.8rem; flex-wrap:wrap;
+  a{
+    color:rgba(255,255,255,.75); text-decoration:none; font-size:1.3rem;
+    border-bottom:1px dashed transparent;
+    &:hover{ border-color:rgba(255,255,255,.25); }
+    &:focus-visible{ outline:2px solid v.$rojotierra; outline-offset:3px; }
+  }
+  span{ color:rgba(255,255,255,.25); }
+}
+
+.zf-copy{ margin:0; font-size:1.3rem; color:rgba(255,255,255,.6); }
+
+/* Mantengo tu admin_movil */
+.admin_movil{
+  padding:1.2rem 0; width:100%;
+  p{ margin:0; font-size:1.5rem; color:v.$grisniebla; text-transform:uppercase; }
 }

@@ -371,70 +371,95 @@
 
 
     <div class="linea-blanca"></div>
-    <footer class="footer">
-
+        <footer class="zf-footer" role="contentinfo">
         <?php if($footer) { ?>
 
-        <div class="contenedo">
-            <nav class="navegacion">
-                <div class="propiedades-venta">
-                        <div class="card-footer">
-                            <img src="/img/logo_ZB.png" alt="Logo de la Empresa" loading="lazy">
-                            <p class="parrafo_img">"Conecta con tu casa, directo y fácil."</p>
-                        </div>
-
-
-                        <div class="card-footer">
-                            <p>Nosotros</p>
-                            <p class="nosotros_text">"Inmobiliaria especializada en la venta de propiedades en el Oriente Antioqueño. Brindamos acompañamiento profesional para encontrar la mejor inversión o el hogar ideal."</p>
-                            
-                        </div>
-                        <div class="card-footer contacto_card_footer">
-                            <p>Contáctanos</p>
-                                <div class="sub_hijo_card_footer">
-                                    <img src="/img/whatsapp_Contacto.webp" alt="Logo de Contacto" loading="lazy">
-                                    <p class="parrafo_footer">57+ 311 785 6360</p>
-                                </div>
-
-                                <div class="sub_hijo_card_footer">
-                                    <img src="/img/contacto.png" alt="Logo de Contacto" loading="lazy">
-                                    <p class="parrafo_footer">57+ 314 791 9932</p>
-                                </div>
-                        </div>
-                </div>
-
-                <div class="card-footer">
-                    <p class="titulo-redes">Redes Sociales</p>
-
-                    <div class="redes-footer">
-                        <img src="/img/Instagram_Contacto.webp" alt="Icono Instagram" loading="lazy">
-                        <p>@zubanabienraiz</p>
-                    </div>
-                    <div class="redes-footer">
-                        <img src="/img/Facebook_Contacto.webp" alt="Icono Facebook" loading="lazy">
-                        <p>@zubanabienraiz</p>
-                    </div>
-                    <div class="redes-footer">
-                        <img src="/img/Tiktok_Contacto.webp" alt="Icono Tik Tok" loading="lazy">
-                        <p>@zubanabienraiz</p>
-                    </div>
-
-                </div>
-            </nav>
+        <!-- CINTA SUPERIOR -->
+        <div class="zf-footer__bar">
+            <a class="zf-brand" href="/" aria-label="Inicio Z Bien Raíz">
+            <img class="zf-brand__logo" src="/img/logo_ZB.png" alt="Z Bien Raíz" width="36" height="36" loading="lazy">
+            </a>
+            <p class="zf-tagline">Conecta con tu casa, directo y fácil.</p>
+            <a class="zf-cta" href="https://wa.me/573117856360" target="_blank" rel="noopener">WhatsApp</a>
         </div>
 
-        <?php if(!$auth): ?>
-            <a class="admin_movil" href="/login">
-                <div class="contenido-a">
-                <p>Admin</p>
-                </div>
-            </a>
-            <?php endif; ?>
+        <!-- GRID PRINCIPAL -->
+        <div class="zf-footer__grid" aria-label="Información del sitio">
+            <!-- Columna 1: Nosotros (details = acordeón en móvil) -->
+            <details class="zf-col" open>
+            <summary class="zf-col__title">Nosotros</summary>
+            <p class="zf-col__text">
+                Inmobiliaria especializada en el Oriente Antioqueño. Acompañamos tu compra o inversión con asesoría profesional.
+            </p>
+            </details>
+
+            <!-- Columna 2: Contacto -->
+            <details class="zf-col" open>
+            <summary class="zf-col__title">Contáctanos</summary>
+            <ul class="zf-list">
+                <li class="zf-list__item">
+                <svg class="zf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 006.6 6.6l2.2-2.2a1.2 1.2 0 011.2-.3 13.1 13.1 0 004 0 1.2 1.2 0 011 .9l.8 3.7a1.2 1.2 0 01-1.1 1.4A19.6 19.6 0 012 4.7 1.2 1.2 0 013.4 3.6l3.7.8a1.2 1.2 0 01.9 1 13.1 13.1 0 000 4 1.2 1.2 0 01-.3 1.2z"/></svg>
+                <a href="tel:+573117856360">+57 311 785 6360</a>
+                </li>
+                <li class="zf-list__item">
+                <svg class="zf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 006.6 6.6l2.2-2.2a1.2 1.2 0 011.2-.3 13.1 13.1 0 004 0 1.2 1.2 0 011 .9l.8 3.7a1.2 1.2 0 01-1.1 1.4A19.6 19.6 0 012 4.7 1.2 1.2 0 013.4 3.6l3.7.8a1.2 1.2 0 01.9 1 13.1 13.1 0 000 4 1.2 1.2 0 01-.3 1.2z"/></svg>
+                <a href="tel:+573147919932">+57 314 791 9932</a>
+                </li>
+                <li class="zf-list__item">
+                <svg class="zf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l8 6 8-6v12H4zM20 6H4l8 6z"/></svg>
+                <a href="mailto:contacto@zubanabienraiz.com">contacto@zubanabienraiz.com</a>
+                </li>
+            </ul>
+            </details>
+
+            <!-- Columna 3: Enlaces rápidos -->
+            <details class="zf-col" open>
+            <summary class="zf-col__title">Enlaces</summary>
+            <nav class="zf-links" aria-label="Enlaces rápidos">
+                <a href="/propiedades">Propiedades</a>
+                <a href="/nosotros">Nosotros</a>
+                <a href="/contacto">Contacto</a>
+                <a href="/faq">Preguntas frecuentes</a>
+            </nav>
+            </details>
+
+            <!-- Columna 4: Redes + ubicación -->
+            <details class="zf-col" open>
+            <summary class="zf-col__title">Síguenos</summary>
+            <div class="zf-social">
+                <a href="https://instagram.com/zubanabienraiz" target="_blank" rel="noopener" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5a5 5 0 100 10 5 5 0 000-10zm6.5.9a1.1 1.1 0 10-2.2 0 1.1 1.1 0 002.2 0z"/></svg>
+                </a>
+                <a href="https://facebook.com/zubanabienraiz" target="_blank" rel="noopener" aria-label="Facebook">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12a10 10 0 10-11.6 9.9v-7h-2.4V12h2.4V9.7c0-2.4 1.4-3.7 3.5-3.7 1 0 2 .2 2 .2v2.2h-1.1c-1.1 0-1.5.7-1.5 1.4V12h2.6l-.4 2.9h-2.2v7A10 10 0 0022 12z"/></svg>
+                </a>
+                <a href="https://tiktok.com/@zubanabienraiz" target="_blank" rel="noopener" aria-label="TikTok">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16.5 3a5.6 5.6 0 004.1 4v3.2a8.7 8.7 0 01-4.1-1.1v6.2a6.3 6.3 0 11-6.3-6.3c.3 0 .5 0 .8.1v3.3a3 3 0 00-.8-.1 3 3 0 103 3V3h3.3z"/></svg>
+                </a>
+            </div>
+            <address class="zf-address">
+                Oriente Antioqueño, Colombia
+            </address>
+            </details>
+        </div>
+
 
         <?php }; ?>
 
-        <p class="copyright">© 2025 Z Bien Raíz. Todos los derechos reservados. | Aviso Legal | Política de Privacidad | Sitio web &copy;</p>
-    </footer>
+        <!-- FRANJA LEGAL -->
+        <div class="zf-legal">
+            <nav class="zf-legal__links" aria-label="Legal">
+            <a href="/aviso-legal">Aviso Legal</a>
+            <span aria-hidden="true">•</span>
+            <a href="/politica-de-privacidad">Política de Privacidad</a>
+            <span aria-hidden="true">•</span>
+            <a href="/sitemap">Mapa del sitio</a>
+            </nav>
+            <p class="zf-copy">© 2025 Z Bien Raíz</p>
+        </div>
+        </footer>
+
+
 
     <?php
         // leer “flash” de errores si los puso el controlador
