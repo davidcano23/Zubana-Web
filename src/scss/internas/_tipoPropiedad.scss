@@ -1,41 +1,138 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.tipo_propiedad {
-    
-    h3 {
-        color: v.$rojotierra;
-        font-size: 2.4rem;
-        text-align: center;
-        margin: 0;
+/* ====== Panel principal ====== */
+.tipo_propiedad{
+  padding-block: 1.2rem 2rem;
+  padding: 1.5rem;
+
+  @include m.desktop { padding: 0; }
+
+  .tp-header{
+    text-align: center;
+    margin-bottom: 1.2rem;
+
+    .tp-title{
+      margin: 0;
+      font-family: v.$secundaria;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      font-weight: v.$black;
+      color: v.$rojotierra;
+      font-size: clamp(2.2rem, 1.6rem + 1.6vw, 3.6rem);
+      position: relative;
+      display: inline-block;
+      padding-inline: .6rem;
+    }
+    .tp-subtitle{
+      margin: .35rem 0 0 0;
+      color: color-mix(in srgb, v.$arenaclaro 85%, transparent);
+      font-family: v.$texto;
+      font-size: clamp(1.3rem, 1.1rem + .4vw, 1.6rem);
+    }
+  }
+
+  /* ====== Grid de tarjetas/botones ====== */
+  .tp-grid{
+    width: 100%;
+    display: grid;
+    gap: 1rem;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    @include m.tablet{ grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @include m.desktop{ grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    /* ----- Card botón ----- */
+    .tp-card{
+      --ring: 0 0 0 0 rgba(0,0,0,0);
+      position: relative;
+      overflow: hidden;
+
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .9rem;
+
+      padding: 1.1rem 1.2rem;
+      border-radius: 16px;
+
+      text-decoration: none;
+      cursor: pointer;
+
+      color: v.$arenaclaro;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) /* glaze */,
+        color-mix(in srgb, v.$grisgrafito 92%, transparent);
+      border: 1px solid color-mix(in srgb, v.$arenaclaro 14%, transparent);
+      box-shadow:
+        0 6px 22px rgba(0,0,0,.22),
+        var(--ring);
+
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+
+      &:hover{
+        transform: translateY(-3px);
+        border-color: color-mix(in srgb, v.$verdeesmeralda 40%, v.$arenaclaro 10%);
+        box-shadow:
+          0 10px 28px rgba(0,0,0,.28),
+          0 0 0 3px color-mix(in srgb, v.$verdeesmeralda 18%, transparent);
+      }
+
+      &:active{ transform: translateY(-1px) scale(.998); }
+
+      /* accesibilidad */
+      &:focus{ outline: none; }
+      &:focus-visible{
+        --ring: 0 0 0 3px color-mix(in srgb, v.$verdeesmeralda 26%, transparent);
+      }
+
+      /* icono */
+      .tp-ico{
+        width: 42px; height: 42px;
+        display: grid; place-items: center;
+        border-radius: 12px;
+        background: color-mix(in srgb, v.$verdeesmeralda 9%, transparent);
+        color: v.$verdeesmeralda;
+      }
+
+      /* textos */
+      .tp-text{
+        display: grid; gap: .15rem;
+        .tp-name{
+          font-family: v.$secundaria;
+          font-weight: v.$bold;
+          letter-spacing: .2px;
+          font-size: clamp(1.4rem, 1.2rem + .4vw, 1.8rem);
+          line-height: 1.1;
+        }
+        .tp-desc{
+          font-family: v.$texto;
+          font-weight: v.$regular;
+          color: color-mix(in srgb, v.$arenaclaro 70%, transparent);
+          font-size: clamp(1.1rem, 1rem + .2vw, 1.3rem);
+          line-height: 1.2;
+        }
+      }
+
+      /* CTA derecho */
+      .tp-cta{
+        padding: .45rem .8rem;
+        border-radius: 999px;
+        border: 1px solid color-mix(in srgb, v.$verdeesmeralda 45%, transparent);
+        background: color-mix(in srgb, v.$verdeesmeralda 15%, transparent);
+        color: v.$arenaclaro;
+        font-weight: v.$bold;
         font-family: v.$secundaria;
-        text-transform: uppercase;
-
-        @include m.tablet {
-            font-size: 3.2rem;
-        }
-
-        @include m.desktop {
-            font-size: 4rem;
-        }
+        font-size: 1.2rem;
+        white-space: nowrap;
+      }
     }
 
-    .selecciones {
-        width: 100%;
-        height: auto;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        text-align: center;
-        gap: 1.5rem;
-
-        @include m.tablet {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        a {
-            @include m.boton(v.$grisgrafito, v.$verdeesmeralda, flex);
-            margin: 0 auto;
-        }
-    }
-
+    /* Variantes de color sutiles (icon background/halo) */
+    .tp-card.casa .tp-ico{ background: color-mix(in srgb, v.$rojotierra 12%, transparent); color: v.$rojotierra; }
+    .tp-card.finca .tp-ico{ background: color-mix(in srgb, v.$verdeesmeralda 12%, transparent); color: v.$verdeesmeralda; }
+    .tp-card.apto  .tp-ico{ background: color-mix(in srgb, v.$azulniebla 14%, transparent); color: v.$azulniebla; }
+    .tp-card.lotes .tp-ico{ background: color-mix(in srgb, v.$arenaclaro 12%, transparent); color: v.$arenaclaro; }
+    .tp-card.local .tp-ico{ background: color-mix(in srgb, v.$grisniebla 16%, transparent); color: v.$grisniebla; }
+  }
 }

@@ -1,488 +1,367 @@
 @use 'base/variables' as v;
 @use 'base/mixins' as m;
 
-.contenedor {
-    margin: 0 auto;
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
-    width: 100%;
-    max-width: 1450px;
+/* =========================
+   CONTENEDOR GLOBAL
+========================= */
+.contenedor{
+  margin: 0 auto;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+  width: 100%;
+  max-width: 1450px;
 }
 
-.propiedad-info {
-    h2 {
-        color: v.$arenaclaro;
-        font-size: 2rem;
-        text-align: left;
-        font-family: v.$secundaria;
-        font-weight: v.$bold;
-        text-transform: uppercase;
+/* =========================
+   TITULARES GENERALES
+========================= */
+.propiedad-info{
+  h2{
+    color: v.$arenaclaro;
+    font-size: 2rem;
+    text-align: left;
+    font-family: v.$secundaria;
+    font-weight: v.$bold;
+    text-transform: uppercase;
 
-        @include m.tablet {
-            font-size: 2.6rem;
-        }
-
-        @include m.desktop {
-            font-size: 3.6rem;
-            text-align: left;
-        }
-    }
+    @include m.tablet{ font-size: 2.6rem; }
+    @include m.desktop{ font-size: 3.6rem; }
+  }
 }
 
-.padre {
+/* =========================
+   LAYOUT PRINCIPAL (COLUMNA)
+========================= */
+.padre{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.6rem;
+
+  @include m.tablet{ gap: 1.8rem; }
+  @include m.desktop{ gap: 2.2rem; }
+
+  /* -------- INFORMACIÓN DE LA PROPIEDAD -------- */
+  .informacion-propiedad{
     display: flex;
     flex-direction: column;
-    align-items: start;
-    justify-content: space-around;
-
-    @include m.tablet {
-        flex-direction: column;
-    }
+    align-items: center;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
 
     @include m.desktop {
-        flex-direction: row;
+        padding: 0;
     }
 
+    /* --- Galería (se respeta funcionalidad actual) --- */
+    .galeria-principal,
+    .galeria-principal-modal{
+      width: 100%;
+      height: 35rem;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      margin-bottom: .6rem;
 
+      @include m.tablet{ height: 42rem; }
+      @include m.desktop{ height: 52rem; }
 
-    .informacion-propiedad {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        margin: 0 2rem;
-        width: 35rem;
-        height: 100%;
-
-        @include m.tablet {
-            width: 70rem;
-            margin: 0 auto;
+      .swiper-wrapper{ width: 100%; height: 100%; }
+      .swiper-slide{
+        width: 100% !important; height: 100%;
+        img{
+          width: 100%; height: 100%;
+          object-fit: cover; border-radius: 1.5rem;
         }
+      }
+      .swiper-button-next,
+      .swiper-button-prev{
+        color: #fff; filter: drop-shadow(0 0 4px #000);
+      }
+    }
+    .galeria-miniaturas{ width: 100%; max-width: 1100px; height: auto; margin-bottom: .4rem; }
+    .galeria-miniaturas-modal{ width: 100%; max-width: 1200px; }
 
-        @include m.desktop {
-            width: 80rem;
-            margin: 0 2rem;
+    .galeria-miniaturas,
+    .galeria-miniaturas-modal{
+      height: 7.5rem;
+      @include m.tablet{ height: 9rem; }
+      @include m.desktop{ height: 12rem; }
+
+      .swiper-slide{
+        width: auto !important; height: auto; opacity: .55; cursor: pointer;
+        img{
+          height: 7.5rem; width: 7.5rem; object-fit: cover; border-radius: 2rem; margin: 0 auto;
+          @include m.tablet{ height: 9rem; width: 9rem; }
+          @include m.desktop{ height: 120px; width: 120px; }
         }
-
-        
-        .galeria-principal,
-        .galeria-principal-modal {
-            width: 35rem;
-            height: 35rem;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            margin-bottom: 1rem;
-
-            @include m.tablet {
-                width: 70rem;
-                height: 40rem;
-            }
-
-            @include m.desktop {
-                width: 80rem;
-                height: 50rem;
-            }
-
-            .swiper-wrapper {
-                width: 100%;
-                height: 100%;
-            }
-
-            .swiper-slide {
-                width: 100% !important;
-                height: 100%;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 1.5rem;
-                }
-            }
-
-            .swiper-button-next,
-            .swiper-button-prev {
-                color: #fff;
-                filter: drop-shadow(0 0 4px #000);
-            }
-        }
-
-        .galeria-miniaturas {
-            margin-bottom: 1rem;
-            width: 35rem;
-
-            @include m.tablet {
-                width: 70rem;
-            }
-
-            @include m.desktop {
-                width: 80rem;
-            }
-        }
-
-        .galeria-miniaturas-modal {
-            width: 34rem;
-
-            @include m.tablet {
-                width: 70rem;
-            }
-
-            @include m.desktop {
-                width: 100rem;
-            }
-        }
-
-        .galeria-miniaturas,
-        .galeria-miniaturas-modal {
-            height: 7.5rem;
-
-            @include m.tablet {
-                height: 9rem;
-            }
-
-            @include m.desktop {
-                height: 12rem;
-            }
-
-
-            .swiper-slide {
-                 width: auto !important;
-                height: auto;
-                opacity: 0.5;
-                cursor: pointer;
-
-                img {
-                    height: 7.5rem;
-                    width: 7.5rem;
-                    object-fit: cover;
-                    border-radius: 2rem;
-                    margin: 0 auto;
-
-                    @include m.tablet {
-                        height: 9rem;
-                        width: 9rem;
-                    }
-
-                    @include m.desktop {
-                        height: 120px;
-                        width: 120px;
-                    }
-                }
-            }
-
-            .swiper-slide-thumb-active {
-                opacity: 1;
-            }
-        }
-
-        .galeria-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: rgba(v.$grisgrafito, 0.6); // Fondo semitransparente
-            backdrop-filter: blur(10px);               // Difumina lo que está detrás
-            -webkit-backdrop-filter: blur(10px);       // Compatibilidad con Safari
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-
-            .galeria-principal-modal {
-                width: 34rem;
-                height: 40rem;
-
-                @include m.tablet {
-                    width: 70rem;
-                    height: 60rem;
-                }
-
-                @include m.desktop {
-                    width: 100rem;
-                    height: 60rem;
-                }
-            }
-        }
-
-        .oculto {
-            display: none;
-        }
-
-        .galeria-contenido {
-            position: relative;
-            width: 1200px;
-            max-width: 1200px;
-            max-height: 95vh;
-            background-color: transparent; // Solo funciona si es un hex string
-            border-radius: 2rem;
-            padding: 2rem;
-        }
-
-        .cerrar-modal {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            font-size: 5rem;
-            color: v.$arenaclaro;
-            cursor: pointer;
-            z-index: 1001;
-        }
-
-        .precio {
-            width: 100%;
-            height: auto;
-            background-color: transparent;
-            border: solid 2px v.$arenaclaro;
-            border-radius: 2rem;
-            margin: 1rem auto;
-            padding: 0 1.5rem;
-
-            h3 {
-                text-align: left;
-                margin: 0;
-                font-size: 2.4rem;
-                font-family: v.$texto;
-                font-weight: v.$bold;
-                color: v.$arenaclaro;
-                height: 3.2rem;
-
-                @include m.tablet {
-                    font-size: 3.2rem;
-                    height: 4rem;
-                }
-
-                @include m.desktop {
-                    font-size: 4rem;
-                    height: 5.5rem;
-                }
-            }
-
-            p {
-                margin: 0;
-                font-size: 1.6rem;
-                color: v.$arenaclaro;
-                font-family: v.$texto;
-                font-weight: v.$regular;
-
-                @include m.tablet {
-                    font-size: 1.8rem;
-                }
-
-                @include m.desktop {
-                    font-size: 2rem;
-                }
-            }
-
-            .ubi {
-                color: v.$rojotierra;
-                margin: .5rem 0;
-                font-size: 2rem;
-
-                @include m.tablet {
-                    font-size: 2.2rem;
-                }
-
-                @include m.desktop {
-                    font-size: 2.4rem;
-                }
-            }
-        }
-
-        .caracteristicas-propiedad {
-            display: flex;
-            flex-direction: column;
-            padding-bottom: 1.5rem;
-
-            h4 {
-                margin: 0;
-                color: v.$arenaclaro;
-                font-size: 2.4rem;
-                font-family: v.$texto;
-                font-weight: v.$regular;
-                text-align: left;
-
-                @include m.tablet {
-                    font-size: 3rem;
-                }
-
-                @include m.desktop {
-                    font-size: 3.2rem;
-                }
-            }
-
-            .carac {
-                display: flex;
-                margin: 1rem 0;
-
-                img {
-                    width: 25px;
-                    height: 25px;
-                    margin-right: 1rem;
-                    filter: invert(1);
-
-                    @include m.tablet {
-                        width: 35px;
-                        height: 35px;
-                    }
-
-                    @include m.desktop {
-                        width: 40px;
-                        height: 40px;
-                    }
-                }
-            }
-        }
-
-        .descripcion {
-            padding-bottom: 1.5rem;
-            h4 {
-                margin: 0;
-                color: v.$arenaclaro;
-                font-size: 2.4rem;
-                font-family: v.$texto;
-                font-weight: v.$regular;
-                text-align: left;
-
-                @include m.tablet {
-                    font-size: 3rem;
-                }
-
-                @include m.desktop {
-                    font-size: 3.2rem;
-                }
-            }
-
-            p {
-                color: v.$arenaclaro;
-                font-size: 1.8rem;
-                line-height: 1.5;
-                font-family: v.$texto;
-                font-weight: v.$regular;
-                text-align: justify;
-
-                @include m.tablet {
-                    font-size: 2rem;
-                }
-
-                @include m.desktop {
-                    font-size: 2.2rem;
-                }
-            }
-
-            iframe {
-                width: 100%;
-                height: 25rem;
-                border: none;
-                margin: 0;
-                border-radius: 2rem;
-
-                @include m.tablet {
-                    height: 30rem;
-                }
-
-                @include m.desktop {
-                    height: 35rem;
-                }
-            }
-        }
-
-        a {
-            width: 100%;
-            height: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-            background-color: v.$verdepastel;
-            border: solid 5px v.$verdeesmeralda;
-            text-decoration: none;
-            color: v.$arenaclaro;
-            font-size: 1.4rem;
-            font-family: v.$secundaria;
-            font-weight: v.$regular;
-            border-radius: 2rem;
-            transition: ease .5s;
-            
-
-            @include m.tablet {
-                font-size: 1.8rem;
-            }
-
-            @include m.desktop {
-                font-size: 2rem;
-            }
-
-            &:hover {
-                background-color: color-mix(in srgb, v.$verdepastel 85%, v.$negrocarbon);
-                transition: ease .5s;
-                transform: scale(1.03);
-            }
-
-            img {
-                width: 3rem;
-                height: 3rem;
-                margin-right: 1rem;
-                // filter: invert(1) brightness(2);
-
-                @include m.tablet {
-                    width: 3.5rem;
-                    height: 3.5rem;
-                }
-
-                @include m.desktop {
-                    width: 5rem;
-                    height: 5rem;
-                }
-            }
-        }
+      }
+      .swiper-slide-thumb-active{ opacity: 1; }
     }
 
-    .cardpropiedad {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        width: 35rem;
-        height: auto;
-        margin:  0 auto;
+    .galeria-modal{
+      position: fixed; inset: 0; height: 100vh;
+      background-color: rgba(v.$grisgrafito, .6);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center; z-index: 1000;
 
-        @include m.tablet {
-            display: grid;
-            grid-template-columns: repeat(2,1fr);
-
-
-        }
-
-        @include m.desktop {
-            display: flex;
-            flex-direction: column;
-        }
-        
-
-        @include m.desktop {
-            width: 100%;
-            margin-left: 4rem;
-        }
-
-        h2 {
-            text-align: center;
-            color: v.$rojotierra;
-            font-size: 2rem;
-            font-family: v.$texto;
-            font-weight: v.$bold;
-            text-transform: uppercase;
-            margin: 0;
-            margin-top: 2rem;
-
-            @include m.tablet {
-                font-size: 2.2rem;
-                grid-column: 1 / 3;
-            }
-
-            @include m.desktop {
-                font-size: 2.6rem;
-                margin: 0;
-            }
-        }
+      .galeria-principal-modal{
+        width: 100%;
+        max-width: 100rem;
+        height: 40rem;
+        @include m.tablet{ height: 60rem; }
+        @include m.desktop{ height: 60rem; }
+      }
     }
+    .oculto{ display: none; }
+    .galeria-contenido{
+      position: relative; width: 100%; max-width: 1200px; max-height: 95vh;
+      background: transparent; border-radius: 2rem; padding: 2rem;
+    }
+    .cerrar-modal{
+      position: absolute; top: 1rem; right: 1rem; font-size: 5rem;
+      color: v.$arenaclaro; cursor: pointer; z-index: 1001;
+    }
+
+    /* --------- PANELES TIPOGRÁFICOS (sin cajas) --------- */
+
+    /* Título de sección con acento a la izquierda */
+    .t-acento{
+      display: inline-flex; align-items: center; gap: .8rem;
+      font-family: v.$texto; font-weight: v.$bold;
+      color: v.$arenaclaro; margin: 0 0 .6rem 0;
+      font-size: 2.1rem;
+      @include m.tablet{ font-size: 2.5rem; }
+      @include m.desktop{ font-size: 2.7rem; }
+
+      &::before{
+        content: ''; display: inline-block; width: 6px; height: 1.1em; border-radius: 6px;
+        background: v.$rojotierra;
+      }
+    }
+
+    /* divisor sutil */
+    .divisor{
+      width: 100%; height: 1px; margin: .8rem 0 1rem 0;
+      background: linear-gradient(to right, transparent, color-mix(in srgb, v.$arenaclaro 18%, transparent), transparent);
+    }
+
+    /* Precio destacado sin caja */
+    .precio{
+      width: 100%; margin: .6rem 0 1rem 0; padding: 0;
+      background: none; border: none; box-shadow: none;
+
+      h3{
+        margin: 0 0 .2rem 0; color: v.$arenaclaro;
+        font-family: v.$texto; font-weight: v.$black;
+        font-size: clamp(2.4rem, 2.4rem + 1.2vw, 4.2rem);
+      }
+      p{
+        margin: 0; color: v.$arenaclaro; font-family: v.$texto; font-weight: v.$regular;
+        font-size: clamp(1.5rem, 1.5rem + .3vw, 2rem);
+      }
+      .ubi{
+        color: v.$rojotierra; margin-top: .2rem;
+        font-size: clamp(1.8rem, 1.8rem + .3vw, 2.3rem);
+      }
+
+      /* separador visual bajo precio */
+      & + .divisor{ margin-top: .6rem; }
+    }
+
+    /* Características en grilla (sin cajas) */
+    .caracteristicas-propiedad{
+      background: none; border: none; box-shadow: none; padding: 0;
+
+      h4{ @extend .t-acento; }
+
+      .carac{
+        display: grid; grid-template-columns: 26px 1fr; align-items: center; gap: .8rem;
+        margin: .6rem 0;
+
+        @include m.tablet{
+          grid-template-columns: 30px 1fr;
+        }
+
+        img{
+          width: 24px; height: 24px; filter: invert(1);
+          @include m.tablet{ width: 30px; height: 30px; }
+          @include m.desktop{ width: 34px; height: 34px; }
+        }
+        p{
+          color: v.$arenaclaro; font-size: 1.6rem;
+          @include m.tablet{ font-size: 1.8rem; }
+          @include m.desktop{ font-size: 1.9rem; }
+        }
+      }
+
+      /* en tablet/desktop mostramos 2 columnas de “carac” */
+      @include m.tablet{
+        display: grid; grid-template-columns: 1fr 1fr; gap: .6rem 2rem;
+
+        h4{ grid-column: 1 / -1; }
+      }
+    }
+
+    /* Descripción (texto libre, sin caja) */
+    .descripcion{
+      background: none; border: none; box-shadow: none; padding: 0;
+
+      h4{ @extend .t-acento; }
+
+      p{
+        color: v.$arenaclaro; font-size: 1.8rem; line-height: 1.55;
+        font-family: v.$texto; text-align: justify;
+        @include m.tablet{ font-size: 2rem; }
+        @include m.desktop{ font-size: 2.1rem; }
+      }
+      iframe{
+        width: 100%; height: 25rem; border: none; margin: .6rem 0 0 0; border-radius: 14px;
+        outline: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+        @include m.tablet{ height: 30rem; }
+        @include m.desktop{ height: 36rem; }
+      }
+    }
+
+    /* CTA WhatsApp */
+    a.whatsapp-button{
+      width: 100%; display: flex; align-items: center; justify-content: center;
+      padding: 1.1rem 1.4rem;
+      background-color: v.$verdepastel;
+      border: 2px solid v.$verdeesmeralda;
+      text-decoration: none; color: v.$arenaclaro;
+      font-size: 1.6rem; font-family: v.$secundaria; font-weight: v.$bold;
+      border-radius: 14px; transition: transform .3s ease, background-color .3s ease;
+
+      @include m.tablet{ font-size: 1.8rem; }
+      @include m.desktop{ font-size: 2rem; }
+
+      &:hover{
+        background-color: color-mix(in srgb, v.$verdepastel 85%, v.$negrocarbon);
+        transform: translateY(-2px);
+      }
+      img{
+        width: 3rem; height: 3rem; margin-right: 1rem;
+        @include m.tablet{ width: 3.5rem; height: 3.5rem; }
+        @include m.desktop{ width: 5rem; height: 5rem; }
+      }
+    }
+
+    /* Espaciado entre bloques + divisores */
+    > *{ margin-block: .6rem; }
+    > .galeria-miniaturas{ margin-top: .2rem; }
+    .divisor + .caracteristicas-propiedad,
+    .caracteristicas-propiedad + .divisor,
+    .descripcion + .divisor{ margin-top: .8rem; }
+  }
+
+ /* =========================
+   PROPIDADES RECOMENDADAS (ARREGLADA)
+========================= */
+.cardpropiedad{
+  width: 100%;
+  max-width: 1100px;
+  margin: 2rem auto 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  position: relative;
+
+  /* separador sutil arriba */
+  &::before{
+    content:'';
+    position: absolute;
+    top: -10px; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      color-mix(in srgb, v.$arenaclaro 18%, transparent),
+      transparent
+    );
+  }
+
+  /* ----- TÍTULO (afuera del scroll) ----- */
+  h2{
+    width: 100%;
+    text-align: left;
+    color: v.$arenaclaro;
+    font-family: v.$texto;
+    font-weight: v.$black;
+    margin-bottom: 1rem;
+    font-size: clamp(2rem, 2vw, 2.8rem);
+    padding-left: 1rem;
+    position: relative;
+    margin-left: 2rem;
+
+    @include m.desktop {
+        margin-left: 0;
+    }
+  }
+
+  h2::before{
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 6px; height: 1.2em; border-radius: 6px;
+    background: v.$rojotierra;
+  }
+
+  /* ----- CONTENEDOR SCROLLEABLE ----- */
+  .listado-recomendadas{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;         /* ⭐ centra las cards ⭐ */
+    gap: 1.4rem;
+
+    height: clamp(520px, 64vh, 820px);
+    overflow-y: auto;
+    padding-right: .4rem;
+    scroll-snap-type: y proximity;
+    -webkit-overflow-scrolling: touch;
+
+    @include m.tablet{ height: clamp(580px, 66vh, 880px); }
+    @include m.desktop{ height: clamp(620px, 70vh, 940px); }
+
+    /* Scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, v.$arenaclaro 25%, transparent) transparent;
+    &::-webkit-scrollbar{ width: 8px; }
+    &::-webkit-scrollbar-track{ background: transparent; }
+    &::-webkit-scrollbar-thumb{
+      background: color-mix(in srgb, v.$arenaclaro 25%, transparent);
+      border-radius: 8px;
+    }
+  }
+
+  /* ----- CARDS DENTRO DEL SCROLL ----- */
+  .listado-recomendadas > *{
+    width: 95%;                 /* ⭐ centrado y ancho estable ⭐ */
+    background: color-mix(in srgb, v.$grisgrafito 90%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 14%, transparent);
+    border-radius: 18px;
+    padding: 1rem 1.2rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,.16);
+    scroll-snap-align: start;
+
+    min-height: 575px;
+    @include m.tablet{ min-height: 600px; }
+    @include m.desktop{ min-height: 350px; }
+  }
+
 }
+
+}
+/* =========================
+   HELPERS: insertar divisores entre bloques
+   (Úsalos en tu HTML si quieres separaciones visibles:
+    <div class="divisor"></div>)
+========================= */
+/* Nada más que lo anterior: ya usamos .divisor en el flujo */

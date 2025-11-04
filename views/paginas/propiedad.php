@@ -447,10 +447,13 @@
         <div class="contenedor card-propiedades cardpropiedad">
 
             <h2>Propiedades Recomendadas</h2>
-
-            <?php 
-            include 'listado.php';
-            ?>
+            
+            <div class="listado-recomendadas">
+                    <?php 
+                        include 'listado.php';
+                    ?>
+            </div>
+            
 
         </div>
 

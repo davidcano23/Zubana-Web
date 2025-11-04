@@ -14,7 +14,7 @@
 
     </div> <?php endforeach; ?>
 
-    <a href="/admin" class="bt-regresar">Regresar</a>
+    <a href="/tipo-propiedad" class="bt-regresar">Regresar</a>
 
     <form action="" class="formulario" method="POST" enctype="multipart/form-data">
 
