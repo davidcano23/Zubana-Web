@@ -88,8 +88,8 @@ class LocalController {
 
     public static function actualizarLocal(Router $router) {
 
-         $propiedad = validarORedireccion('/admin');
-        $id = validarORedireccion('/admin');
+         $propiedad = validarORedireccion('/');
+        $id = validarORedireccion('/');
         $propiedad = Local::find($id);
 
        //Arreglo mensaje de errores

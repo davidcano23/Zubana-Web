@@ -24,10 +24,12 @@
     <legend>Tipo de Propiedad</legend>
 
         <label for="tipo-propiedad">Tipo de Propiedad</label>
-        <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]" required disabled>
-            <option value="Casa" selected>Casa</option>
+        <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]" required>
+            <option value="" disabled <?php echo empty($propiedad?->tipo) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
+            <option value="Casa" <?php echo ($propiedad?->tipo === 'Casa') ? 'selected' : ''; ?> >Casa</option>
+            <option value="Casa Campestre" <?php echo ($propiedad?->tipo === 'Casa Campestre') ? 'selected' : ''; ?> >Casa Campestre</option>
         </select>
-        <input type="hidden" name="propiedad[tipo]" value="Casa">
+        <!-- <input type="hidden" name="propiedad[tipo]" value="Casa"> -->
         <input type="hidden" name="propiedad[actualizacion]" value="casa">
 
 

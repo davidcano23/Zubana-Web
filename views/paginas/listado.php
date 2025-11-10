@@ -33,7 +33,7 @@
             <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $propiedad->{'tipo'} . ' en ' . $propiedad->{'barrio'} . ', ' . $propiedad->{'ubicacion'}; ?> </p>
 
 
-        <?php if ($propiedad->{'tipo'} === 'Casa' || $propiedad->{'tipo'} === 'Finca' || $propiedad->{'tipo'} === 'Apartamento' || $propiedad->{'tipo'} === 'Apartaestudio' || $propiedad->{'tipo'} === 'Apartaoficina') : ?>  
+        <?php if ($propiedad->{'tipo'} === 'Casa' || $propiedad->{'tipo'} === 'Casa Campestre' || $propiedad->{'tipo'} === 'Finca' || $propiedad->{'tipo'} === 'Apartamento' || $propiedad->{'tipo'} === 'Apartaestudio' || $propiedad->{'tipo'} === 'Apartaoficina') : ?>  
             <div class="carac">
                 <?php if($propiedad->{'banos'} == 1): ?>
                 <div class="contenedor_caracteristicas">

@@ -98,8 +98,8 @@ class PropiedadController {
 
     public static function actualizarCasa(Router $router) {
 
-            $propiedad = validarORedireccion('/admin');
-            $id = validarORedireccion('/admin');
+            $propiedad = validarORedireccion('/');
+            $id = validarORedireccion('/');
             $propiedad = Casa::find($id);
 
         //Arreglo mensaje de errores

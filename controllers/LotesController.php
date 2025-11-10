@@ -88,8 +88,8 @@ class LotesController {
 
     public static function actualizarLotes(Router $router) {
 
-         $propiedad = validarORedireccion('/admin');
-        $id = validarORedireccion('/admin');
+         $propiedad = validarORedireccion('/');
+        $id = validarORedireccion('/');
         $propiedad = Lote::find($id);
 
        //Arreglo mensaje de errores

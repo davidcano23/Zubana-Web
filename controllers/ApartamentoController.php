@@ -88,8 +88,8 @@ class ApartamentoController {
 
     public static function actualizarApartamento(Router $router) {
 
-    $propiedad = validarORedireccion('/admin');
-    $id = validarORedireccion('/admin');
+    $propiedad = validarORedireccion('/');
+    $id = validarORedireccion('/');
     $propiedad = Apartamento::find($id);
 
     $errores = Apartamento::getErrores();

@@ -89,8 +89,8 @@ class FincaController {
 
     public static function actualizarFinca(Router $router) {
 
-         $propiedad = validarORedireccion('/admin');
-        $id = validarORedireccion('/admin');
+         $propiedad = validarORedireccion('/');
+        $id = validarORedireccion('/');
         $propiedad = Casa::find($id);
 
        //Arreglo mensaje de errores
