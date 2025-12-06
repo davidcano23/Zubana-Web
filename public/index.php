@@ -5,6 +5,7 @@ require_once __DIR__ . '/../includes/app.php';
 use Controllers\ApartamentoController;
 use Controllers\ApiBusquedaController;
 use Controllers\ApiPropiedadesController;
+use Controllers\AvisoPoliticasController;
 use Controllers\FincaController;
 use Controllers\LocalController;
 use MVC\Router;
@@ -51,6 +52,10 @@ $router->get('/propiedades/crear-local', [LocalController::class, 'crearLocal'])
 $router->post('/propiedades/crear-local', [LocalController::class, 'crearLocal']);
 $router->get('/propiedades/actualizar-local', [LocalController::class, 'actualizarLocal']);
 $router->post('/propiedades/actualizar-local', [LocalController::class, 'actualizarLocal']);
+
+//AVISO LEGAL Y POLITICAS DE PRIVACIDAD
+$router->get('/aviso-legal', [AvisoPoliticasController::class, 'avisoLegal'] );
+$router->get('/politica-de-privacidad', [AvisoPoliticasController::class, 'politicasPrivacidad' ]);
 
 $router->post('/propiedades/eliminar', [PropiedadController::class, 'eliminar']);
 

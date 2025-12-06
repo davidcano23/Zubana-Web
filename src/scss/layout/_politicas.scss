@@ -1,0 +1,141 @@
+@use 'base/variables' as v;
+
+
+.legal-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 5rem;
+    color: v.$grisniebla;
+    font-family: v.$texto;
+
+    @media (min-width: v.$tablet) {
+        padding: 5rem 2rem 6rem;
+    }
+
+    @media (min-width: v.$desktop) {
+        padding: 6rem 0 7rem;
+    }
+}
+
+.legal-hero {
+    text-align: left;
+    margin-bottom: 2.5rem;
+
+    h1 {
+        font-size: 2rem;
+        font-weight: v.$black;
+        font-family: v.$titulos;
+        color: v.$rojotierra;
+        letter-spacing: 0.03em;
+        margin-bottom: 0.75rem;
+
+        @media (min-width: v.$tablet) {
+            font-size: 2.4rem;
+        }
+
+        @media (min-width: v.$desktop) {
+            font-size: 2.6rem;
+        }
+    }
+
+    .legal-subtitle {
+        font-size: 0.98rem;
+        font-family: v.$secundaria;
+        color: v.$grisniebla;
+        max-width: 560px;
+        line-height: 1.6;
+    }
+}
+
+.legal-content {
+    background-color: v.$arenaclaro;
+    border-radius: 1.25rem;
+    padding: 2rem 1.5rem;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+
+    @media (min-width: v.$tablet) {
+        padding: 2.5rem 2rem;
+    }
+
+    @media (min-width: v.$desktop) {
+        padding: 3rem 2.5rem;
+    }
+
+    p {
+        font-size: 0.98rem;
+        line-height: 1.8;
+        margin-bottom: 1rem;
+        font-family: v.$texto;
+        color: v.$grisniebla;
+    }
+
+    .legal-update {
+        font-size: 0.85rem;
+        color: v.$grisniebla;
+        margin-bottom: 1.5rem;
+        font-family: v.$secundaria;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+        font-weight: v.$bold;
+        font-family: v.$secundaria;
+        color: v.$rojotierra;
+        margin: 2rem 0 0.75rem;
+        position: relative;
+        padding-left: 0.9rem;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: v.$rojotierra;
+        }
+    }
+
+    ul {
+        margin: 0.5rem 0 1rem 1.2rem;
+        padding: 0;
+        list-style: none;
+
+        li {
+            position: relative;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 0.4rem;
+            padding-left: 1.1rem;
+            font-family: v.$texto;
+            color: v.$grisniebla;
+
+            &::before {
+                content: '•';
+                position: absolute;
+                left: 0;
+                top: 0;
+                color: v.$rojotierra;
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+.legal-highlight {
+    font-weight: v.$bold;
+    color: v.$rojotierra;
+}
+
+@media (max-width: v.$telefono) {
+    .legal-page {
+        padding-top: 3.5rem;
+    }
+
+    .legal-content {
+        border-radius: 1rem;
+        padding: 1.75rem 1.25rem;
+    }
+}

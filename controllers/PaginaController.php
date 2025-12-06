@@ -198,6 +198,7 @@ class PaginaController {
     switch ($tipo) {
     case 'casa':
     case 'finca':
+    case 'casa campestre':
         $propiedad = Casa::find($id);
         $propiedades = Casa::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
         $imagenes = ImagenCasa::where('casa_id', $id);
@@ -219,8 +220,7 @@ class PaginaController {
 
 
     case 'lote campestre':
-    case 'lote urbanizable':
-    case 'lote rural':
+    case 'lote urbano':
     case 'lote bodega':
         $propiedad = Lote::find($id);
         $propiedades = Lote::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);

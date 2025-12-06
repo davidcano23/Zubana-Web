@@ -405,22 +405,7 @@
                 <svg class="zf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 006.6 6.6l2.2-2.2a1.2 1.2 0 011.2-.3 13.1 13.1 0 004 0 1.2 1.2 0 011 .9l.8 3.7a1.2 1.2 0 01-1.1 1.4A19.6 19.6 0 012 4.7 1.2 1.2 0 013.4 3.6l3.7.8a1.2 1.2 0 01.9 1 13.1 13.1 0 000 4 1.2 1.2 0 01-.3 1.2z"/></svg>
                 <a href="tel:+573147919932">+57 314 791 9932</a>
                 </li>
-                <li class="zf-list__item">
-                <svg class="zf-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6l8 6 8-6v12H4zM20 6H4l8 6z"/></svg>
-                <a href="mailto:contacto@zubanabienraiz.com">contacto@zubanabienraiz.com</a>
-                </li>
             </ul>
-            </details>
-
-            <!-- Columna 3: Enlaces rápidos -->
-            <details class="zf-col" open>
-            <summary class="zf-col__title">Enlaces</summary>
-            <nav class="zf-links" aria-label="Enlaces rápidos">
-                <a href="/propiedades">Propiedades</a>
-                <a href="/nosotros">Nosotros</a>
-                <a href="/contacto">Contacto</a>
-                <a href="/faq">Preguntas frecuentes</a>
-            </nav>
             </details>
 
             <!-- Columna 4: Redes + ubicación -->
@@ -452,8 +437,6 @@
             <a href="/aviso-legal">Aviso Legal</a>
             <span aria-hidden="true">•</span>
             <a href="/politica-de-privacidad">Política de Privacidad</a>
-            <span aria-hidden="true">•</span>
-            <a href="/sitemap">Mapa del sitio</a>
             </nav>
             <p class="zf-copy">© 2025 Z Bien Raíz</p>
         </div>

@@ -66,13 +66,13 @@
 
 
             <div class="precio">
-                <h3>Desde $<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?> COP</h3>
+                <h3>Desde $<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?></h3>
                 <p>Precio de Venta</p>
                 <p class="ubi"><?php echo $propiedad->{'ubicacion'}; ?></p>
             </div>
 
         <!-- INFORMACION PARA CASAS Y FINCAS -->
-        <?php if ($tipo === 'casa' || $tipo === 'finca') : ?>
+        <?php if ($tipo === 'casa' || $tipo === 'casa campestre' || $tipo === 'finca') : ?>
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la propiedad</h4>
 
@@ -234,7 +234,7 @@
         <?php endif; ?>
 
         <!-- INFORMACION PARA LOTES -->
-         <?php if (in_array($tipo, ['lote campestre', 'lote urbanizable', 'lote rural', 'lote bodega'])) : ?>
+         <?php if (in_array($tipo, ['lote campestre', 'lote urbano', 'lote bodega'])) : ?>
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la propiedad</h4>
 
@@ -312,7 +312,7 @@
         <?php endif; ?>
 
 
-        <?php if (in_array($tipo, ['casa', 'finca', 'apartamento', 'apartaestudio','apartaoficina'])) : ?>            
+        <?php if (in_array($tipo, ['casa', 'casa campestre', 'finca', 'apartamento', 'apartaestudio','apartaoficina'])) : ?>            
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la Urbanizacion</h4>
 

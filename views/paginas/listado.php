@@ -75,6 +75,11 @@
                     <img src="/img/estrato.png" alt="">
                 <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
                 </div>
+
+                <div class="contenedor_caracteristicas area_computador_total">
+                        <img src="/img/area.png" alt="">
+                        <p><?php echo $propiedad->{'area_total'}; ?>m²</p>
+                    </div>
                 <?php endif; ?>
             </div>
         <?php endif; ?>
