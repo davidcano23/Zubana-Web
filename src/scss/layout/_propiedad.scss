@@ -331,12 +331,12 @@
     scroll-snap-type: y proximity;
     -webkit-overflow-scrolling: touch;
 
-    @include m.tablet{ height: clamp(580px, 66vh, 880px); }
-    @include m.desktop{ height: clamp(620px, 70vh, 940px); }
-
     /* Scrollbar */
     scrollbar-width: thin;
     scrollbar-color: color-mix(in srgb, v.$arenaclaro 25%, transparent) transparent;
+
+    @include m.tablet{ height: clamp(580px, 66vh, 880px); }
+    @include m.desktop{ height: clamp(620px, 70vh, 940px); }
     &::-webkit-scrollbar{ width: 8px; }
     &::-webkit-scrollbar-track{ background: transparent; }
     &::-webkit-scrollbar-thumb{

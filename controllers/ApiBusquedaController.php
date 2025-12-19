@@ -2,95 +2,95 @@
 
 namespace Controllers;
 
+use mysqli;
+
 class ApiBusquedaController {
+
     public static function buscar() {
         header('Content-Type: application/json; charset=utf-8');
 
-        $q = $_GET['busqueda'] ?? '';
-        $q = trim($q);
-        if ($q === '' || mb_strlen($q) < 2) { echo json_encode([]); return; }
+        $q = trim($_GET['busqueda'] ?? '');
+        if ($q === '' || mb_strlen($q) < 2) {
+            echo json_encode([]);
+            exit;
+        }
 
-        $link = conectarDB();
-        if (!$link) { http_response_code(500); echo json_encode(['error'=>'DB connection']); return; }
+        $db = conectarDB();
+        if (!$db instanceof mysqli) {
+            http_response_code(500);
+            echo json_encode([]);
+            exit;
+        }
 
-        // Tablas a consultar (ajusta nombres exactos)
+        // Tablas a consultar
         $tablas = ['casa', 'apartamento', 'local', 'lotes'];
 
-        $todos = [];
-        foreach ($tablas as $t) {
-            $todos = array_merge($todos, self::sugerenciasTabla($link, $t, $q));
-        }
-
-        // Deduplicar por texto (case-insensitive)
+        $resultados = [];
         $seen = [];
-        $unicos = [];
-        foreach ($todos as $r) {
-            $key = mb_strtolower($r['texto']);
-            if (!isset($seen[$key])) {
-                $seen[$key] = true;
-                $unicos[] = ['texto' => $r['texto'] /*, 'tipo' => $r['tipo'] */];
-            }
-        }
 
-        // (Opcional) Limitar total global a 8–10
-        $unicos = array_slice($unicos, 0, 10);
+        foreach ($tablas as $tabla) {
+            $items = self::sugerenciasTabla($db, $tabla, $q);
 
-        echo json_encode($unicos);
-    }
-
-
-
-       private static function sugerenciasTabla($link, string $tabla, string $q): array {
-            $sql = "
-                (SELECT DISTINCT TRIM(ubicacion) AS texto, 'ubicacion' AS fuente
-                FROM {$tabla}
-                WHERE ubicacion IS NOT NULL
-                AND ubicacion <> ''
-                AND ubicacion LIKE CONCAT('%', ?, '%')
-                LIMIT 5)
-                UNION ALL
-                (SELECT DISTINCT TRIM(barrio) AS texto, 'barrio' AS fuente
-                FROM {$tabla}
-                WHERE barrio IS NOT NULL
-                AND barrio <> ''
-                AND barrio LIKE CONCAT('%', ?, '%')
-                LIMIT 5)
-                UNION ALL
-                (SELECT DISTINCT TRIM(corregimiento) AS texto, 'corregimiento' AS fuente
-                FROM {$tabla}
-                WHERE corregimiento IS NOT NULL
-                AND corregimiento <> ''
-                AND corregimiento LIKE CONCAT('%', ?, '%')
-                LIMIT 5)
-                UNION ALL
-                (SELECT DISTINCT TRIM(palabra_clave) AS texto, 'palabra_clave' AS fuente
-                FROM {$tabla}
-                WHERE palabra_clave IS NOT NULL
-                AND palabra_clave <> ''
-                AND palabra_clave LIKE CONCAT('%', ?, '%')
-                LIMIT 5)
-            ";
-
-            $stmt = mysqli_prepare($link, $sql);
-            if (!$stmt) return [];
-
-            // 👈 OJO: ahora son CUATRO parámetros
-            mysqli_stmt_bind_param($stmt, 'ssss', $q, $q, $q, $q);
-
-            mysqli_stmt_execute($stmt);
-            $res = mysqli_stmt_get_result($stmt);
-
-            $out = [];
-            while ($row = mysqli_fetch_assoc($res)) {
-                $texto  = trim($row['texto'] ?? '');
-                $fuente = $row['fuente'] ?? '';
-                if ($texto !== '') {
-                    $out[] = ['texto' => $texto, 'fuente' => $fuente, 'tipo' => $tabla];
+            foreach ($items as $item) {
+                $key = mb_strtolower($item['texto']);
+                if (!isset($seen[$key])) {
+                    $seen[$key] = true;
+                    $resultados[] = ['texto' => $item['texto']];
                 }
             }
-            mysqli_stmt_close($stmt);
-            return $out;
+
+            // Corte anticipado para rendimiento
+            if (count($resultados) >= 10) {
+                break;
+            }
         }
 
-
+        echo json_encode(array_slice($resultados, 0, 10));
+        exit;
     }
+
+    /**
+     * Obtiene sugerencias de una tabla para varias columnas
+     */
+    private static function sugerenciasTabla(mysqli $db, string $tabla, string $q): array {
+
+        $campos = ['ubicacion', 'barrio', 'corregimiento', 'palabra_clave'];
+        $out = [];
+
+        foreach ($campos as $campo) {
+
+            $sql = "
+                SELECT DISTINCT TRIM($campo)
+                FROM {$tabla}
+                WHERE $campo IS NOT NULL
+                AND $campo <> ''
+                AND $campo COLLATE utf8mb4_unicode_ci
+                    LIKE CONCAT('%', ?, '%') COLLATE utf8mb4_unicode_ci
+                LIMIT 5
+            ";
+
+            $stmt = $db->prepare($sql);
+            if (!$stmt) {
+                continue;
+            }
+
+            $stmt->bind_param('s', $q);
+            $stmt->execute();
+            $stmt->bind_result($texto);
+
+            while ($stmt->fetch()) {
+                if ($texto !== '') {
+                    $out[] = [
+                        'texto' => $texto,
+                        'campo' => $campo,
+                        'tabla' => $tabla
+                    ];
+                }
+            }
+
+            $stmt->close();
+        }
+
+        return $out;
+    }
+}
