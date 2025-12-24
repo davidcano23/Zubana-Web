@@ -389,15 +389,49 @@
             </div>
                     
             <?php
-            // Construimos la URL actual
-            $url_actual = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            $dominio = "https://" . $_SERVER['HTTP_HOST'];
+            $url_actual = $dominio . $_SERVER['REQUEST_URI'];
 
-            // Creamos el mensaje
-            $mensaje = "Hola, estoy interesado en esta propiedad: $url_actual";
+            $mensaje  = "Hola, estoy interesado en esta propiedad:\n\n";
+            $mensaje .= $url_actual . "\n\n";
 
-            // Codificamos el mensaje para URL
+            // Datos comunes
+            if ($propiedad->area_total > 0)
+                $mensaje .= "° Área Total: {$propiedad->area_total} m²\n";
+
+            if (isset($propiedad->area_construida) && $propiedad->area_construida > 0)
+                $mensaje .= "° Área Construida: {$propiedad->area_construida} m²\n";
+
+            if (isset($propiedad->banos) && $propiedad->banos > 0)
+                $mensaje .= "° Baños: {$propiedad->banos}\n";
+
+            if (isset($propiedad->habitaciones) && $propiedad->habitaciones > 0)
+                $mensaje .= "° Habitaciones: {$propiedad->habitaciones}\n";
+
+            if (isset($propiedad->estrato) && $propiedad->estrato > 0)
+                $mensaje .= "° Estrato: {$propiedad->estrato}\n";
+
+            if (!empty($propiedad->tipo_unidad))
+                $mensaje .= "° Tipo de Unidad: {$propiedad->tipo_unidad}\n";
+
+            $mensaje .= "° Tipo de Propiedad: {$propiedad->tipo}\n";
+
+            // Extras
+            if (isset($propiedad->sala) && $propiedad->sala === 'Si')
+                $mensaje .= "° Sala Comedor\n";
+
+            if (isset($propiedad->cocina) && $propiedad->cocina === 'Si')
+                $mensaje .= "° Cocina Integral\n";
+
+            if (isset($propiedad->zona_ropa) && $propiedad->zona_ropa === 'Si')
+                $mensaje .= "° Zona de Ropa\n";
+
+            if (isset($propiedad->garaje) && $propiedad->garaje === 'Si')
+                $mensaje .= "° Garaje\n";
+
             $mensaje_url = urlencode($mensaje);
-        ?>
+            ?>
+
 
         <a href="https://wa.me/573117856360?text=<?php echo $mensaje_url; ?>" target="_blank" class="whatsapp-button">
 

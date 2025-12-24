@@ -7,36 +7,49 @@
 
 <!DOCTYPE html>
 <html lang="en">
+    <?php
+    $dominio = "https://" . $_SERVER['HTTP_HOST'];
+    $url_actual = $dominio . $_SERVER['REQUEST_URI'];
+    ?>
+
+    <?php
+    $imagen_principal = null;
+
+    if (!empty($imagenes)) {
+        $imagen_principal = $dominio . "/imagenes/" . $imagenes[0]->nombre;
+    } else {
+        $imagen_principal = $dominio . "/img/icono_pestanapng.png"; // fallback
+    }
+    ?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zubana BienRaiz</title>
-    <link rel="stylesheet" href="../build/css/app.css">
 
-    <!-- CSS de Choices -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+    <title><?php echo htmlspecialchars($propiedad->titulo ?? 'Zubana BienRaíz'); ?></title>
 
-    <!-- JS de Choices -->
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <meta name="description"
+          content="<?php echo htmlspecialchars(substr($propiedad->descripcion ?? 'Encuentra propiedades únicas con Zubana BienRaíz', 0, 160)); ?>">
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGYd7mmhUfywh_3txsmLhg81OcjLqu3so&libraries=places"></script>
-    
+    <!-- Open Graph -->
+    <meta property="og:title"
+          content="<?php echo htmlspecialchars($propiedad->titulo ?? 'Zubana BienRaíz'); ?>">
 
-    <!-- Favicon (ícono de pestaña) -->
-    <link rel="icon" href="/img/icono_pestanapng.png" type="image/png">
+    <meta property="og:description"
+          content="<?php echo htmlspecialchars(substr($propiedad->descripcion ?? '', 0, 160)); ?>">
 
+    <meta property="og:image"
+          content="<?php echo $imagen_principal; ?>">
 
-    <!-- Meta descripción (SEO y vista previa en Google) -->
-    <meta name="description" content="Zubana BienRaíz - Encuentra casas, apartamentos y propiedades únicas en el Oriente Antioqueño.">
+    <meta property="og:url"
+          content="<?php echo $url_actual; ?>">
 
-    <!-- (Opcional) Meta para redes sociales -->
-    <meta property="og:title" content="Zubana BienRaíz">
-    <meta property="og:description" content="Encuentra casas y apartamentos en el Oriente Antioqueño con Zubana BienRaíz.">
-    <meta property="og:image" content="/img/logo_ZB">
     <meta property="og:type" content="website">
 
-
+    <link rel="icon" href="<?php echo $dominio; ?>/img/icono_pestanapng.png" type="image/png">
+    <link rel="stylesheet" href="../build/css/app.css">
 </head>
+
 <body>
     <header class="header">
         <div class="superior">
