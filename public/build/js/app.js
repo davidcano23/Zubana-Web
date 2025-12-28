@@ -9817,27 +9817,21 @@
 
   // ------------------------- INICIALIZACIÓN -------------------------
   document.addEventListener('DOMContentLoaded', function () {
-    // 1. Gestor de apertura visual (Desktop)
     initGestorFiltrosDesktop(); 
-
-    // 2. Gestor de apertura visual (Móvil)
     initFiltrosResponsive();
-
-    // 🔥. AGREGA ESTO AQUÍ (El parche para iPhone)
+    
+    // 🔥 ESTE ES EL ARREGLO CLAVE PARA MÓVIL
     initHackSafari();
 
-    // 3. Lógica interna (Ahora aplicada a TODOS los paneles encontrados)
     initBuscadorPorTipo();
     initFiltroPrecio();
     initFiltroHB();
     initMasFiltros();
 
-    // 4. Utilidades
     initPrecioMiles();
     buscadorUbicacion();
     initOrdenar();
     
-    // 5. Otros
     confirmarEliminacionPropiedad();
     initSwiperRecomendados();
     initGalerias();
@@ -9846,7 +9840,7 @@
   });
 
   // ==========================================================================
-  // 🧠 1. GESTOR UNIVERSAL DE FILTROS (DESKTOP)
+  // 1. GESTOR FILTROS DESKTOP
   // ==========================================================================
   function initGestorFiltrosDesktop() {
     const filtros = [
@@ -9857,29 +9851,21 @@
     ];
 
     document.addEventListener('click', (e) => {
-      // Si es móvil, dejamos que initFiltrosResponsive se encargue
       if (window.matchMedia('(max-width: 1024px)').matches) return;
 
       const target = e.target;
-      // Buscamos si el clic fue en algún trigger configurado
       const config = filtros.find(f => target.closest(f.trigger));
 
       if (config) {
         e.preventDefault();
         e.stopPropagation();
-
-        // ⚠️ CLAVE: Usamos closest para encontrar EL trigger y EL root específicos que se clickearon
         const clickedTrigger = target.closest(config.trigger);
         const specificRoot = clickedTrigger.closest(config.root);
-
         if (!specificRoot) return;
 
         const estaAbierto = specificRoot.classList.contains('is-open');
-
-        // Cerramos TODOS los filtros visualmente para limpiar
         cerrarTodosLosFiltrosDesktop();
 
-        // Si no estaba abierto, abrimos ESTE específico
         if (!estaAbierto) {
           specificRoot.classList.add('is-open');
           clickedTrigger.setAttribute('aria-expanded', 'true');
@@ -9887,25 +9873,18 @@
         return;
       }
 
-      // Si clic fue dentro de un panel abierto, no hacemos nada (dejamos interactuar)
-      // Nota: Asumimos que el panel es hijo del root
       const rootAbierto = target.closest('.is-open'); 
       if (rootAbierto) {
-          // Excepción: Botón de cerrar explícito
           if (target.closest('.mas_close')) {
               cerrarTodosLosFiltrosDesktop();
           }
           return;
       }
-
-      // Si clic fue afuera de todo, cerramos
       cerrarTodosLosFiltrosDesktop();
     });
 
     function cerrarTodosLosFiltrosDesktop() {
-      // Buscamos TODOS los roots abiertos y los cerramos
       document.querySelectorAll('.is-open').forEach(el => {
-          // Verificamos que sea uno de nuestros filtros para no cerrar otras cosas
           if (el.matches('.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas')) {
               el.classList.remove('is-open');
               const trigger = el.querySelector('[aria-expanded="true"]');
@@ -9915,10 +9894,13 @@
     }
   }
 
-  /* ---- 2. Filtros Responsive (Móvil) ---- */
+  /* ---- Reemplaza tu función initFiltrosResponsive por esta ---- */
+
   function initFiltrosResponsive() {
     const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+    const scroller = document.querySelector('.filtros_scroller'); // Referencia al padre
 
+    // Crear overlay si no existe
     let overlay = document.querySelector('.filtros_overlay');
     if (!overlay) {
       overlay = document.createElement('div');
@@ -9926,25 +9908,31 @@
       document.body.appendChild(overlay);
     }
 
-    // ❌ ELIMINADO: syncOverlayPointerEvents (Esto bloqueaba la pantalla)
-    // Dejamos que el CSS controle los pointer-events
-
-    const lock   = () => document.body.classList.add('bsheet-lock');
-    const unlock = () => document.body.classList.remove('bsheet-lock');
-
+    // Función para cerrar todo
     const closeAll = () => {
       if (!isMobile()) return;
       document.querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
         .forEach(el => el.classList.remove('is-open'));
       
-      overlay.classList.remove('is-open'); // Quitamos clase al overlay
-      unlock();
+      overlay.classList.remove('is-open');
+      document.body.classList.remove('bsheet-lock');
+
+      // 🔥 RESTAURAR SCROLL DEL PADRE
+      if (scroller) {
+          scroller.classList.remove('padre-visible');
+      }
     };
 
+    // Función para abrir uno específico
     const openRoot = ($root) => {
       $root.classList.add('is-open');
-      overlay.classList.add('is-open'); // Ponemos clase al overlay
-      lock();
+      overlay.classList.add('is-open');
+      document.body.classList.add('bsheet-lock');
+
+      // 🔥 TRUCO MAGICO: Quitamos el overflow del padre para que el hijo fijo se vea
+      if (scroller) {
+          scroller.classList.add('padre-visible');
+      }
     };
 
     const selectors = ['.filtro_tipo', '.filtro_precio', '.filtro_hb', '.filtro_mas'];
@@ -9959,20 +9947,53 @@
               e.preventDefault();
               e.stopPropagation();
               
-              setTimeout(() => {
-                  const opened = $root.classList.contains('is-open');
-                  closeAll();
-                  if (!opened) openRoot($root);
-              }, 50);
+              const yaAbierto = $root.classList.contains('is-open');
+              // Primero cerramos cualquier otro que esté abierto
+              closeAll(); 
+
+              // Si no estaba abierto, lo abrimos (con un mini delay para asegurar renderizado)
+              if (!yaAbierto) {
+                  setTimeout(() => openRoot($root), 10);
+              }
           });
       });
     });
 
+    // Cerrar al dar click en el fondo oscuro
     overlay.addEventListener('click', (e) => {
       if (!isMobile()) return;
       e.preventDefault();
       e.stopPropagation();
       closeAll();
+    });
+  }
+
+  // 🔥 EL HACK DE SAFARI/MÓVIL MEJORADO 🔥
+  // Esto fuerza a que el contenedor permita que el modal fijo se vea
+  function initHackSafari() {
+    const scroller = document.querySelector('.filtros_scroller');
+    if(!scroller) return;
+
+    // Usamos MutationObserver para detectar cuando se añade la clase 'is-open'
+    const observer = new MutationObserver((mutations) => {
+      if (!window.matchMedia('(max-width: 1024px)').matches) return;
+
+      const algunAbierto = document.querySelector('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open');
+      
+      if (algunAbierto) {
+          // Truco: Hacer visible el overflow para que el hijo fixed se vea
+          scroller.style.setProperty('overflow-x', 'visible', 'important');
+          scroller.style.transform = 'none'; 
+      } else {
+          // Restaurar scroll
+          scroller.style.removeProperty('overflow-x');
+          scroller.style.removeProperty('transform');
+      }
+    });
+
+    // Observamos cambios en los filtros
+    document.querySelectorAll('.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas').forEach(el => {
+        observer.observe(el, { attributes: true, attributeFilter: ['class'] });
     });
   }
 
@@ -10736,49 +10757,6 @@
       url.searchParams.set('pagina', '1');
       window.location.href = url.toString();
     }
-  }
-  function initHackSafari() {
-    if (!window.matchMedia('(max-width: 1024px)').matches) return;
-
-    const scroller = document.querySelector('.filtros_scroller');
-    const header   = document.querySelector('.header');
-    const triggers = document.querySelectorAll('.tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger');
-    const overlay  = document.querySelector('.filtros_overlay');
-
-    const toggleHack = (activar) => {
-      if (!scroller || !header) return;
-      if (activar) {
-        scroller.style.overflow = 'visible';
-        scroller.style.transform = 'none'; // Rompe el Stacking Context
-        header.style.zIndex = '999999';
-      } else {
-        scroller.style.overflow = ''; 
-        scroller.style.removeProperty('transform');
-        header.style.removeProperty('z-index');
-      }
-    };
-
-    // Activar hack al abrir cualquier filtro móvil
-    triggers.forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        setTimeout(() => {
-          const algunAbierto = document.querySelector('.is-open');
-          toggleHack(!!algunAbierto);
-        }, 100);
-      });
-    });
-
-    // Cerrar todo al tocar overlay o fuera
-    document.addEventListener('click', (e) => {
-      if (overlay && e.target === overlay) {
-        toggleHack(false);
-      }
-      if (!e.target.closest('.header') && !e.target.closest('.resultados_busqueda')) {
-        setTimeout(() => {
-          if (!document.querySelector('.is-open')) toggleHack(false);
-        }, 100);
-      }
-    });
   }
 
 })();

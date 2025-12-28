@@ -3,11 +3,10 @@
 @use 'sass:color';
 
 /* ==========================================================================
-   1. ESTILOS GENERALES Y LAYOUT
+   1. LAYOUT PRINCIPAL
    ========================================================================== */
 .filtros_header {
   .form_busqueda {
-    /* MÓVIL */
     display: flex;
     flex-direction: column; 
     gap: 1rem;
@@ -15,7 +14,6 @@
     margin: 0 auto; 
     padding: .5rem;
 
-    /* ESCRITORIO */
     @media (min-width: 1025px) {
        flex-direction: row;
        align-items: center;
@@ -24,10 +22,10 @@
     }
   }
 
-  /* BLOQUE 1: BUSCADOR */
+  /* BUSCADOR: Z-index para estar sobre el contenido pero bajo el modal */
   .bloque_buscador_static {
       position: relative; 
-      z-index: 100;
+      z-index: 200; 
       width: 100%;
       @media (min-width: 1025px) { width: auto; }
   }
@@ -45,36 +43,46 @@
   }
 }
 
-/* BLOQUE 2: SCROLLER DE FILTROS */
+/* ==========================================================================
+   2. SCROLLER DE FILTROS (Lógica Funcional + Diseño Original)
+   ========================================================================== */
 .filtros_scroller {
     display: flex;
     gap: 0.8rem;
     width: 100%;
+    align-items: center;
+    position: relative;
+    z-index: 100; 
     
-    /* === MÓVIL: FORZAR SIEMPRE EL SCROLL === */
-    /* El !important evita que el JS o el bloqueo del body lo rompan */
-    overflow-x: auto !important; 
-    padding-bottom: 5px; 
-    
-    /* Suavizado en iOS */
+    /* MÓVIL: Scroll horizontal */
+    overflow-x: auto; 
+    overflow-y: hidden;
+    white-space: nowrap;
+    touch-action: pan-x;
     -webkit-overflow-scrolling: touch;
+    padding-bottom: 5px; 
+
+    /* 🔥 CLASE FUNCIONAL DEL JS (No toca diseño, solo visibilidad) 🔥 */
+    &.padre-visible {
+        overflow: visible !important; 
+        z-index: 9500 !important;     
+        transform: none !important;   
+    }
     
-    /* Ocultar barra */
-    &::-webkit-scrollbar { display: none; }
-    scrollbar-width: none;
-    
-    /* === ESCRITORIO === */
+    /* ESCRITORIO */
     @media (min-width: 1025px) {
         width: auto;
-        /* En PC debe ser visible para que salgan los dropdowns hacia abajo */
         overflow: visible !important; 
         padding-bottom: 0;
-        z-index: 110;
+        z-index: 100; 
     }
+    
+    &::-webkit-scrollbar { display: none; }
+    scrollbar-width: none;
 }
 
 /* ==========================================================================
-   2. DROPDOWN SUGERENCIAS
+   3. RESULTADOS BÚSQUEDA
    ========================================================================== */
 .resultados_busqueda {
   display: none; 
@@ -87,129 +95,183 @@
   color: v.$arenaclaro;
   border: 1px solid v.$grisniebla; 
   border-radius: 1.2rem; 
-  box-shadow: 0 15px 40px rgba(0,0,0,0.8); 
-  z-index: 220;
-  &:not(:empty) { display: block; }
-  &::before { content: ''; position: absolute; top: -8px; left: 2.4rem; width: 16px; height: 16px; background: v.$grisgrafito; border-left: 1px solid v.$grisniebla; border-top: 1px solid v.$grisniebla; transform: rotate(45deg); display: none; }
-  @media(min-width: 1025px) { &::before { display: block; } }
-}
+  box-shadow: 0 15px 40px rgba(0,0,0,0.9); 
+  z-index: 300; 
 
+  &:not(:empty) { display: block; }
+  @media(min-width: 1025px) { 
+      &::before { content: ''; position: absolute; top: -8px; left: 2.4rem; width: 16px; height: 16px; background: v.$grisgrafito; border-left: 1px solid v.$grisniebla; border-top: 1px solid v.$grisniebla; transform: rotate(45deg); display: block; } 
+  }
+}
 .resultado-item {
   display: grid; grid-template-columns: 2rem 1fr; align-items: center; gap: .8rem; padding: 1.1rem 1.2rem;
   cursor: pointer; font-family: v.$texto; border-top: 1px solid rgba(255,255,255,.06);
   &:first-child { border-top: 0; }
-  &::before { content: ''; width: 1.6rem; height: 1.6rem; justify-self: center; background-repeat: no-repeat; background-position: center; background-size: 1.6rem 1.6rem; background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1 1 18 0Z'/%3E%3Ccircle cx='12' cy='10.5' r='3'/%3E%3C/svg%3E"); opacity: .85; }
+  
+  &::before { 
+    content: ''; 
+    width: 1.6rem; 
+    height: 1.6rem; 
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1 1 18 0Z'/%3E%3Ccircle cx='12' cy='10.5' r='3'/%3E%3C/svg%3E"); 
+    opacity: .85; 
+    
+    /* AGREGA ESTO PARA QUE SE VEA COMPLETO */
+    background-size: contain;      /* Ajusta el ícono al tamaño del cuadro */
+    background-repeat: no-repeat;  /* Evita que se repita */
+    background-position: center;   /* Lo centra perfectamente */
+  }
+
   span { font-size: 1.45rem; }
   &:hover, &.activo { background: color.scale(v.$grisgrafito, $lightness: 8%); }
   &.muted { cursor: default; color: rgba(255,255,255,.55); &::before { display: none; } }
 }
 
 /* ==========================================================================
-   3. ESTILOS DE LOS PANELES Y BOTONES
+   4. FILTROS (DISEÑO RESTAURADO)
    ========================================================================== */
+.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas { position: relative; }
 
-/* 🔥 ARREGLO CRÍTICO: Posicionamiento Relativo para los padres 🔥 */
-/* Sin esto, el "position: absolute" de los paneles no sabe dónde ubicarse en PC */
-.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas {
-    position: relative;
-}
-
-@mixin trigger-style {
+/* Trigger (Botones que abren) */
+.tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger { 
   display: inline-flex; align-items: center; gap: .6rem; height: 4rem; padding: 0 1.2rem;
   border: 1px solid v.$grisniebla; border-radius: 1.2rem; background: v.$grisgrafito;
-  color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem; cursor: pointer; line-height: 4rem;
+  color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem; cursor: pointer;
   white-space: nowrap; 
-  &:focus { outline: none; border-color: v.$azulniebla; box-shadow: 0 0 0 3px rgba(164,200,216,.25); }
+  &:focus { outline: none; border-color: v.$rojotierra; box-shadow: 0 0 0 3px rgba(204, 131, 131, 0.25); }
 }
 
-@mixin panel-style {
+/* Mixin o Estilo Base de Paneles (Escritorio) */
+.tipo_panel, .precio_panel, .hb_panel, .mas_modal { 
   opacity: 0; pointer-events: none; transform: translateY(6px); position: absolute;
-  top: calc(100% + .6rem); left: 0; background: v.$grisgrafito; color: v.$arenaclaro;
+  top: calc(100% + .6rem); left: 0; 
+  background: v.$grisgrafito; color: v.$arenaclaro;
   border: 1px solid v.$grisniebla; border-radius: 1.2rem; box-shadow: 0 12px 28px rgba(0,0,0,.35); 
-  z-index: 500; /* Z-Index alto para PC */
+  z-index: 500; 
 }
 
-/* Clases y Mixins */
-.tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger { @include trigger-style; }
-.tipo_panel, .precio_panel, .hb_panel { @include panel-style; }
+/* Detalles específicos de cada panel (RESTAURADOS) */
+.tipo_panel { width: 28rem; max-height: 28rem; overflow-y: auto; }
+.precio_panel { width: 26rem; padding: 1.2rem; }
+.hb_panel { width: 34rem; padding: 1.2rem; }
 
-/* Estilos Internos (Intactos) */
+/* El modal de "Más Filtros" en PC es absolute y oculto */
+.mas_modal { 
+  display: none; 
+  width: min(92vw, 720px); 
+  max-height: 75dvh; 
+  flex-direction: column; 
+  /* Centrado en pantalla SOLO cuando se abre con JS/Clase específica, 
+     pero por defecto mantenemos la base para que no se rompa */
+  position: fixed; 
+  z-index: 130; 
+  inset: 50% auto auto 50%; 
+  transform: translate(-50%, -50%); 
+}
+
+/* === ESTILOS INTERNOS (BOTONES, GRIDS, INPUTS) === */
+/* Estos son los estilos de TU diseño que se habían perdido */
+
 .tipo_trigger__badge { min-width: 1.6rem; height: 1.6rem; border-radius: 999px; padding: 0 .4rem; background: color.scale(v.$grisgrafito, $lightness: 15%); border: 1px solid v.$grisniebla; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 .tipo_trigger__chev, .precio_trigger__chev, .hb_trigger__chev, .mas_trigger__chev { opacity: .75; transition: transform .15s ease; }
 [aria-expanded="true"] .tipo_trigger__chev { transform: rotate(180deg); }
 
-.tipo_panel { width: 28rem; max-height: 28rem; overflow-y: auto; }
-.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$azulniebla; } span { font-size: 1.4rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
+.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$rojotierra; } span { font-size: 1.4rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
 
-.precio_panel { width: 26rem; padding: 1.2rem; }
 .precio_inputs { display: grid; gap: .8rem; label { display: grid; gap: .4rem; } input { height: 3.2rem; padding: 0 .9rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #222; color: v.$arenaclaro; font-size: 1.4rem; outline: none; } }
 .precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: white; } }
 
-.hb_panel { width: 34rem; padding: 1.2rem; }
 .hb_title { margin: .2rem 0 .8rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .hb_group { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }
 .hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
 .hb_exact_label { display: flex; align-items: center; gap: .8rem; font-size: 1.25rem; color: rgba(255,255,255,.8); input[type="checkbox"] { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: #2a2a2a; border: 1px solid v.$grisniebla; position: relative; cursor: pointer; transition: background .15s; &::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #bbb; transition: transform .15s; } &:checked { background: v.$rojotierra; border-color: v.$rojotierra; } &:checked::after { transform: translateX(18px); background: #fff; } } }
 .hb_actions { display: flex; gap: .8rem; justify-content: flex-end; margin-top: 1.2rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .hb_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .hb_apply { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
 
-/* Más filtros (Modal) */
-.mas_modal { display: none; position: fixed; z-index: 130; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: min(92vw, 720px); max-height: 75dvh; flex-direction: column; background: v.$grisgrafito; color: v.$arenaclaro; border: 1px solid v.$grisniebla; border-radius: 1.2rem; box-shadow: 0 18px 48px rgba(0,0,0,.5); .mas_head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,.06); h3 { margin: 0; font-size: 1.6rem; color: rgba(255,255,255,.95); } .mas_close { width: 3.2rem; height: 3.2rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; cursor: pointer; } } .mas_body { padding: 1.2rem 1.4rem; overflow: auto; flex: 1; } .mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: v.$rojotierra; color: #fff; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); } } }
+/* Estilos internos de Más Filtros (Restaurados) */
+.mas_head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,.06); h3 { margin: 0; font-size: 1.6rem; color: rgba(255,255,255,.95); } .mas_close { width: 3.2rem; height: 3.2rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; cursor: pointer; } } 
+.mas_body { padding: 1.2rem 1.4rem; overflow: auto; flex: 1; } 
+.mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: v.$rojotierra; color: #fff; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); } } 
 .mf_section { padding: .6rem 0 1.2rem 0; & + .mf_section { border-top: 1px solid rgba(255,255,255,.06); margin-top: 1rem; } }
 .mf_title { margin: .2rem 0 .9rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .mf_group { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .6rem; }
 .mf_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
 
 /* ==========================================================================
-   4. TARJETAS FLOTANTES MÓVIL Y ESTADOS
+   5. OVERLAY MÓVIL
    ========================================================================== */
 .filtros_overlay {
   display: none; 
   @media (max-width: 1024px) {
     display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-    z-index: 9000; opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    z-index: 9000; 
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
     &.is-open { opacity: 1; pointer-events: auto; }
   }
 }
 
 body.bsheet-lock {
-  @media (max-width: 1024px) { position: fixed; width: 100%; height: 100%; overflow: hidden; }
+  @media (max-width: 1024px) { overflow: hidden !important; height: 100vh; }
 }
 
+/* ==========================================================================
+   6. ESTADOS "IS-OPEN" (FUNCIONALIDAD + DISEÑO)
+   ========================================================================== */
+
+/* --- MÓVIL: Panel deslizante --- */
 @media (max-width: 1024px) {
-  /* MÓVIL */
   .filtro_tipo.is-open .tipo_panel,
   .filtro_precio.is-open .precio_panel,
   .filtro_hb.is-open .hb_panel,
   .filtro_mas.is-open .mas_modal {
     position: fixed !important;
-    top: auto !important;
-    bottom: 20px !important;
-    left: 50% !important;
-    transform: translate3d(-50%, 0, 0) !important;
-    width: min(92vw, 360px) !important;
-    max-height: 70vh !important;
-    background: rgba(v.$grisgrafito, 0.98) !important;
-    border-radius: 16px !important;
-    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6) !important;
-    z-index: 9999 !important;
-    display: block !important;
+    top: auto !important; 
+    bottom: 0 !important; 
+    left: 0 !important; 
+    right: 0 !important;
+    
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 1.6rem 1.6rem 0 0 !important;
+    transform: none !important; 
+    
+    /* Aseguramos que el fondo sea TU gris grafito */
+    background: v.$grisgrafito !important;
+    border-top: 1px solid v.$grisniebla;
+    box-shadow: 0 -10px 40px rgba(0,0,0,0.5) !important;
+    
+    z-index: 10000 !important; 
+    display: block !important; /* Si era flex, aqui block, salvo mas_modal */
     opacity: 1 !important;
     pointer-events: auto !important;
-    &.mas_modal { display: flex !important; }
+
+    animation: slideUp 0.3s ease-out forwards;
+    
+    /* El modal de Más filtros usa flex internamente */
+    &.mas_modal { display: flex !important; height: 80vh; }
   }
 }
 
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+/* --- ESCRITORIO: Dropdown normal --- */
 @media (min-width: 1025px) {
-  /* ESCRITORIO */
   .filtro_tipo.is-open .tipo_panel, 
   .filtro_precio.is-open .precio_panel, 
   .filtro_hb.is-open .hb_panel {
-    opacity: 1 !important; 
-    pointer-events: auto !important; 
-    transform: translateY(0) !important;
+    opacity: 1 !important; pointer-events: auto !important; transform: translateY(0) !important;
     display: block !important; 
   }
   
-  .filtro_mas.is-open .mas_modal { display: flex !important; opacity: 1 !important; }
+  /* Modal Más filtros centrado en PC */
+  .filtro_mas.is-open .mas_modal { 
+      display: flex !important; 
+      opacity: 1 !important; 
+      /* Forzamos position fixed centrado en escritorio también */
+      position: fixed !important;
+      inset: 50% auto auto 50% !important;
+      transform: translate(-50%, -50%) !important;
+  }
   .filtro_mas.is-open .mas_overlay { display: block !important; }
 }
