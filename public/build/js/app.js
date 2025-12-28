@@ -9814,25 +9814,108 @@
   Swiper.use(modules);
 
   // ------------------------- IMPORTACIONES -------------------------
+
   // ------------------------- INICIALIZACIÓN -------------------------
   document.addEventListener('DOMContentLoaded', function () {
+    // 1. Gestor de apertura visual (Desktop)
+    initGestorFiltrosDesktop(); 
+
+    // 2. Gestor de apertura visual (Móvil)
+    initFiltrosResponsive();
+
+    // 🔥. AGREGA ESTO AQUÍ (El parche para iPhone)
+    initHackSafari();
+
+    // 3. Lógica interna (Ahora aplicada a TODOS los paneles encontrados)
+    initBuscadorPorTipo();
+    initFiltroPrecio();
+    initFiltroHB();
+    initMasFiltros();
+
+    // 4. Utilidades
+    initPrecioMiles();
+    buscadorUbicacion();
+    initOrdenar();
+    
+    // 5. Otros
     confirmarEliminacionPropiedad();
     initSwiperRecomendados();
     initGalerias();
-    buscadorUbicacion();
-    buscadorPorTipo();
-    initFiltroPrecio();
-    initPrecioMiles();
-    initFiltroHB();
-    initMasFiltros();
     initLoginModalSubmit();
     initLoginModal();
-    initOrdenar();
-    initFiltrosResponsive();
-    
   });
 
-  /* ---- Filtros: bottom-sheet + cierre a 1 toque ---- */
+  // ==========================================================================
+  // 🧠 1. GESTOR UNIVERSAL DE FILTROS (DESKTOP)
+  // ==========================================================================
+  function initGestorFiltrosDesktop() {
+    const filtros = [
+      { trigger: '.tipo_trigger',   root: '.filtro_tipo' },
+      { trigger: '.precio_trigger', root: '.filtro_precio' },
+      { trigger: '.hb_trigger',     root: '.filtro_hb' },
+      { trigger: '.mas_trigger',    root: '.filtro_mas' } 
+    ];
+
+    document.addEventListener('click', (e) => {
+      // Si es móvil, dejamos que initFiltrosResponsive se encargue
+      if (window.matchMedia('(max-width: 1024px)').matches) return;
+
+      const target = e.target;
+      // Buscamos si el clic fue en algún trigger configurado
+      const config = filtros.find(f => target.closest(f.trigger));
+
+      if (config) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // ⚠️ CLAVE: Usamos closest para encontrar EL trigger y EL root específicos que se clickearon
+        const clickedTrigger = target.closest(config.trigger);
+        const specificRoot = clickedTrigger.closest(config.root);
+
+        if (!specificRoot) return;
+
+        const estaAbierto = specificRoot.classList.contains('is-open');
+
+        // Cerramos TODOS los filtros visualmente para limpiar
+        cerrarTodosLosFiltrosDesktop();
+
+        // Si no estaba abierto, abrimos ESTE específico
+        if (!estaAbierto) {
+          specificRoot.classList.add('is-open');
+          clickedTrigger.setAttribute('aria-expanded', 'true');
+        }
+        return;
+      }
+
+      // Si clic fue dentro de un panel abierto, no hacemos nada (dejamos interactuar)
+      // Nota: Asumimos que el panel es hijo del root
+      const rootAbierto = target.closest('.is-open'); 
+      if (rootAbierto) {
+          // Excepción: Botón de cerrar explícito
+          if (target.closest('.mas_close')) {
+              cerrarTodosLosFiltrosDesktop();
+          }
+          return;
+      }
+
+      // Si clic fue afuera de todo, cerramos
+      cerrarTodosLosFiltrosDesktop();
+    });
+
+    function cerrarTodosLosFiltrosDesktop() {
+      // Buscamos TODOS los roots abiertos y los cerramos
+      document.querySelectorAll('.is-open').forEach(el => {
+          // Verificamos que sea uno de nuestros filtros para no cerrar otras cosas
+          if (el.matches('.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas')) {
+              el.classList.remove('is-open');
+              const trigger = el.querySelector('[aria-expanded="true"]');
+              if (trigger) trigger.setAttribute('aria-expanded', 'false');
+          }
+      });
+    }
+  }
+
+  /* ---- 2. Filtros Responsive (Móvil) ---- */
   function initFiltrosResponsive() {
     const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
 
@@ -9843,175 +9926,396 @@
       document.body.appendChild(overlay);
     }
 
+    // ❌ ELIMINADO: syncOverlayPointerEvents (Esto bloqueaba la pantalla)
+    // Dejamos que el CSS controle los pointer-events
+
     const lock   = () => document.body.classList.add('bsheet-lock');
     const unlock = () => document.body.classList.remove('bsheet-lock');
 
-    // ✅ FIX — Declarar SIEMPRE antes de usar
-    const ubicInput = document.querySelector('.barra_por_ubicaciones');
-    const ubicList  = document.querySelector('.resultados_busqueda');
-
-    function positionUbicacionesDropdown() {
-      if (!ubicInput || !ubicList) return;
-
-      const visible = getComputedStyle(ubicList).display !== 'none';
-      if (!visible) return;
-
-      if (!isMobile()) {
-        ubicList.classList.remove('is-floating');
-        ubicList.style.removeProperty('--ub-left');
-        ubicList.style.removeProperty('--ub-top');
-        ubicList.style.removeProperty('--ub-width');
-        return;
-      }
-
-      const r = ubicInput.getBoundingClientRect();
-      ubicList.classList.add('is-floating');
-      ubicList.style.setProperty('--ub-left',  `${Math.round(r.left)}px`);
-      ubicList.style.setProperty('--ub-top',   `${Math.round(r.bottom + 6)}px`);
-      ubicList.style.setProperty('--ub-width', `${Math.round(r.width)}px`);
-    }
-
-    function hideUbicacionesDropdown() {
-      if (!ubicList) return;
-      ubicList.classList.remove('is-floating');
-    }
-
     const closeAll = () => {
-      document
-        .querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
+      if (!isMobile()) return;
+      document.querySelectorAll('.filtro_tipo.is-open, .filtro_precio.is-open, .filtro_hb.is-open, .filtro_mas.is-open')
         .forEach(el => el.classList.remove('is-open'));
-
-      overlay.classList.remove('is-open');
+      
+      overlay.classList.remove('is-open'); // Quitamos clase al overlay
       unlock();
-      hideUbicacionesDropdown(); // ✅ cerrar si estaba flotando
     };
 
     const openRoot = ($root) => {
       $root.classList.add('is-open');
-      overlay.classList.add('is-open');
+      overlay.classList.add('is-open'); // Ponemos clase al overlay
       lock();
     };
 
-    const pairs = [
-      { root: '.filtro_tipo',   trigger: '.tipo_trigger'   },
-      { root: '.filtro_precio', trigger: '.precio_trigger' },
-      { root: '.filtro_hb',     trigger: '.hb_trigger'     },
-      { root: '.filtro_mas',    trigger: '.mas_trigger'    },
-    ];
+    const selectors = ['.filtro_tipo', '.filtro_precio', '.filtro_hb', '.filtro_mas'];
+    
+    selectors.forEach(sel => {
+      document.querySelectorAll(sel).forEach($root => {
+          const $trg = $root.querySelector('button[aria-haspopup]'); 
+          if (!$trg) return;
 
-    let isToggling = false;
-    const withGuard = (fn) => {
-      if (isToggling) return;
-      isToggling = true;
-      try { fn(); } finally { setTimeout(() => { isToggling = false; }, 120); }
-    };
-
-    pairs.forEach(({ root, trigger }) => {
-      const $root = document.querySelector(root);
-      const $trg  = $root?.querySelector(trigger);
-      if (!$root || !$trg) return;
-
-      $trg.addEventListener('click', (e) => {
-        if (!isMobile()) return;
-        e.preventDefault();
-        e.stopPropagation();
-        withGuard(() => {
-          const opened = $root.classList.contains('is-open');
-          closeAll();
-          if (!opened) openRoot($root);
-        });
+          $trg.addEventListener('click', (e) => {
+              if (!isMobile()) return; 
+              e.preventDefault();
+              e.stopPropagation();
+              
+              setTimeout(() => {
+                  const opened = $root.classList.contains('is-open');
+                  closeAll();
+                  if (!opened) openRoot($root);
+              }, 50);
+          });
       });
     });
 
     overlay.addEventListener('click', (e) => {
+      if (!isMobile()) return;
       e.preventDefault();
       e.stopPropagation();
       closeAll();
     });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAll();
-    });
-    window.addEventListener('resize', () => {
-      if (!isMobile()) closeAll();
-    });
-
-    const scroller = document.querySelector('.filtros_scroller');
-    if (scroller) {
-      const reset = () => { scroller.scrollLeft = 0; };
-      reset();
-      window.addEventListener('resize', reset);
-    }
-
-    // ==============================
-    // ✅ WIRING Ubicaciones
-    // ==============================
-    if (ubicInput && ubicList) {
-      ['focus', 'input', 'click'].forEach(evt =>
-        ubicInput.addEventListener(evt, positionUbicacionesDropdown, { passive: true })
-      );
-
-      ubicList.addEventListener('click', () => {
-        hideUbicacionesDropdown();
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!ubicList.classList.contains('is-floating')) return;
-        const inside = ubicList.contains(e.target) || ubicInput.contains(e.target);
-        if (!inside) hideUbicacionesDropdown();
-      });
-
-      const reflow = () => {
-        if (ubicList.classList.contains('is-floating')) positionUbicacionesDropdown();
-      };
-      window.addEventListener('resize', reflow, { passive: true });
-      window.addEventListener('scroll', reflow, { passive: true });
-    }
   }
 
+  // ==========================================================================
+  // 3. LÓGICA DE DATOS (Aplicada a todas las instancias)
+  // ==========================================================================
 
-  // === Ubicaciones: posicionamiento seguro en móvil/tablet ===
-  function positionUbicacionesDropdown() {
-    const input = document.querySelector('.barra_por_ubicaciones');
-    const list  = document.querySelector('.resultados_busqueda');
-    if (!input || !list) return;
+  function initBuscadorPorTipo() {
+    // Aplicamos lógica a CADA instancia de .filtro_tipo que encuentre en la página
+    document.querySelectorAll('.filtro_tipo').forEach(root => {
+      const form    = root.closest('form') || document.querySelector('.form_busqueda');
+      const badge   = root.querySelector('.tipo_trigger__badge');
+      const textEl  = root.querySelector('.tipo_trigger__text');
+      const todas   = root.querySelector('#tipo_todas'); // Ojo: IDs únicos pueden dar problema si duplicas HTML idéntico, mejor usar clases si duplicas.
+      // Si duplicas el ID 'tipo_todas', el JS solo afectará al primero. 
+      // Asumiremos que el HTML es único o usas clases. Si falla, cambia #tipo_todas por .tipo_todas en HTML y JS.
+      
+      // Checkboxes dentro de ESTE panel
+      const checks  = Array.from(root.querySelectorAll('input[name="tipo[]"]'));
+      const pagina  = form ? form.querySelector('input[name="pagina"]') : null; // Buscamos input genérico de página
 
-    const isMobile = () => window.matchMedia('(max-width: 1024px)').matches;
+      if (!form || !checks.length) return;
 
-    // Asegura que exista y esté visible
-    list.style.display = 'block';
+      function updateTriggerLabel() {
+          if (!textEl) return;
+          const activos = checks.filter(c => c.checked).map(c => c.value);
+          if (activos.length === 0) {
+              textEl.textContent = 'Tipo de propiedad';
+              if(badge) badge.style.display = 'none';
+          } else {
+              textEl.textContent = activos.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(', ');
+              if(badge) {
+                  badge.textContent = activos.length;
+                  badge.style.display = 'inline-flex';
+              }
+          }
+      }
+      updateTriggerLabel();
 
-    if (!isMobile()) {
-      // Desktop: comportamiento normal (absoluto relativo al form)
-      list.classList.remove('is-floating');
-      list.style.removeProperty('--ub-left');
-      list.style.removeProperty('--ub-top');
-      list.style.removeProperty('--ub-width');
-      return;
-    }
+      if (todas) {
+          todas.addEventListener('change', () => {
+              if (todas.checked) {
+                  checks.forEach(c => c.checked = false);
+                  updateTriggerLabel();
+                  // Reset URL
+                  const url = new URL(window.location.href);
+                  url.searchParams.forEach((v, k) => { if (k === 'tipo[]') url.searchParams.delete(k); });
+                  url.searchParams.set('pagina', '1');
+                  const busq = form.querySelector('input[name="busqueda"]')?.value?.trim();
+                  if (busq) url.searchParams.set('busqueda', busq);
+                  window.location.href = url.toString();
+              }
+          });
+      }
 
-    // Móvil/Tablet: anclar al viewport
-    const r = input.getBoundingClientRect();
-    list.classList.add('is-floating');
-    list.style.setProperty('--ub-left',  `${Math.round(r.left)}px`);
-    list.style.setProperty('--ub-top',   `${Math.round(r.bottom + 6)}px`);
-    list.style.setProperty('--ub-width', `${Math.round(r.width)}px`);
+      checks.forEach(c => {
+          c.addEventListener('change', () => {
+              if (c.checked && todas) todas.checked = false;
+              const alguno = checks.some(x => x.checked);
+              
+              if (!alguno && todas) {
+                  todas.checked = true;
+                  updateTriggerLabel();
+                  const url = new URL(window.location.href);
+                  url.searchParams.forEach((v, k) => { if (k === 'tipo[]') url.searchParams.delete(k); });
+                  url.searchParams.set('pagina', '1');
+                  const busq = form.querySelector('input[name="busqueda"]')?.value?.trim();
+                  if (busq) url.searchParams.set('busqueda', busq);
+                  window.location.href = url.toString();
+                  return;
+              }
+              updateTriggerLabel();
+              if(pagina) pagina.value = '1';
+              form.submit();
+          });
+      });
+    });
   }
 
-  // Recalcular al rotar/resize/scroll (mientras esté abierto)
-  (function wireUbicacionesReflow() {
-    const reflow = () => {
-      const list = document.querySelector('.resultados_busqueda');
-      if (list && list.classList.contains('is-floating')) positionUbicacionesDropdown();
-    };
-    window.addEventListener('resize', reflow, { passive: true });
-    window.addEventListener('scroll', reflow, { passive: true });
-  })();
+  function initFiltroPrecio() {
+    document.querySelectorAll('.precio_panel').forEach(panel => {
+        const form = panel.closest('form') || document.querySelector('.form_busqueda');
+        if (!form) return;
 
+        const root = panel.closest('.filtro_precio');
+        const triggerText = root ? root.querySelector('.precio_trigger__text') : null;
 
-  /* ---- Ordenar: tarjeta centrada en móvil + overlay + 1 toque para cerrar ---- */
+        const inputMin = panel.querySelector('.precio_min');
+        const inputMax = panel.querySelector('.precio_max');
+        const btnFiltrar = panel.querySelector('.precio_filtrar');
+        const btnLimpiar = panel.querySelector('.precio_limpiar');
+        const paginaHidden = panel.querySelector('.precio_pagina_hidden');
+
+        if (!inputMin || !inputMax) return;
+
+        function onlyDigits(str) { return (str || '').replace(/\D+/g, ''); }
+
+        // Actualizar texto trigger
+        const currentMin = onlyDigits(inputMin.value);
+        const currentMax = onlyDigits(inputMax.value);
+        if (triggerText) {
+            if (currentMin || currentMax) {
+              const minTxt = currentMin ? '$' + currentMin : '—';
+              const maxTxt = currentMax ? '$' + currentMax : '—';
+              triggerText.textContent = `${minTxt} — ${maxTxt}`;
+            } else {
+              triggerText.textContent = 'Precio';
+            }
+        }
+
+        if (btnFiltrar) {
+            btnFiltrar.addEventListener('click', (e) => {
+              e.preventDefault();
+              const rawMin = onlyDigits(inputMin.value);
+              const rawMax = onlyDigits(inputMax.value);
+              inputMin.value = rawMin;
+              inputMax.value = rawMax;
+
+              if (rawMin && rawMax && Number(rawMin) > Number(rawMax)) {
+                  inputMin.value = rawMax;
+                  inputMax.value = rawMin;
+              }
+              if (paginaHidden) paginaHidden.value = '1';
+              form.submit();
+            });
+        }
+
+        if (btnLimpiar) {
+            btnLimpiar.addEventListener('click', () => {
+              inputMin.value = '';
+              inputMax.value = '';
+              const url = new URL(window.location.href);
+              url.searchParams.delete('precio_min');
+              url.searchParams.delete('precio_max');
+              url.searchParams.set('pagina', '1');
+              window.location.href = url.toString();
+            });
+        }
+
+        [inputMin, inputMax].forEach(inp => {
+            inp.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if(btnFiltrar) btnFiltrar.click();
+              }
+            });
+        });
+    });
+  }
+
+  function initFiltroHB() {
+    document.querySelectorAll('.hb_panel').forEach(panel => {
+        const form = panel.closest('form') || document.querySelector('.form_busqueda');
+        if(!form) return;
+
+        const root = panel.closest('.filtro_hb');
+        const labelText = root ? root.querySelector('.hb_trigger__text') : null;
+
+        const hiddenHab   = panel.querySelector('.hb_hidden_hab');
+        const hiddenBanos = panel.querySelector('.hb_hidden_banos');
+        const exactBoxes  = panel.querySelectorAll('.hb_exact');
+        const btnApply    = panel.querySelector('.hb_apply');
+        const btnClear    = panel.querySelector('.hb_clear');
+        const paginaHid   = panel.querySelector('.hb_pagina_hidden');
+
+        function updateTriggerText() {
+          if (!labelText) return;
+          const hab   = parseInt(hiddenHab.value || '0', 10);
+          const banos = parseInt(hiddenBanos.value || '0', 10);
+          const habExact   = panel.querySelector('input[name="hab_exact"]')?.checked;
+          const banosExact = panel.querySelector('input[name="banos_exact"]')?.checked;
+          
+          const parts = [];
+          if (hab > 0)   parts.push(`Habs: ${hab}${habExact ? '' : '+'}`);
+          if (banos > 0) parts.push(`Baños: ${banos}${banosExact ? '' : '+'}`);
+          labelText.textContent = parts.length ? parts.join(', ') : 'Habs. y baños';
+        }
+        updateTriggerText();
+
+        panel.querySelectorAll('.hb_group').forEach(group => {
+          group.addEventListener('click', (e) => {
+            const btn = e.target.closest('.hb_opt');
+            if (!btn) return;
+            const kind = btn.dataset.kind;         
+            const val  = parseInt(btn.dataset.val, 10) || 0;
+            group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            if (kind === 'hab')   hiddenHab.value = String(val);
+            if (kind === 'banos') hiddenBanos.value = String(val);
+            updateTriggerText();
+          });
+        });
+
+        if(btnApply) {
+            btnApply.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (paginaHid) paginaHid.value = '1';
+              form.submit();
+            });
+        }
+
+        if(btnClear) {
+            btnClear.addEventListener('click', () => {
+              hiddenHab.value = '0';
+              hiddenBanos.value = '0';
+              exactBoxes.forEach(cb => { cb.checked = false; });
+              panel.querySelectorAll('.hb_group').forEach(group => {
+                group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
+                const first = group.querySelector('.hb_opt[data-val="0"]'); 
+                first && first.classList.add('active');
+              });
+              updateTriggerText();
+              const url = new URL(window.location.href);
+              url.searchParams.delete('hab');
+              url.searchParams.delete('banos');
+              url.searchParams.delete('hab_exact');
+              url.searchParams.delete('banos_exact');
+              url.searchParams.set('pagina', '1');
+              window.location.href = url.toString();
+            });
+        }
+    });
+  }
+
+  function initMasFiltros() {
+    // Aplicar a TODAS las instancias de mas_modal
+    document.querySelectorAll('.mas_modal').forEach(modal => {
+        const form = modal.closest('form') || document.querySelector('.form_busqueda');
+        if(!form) return;
+
+        const root = modal.closest('.filtro_mas');
+        const trigger = root ? root.querySelector('.mas_trigger') : null;
+        const labelText = trigger ? trigger.querySelector('.mas_trigger__text') : null;
+        
+        const closeBtn  = modal.querySelector('.mas_close');
+        const btnApply  = modal.querySelector('.mas_apply');
+        const btnClear  = modal.querySelector('.mas_clear');
+        const pageInput = modal.querySelector('.mas_pagina_hidden');
+        
+        const estratoHidden = modal.querySelector('.mf_hidden_estrato');
+        const estratoGroup  = modal.querySelector('.mf_group[data-kind="estrato"]');
+
+        // Funcionalidad cerrar con X
+        if(closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+               e.preventDefault();
+               // Cerramos buscando el root padre y quitando la clase
+               if(root) root.classList.remove('is-open');
+            });
+        }
+
+        function updateTriggerText() {
+          if (!labelText || !estratoHidden) return;
+          const eVal = parseInt(estratoHidden.value || '0', 10);
+          labelText.textContent = eVal > 0 ? `Más filtros (Estrato ${eVal})` : 'Más filtros';
+        }
+        updateTriggerText();
+
+        if(estratoGroup) {
+            estratoGroup.addEventListener('click', (e) => {
+              const btn = e.target.closest('.mf_opt');
+              if (!btn) return;
+              estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              if(estratoHidden) estratoHidden.value = String(parseInt(btn.dataset.val || '0', 10) || 0);
+              updateTriggerText();
+            });
+        }
+
+        if(btnApply) {
+            btnApply.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (pageInput) pageInput.value = '1';
+              form.submit();
+            });
+        }
+
+        if(btnClear) {
+            btnClear.addEventListener('click', () => {
+              if(estratoHidden) estratoHidden.value = '0';
+              if(estratoGroup) {
+                  estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+                  const first = estratoGroup.querySelector('.mf_opt[data-val="0"]');
+                  first && first.classList.add('active');
+              }
+              updateTriggerText();
+              const url = new URL(window.location.href);
+              url.searchParams.delete('estrato');
+              url.searchParams.set('pagina', '1');
+              window.location.href = url.toString();
+            });
+        }
+    });
+  }
+
+  // ------------------------- UTILIDADES Y OTROS -------------------------
+
+  function initPrecioMiles() {
+    document.querySelectorAll('.precio_min, .precio_max').forEach(el => bindMilesMask(el));
+  }
+
+  function bindMilesMask(input) {
+    const fmt = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
+
+    input.addEventListener('input', () => {
+      const selStart = input.selectionStart ?? input.value.length;
+      const raw = input.value;
+      const digits = raw.replace(/\D+/g, '').replace(/^0+/, '');
+      if (digits === '') {
+        input.value = '';
+        return;
+      }
+      const leftRaw = raw.slice(0, selStart);
+      const leftDigitsCount = (leftRaw.match(/\d/g) || []).length;
+      const formatted = fmt.format(Number(digits));
+      let newCaret = 0, seen = 0;
+      for (let i = 0; i < formatted.length; i++) {
+        if (/\d/.test(formatted[i])) {
+          seen++;
+          if (seen === leftDigitsCount) { newCaret = i + 1; break; }
+        }
+        if (i === formatted.length - 1) newCaret = formatted.length;
+      }
+      input.value = formatted;
+      try { input.setSelectionRange(newCaret, newCaret); } catch {}
+    });
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const panel = input.closest('.precio_panel');
+        if(panel) panel.querySelector('.precio_filtrar')?.click();
+      }
+    });
+
+    input.addEventListener('blur', () => {
+      const digits = input.value.replace(/\D+/g, '').replace(/^0+/, '');
+      input.value = digits ? new Intl.NumberFormat('es-CO').format(Number(digits)) : '';
+    });
+  }
+
   function initOrdenar() {
-    const BP = 1024; // ajusta a tu v.$tablet si cambia
+    const BP = 1024;
     const isMobile = () => window.innerWidth <= BP;
 
     const form   = document.getElementById('formOrdenar');
@@ -10020,7 +10324,6 @@
     const menu   = form?.querySelector('.ordenar__menu');
     if (!form || !select || !toggle || !menu) return;
 
-    // overlay para ordenar en móvil
     let overlay = document.querySelector('.ui_overlay');
     if (!overlay) {
       overlay = document.createElement('div');
@@ -10028,7 +10331,6 @@
       document.body.appendChild(overlay);
     }
 
-    // Desktop: onchange del select envía
     select.addEventListener('change', () => form.submit());
 
     const markActive = () => {
@@ -10075,30 +10377,19 @@
       }
     });
 
-    // Cerrar con overlay
     overlay.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); close(); });
-
-    // Cerrar con Escape
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
-
-    // ✅ Cerrar al tocar cualquier parte fuera del botón/menú
     document.addEventListener('click', (e) => {
       if (!form.classList.contains('is-open')) return;
       const target = e.target;
       const clickedInside = form.contains(target);
       if (!clickedInside) close();
     });
-
-    // Si cambian a desktop, cerramos
     window.addEventListener('resize', () => { if (!isMobile()) close(); });
   }
 
-
-
-
-
   function initLoginModal() {
-    const btnOpen = document.querySelector('.js-open-login');
+    const btnOpen = document.querySelectorAll('.js-open-login'); // querySelectorAll por si hay varios
     const overlay = document.getElementById('loginOverlay');
     const modal   = document.getElementById('loginModal');
     const btnClose= document.getElementById('loginClose');
@@ -10123,19 +10414,20 @@
       modal.hidden   = true;
     };
 
-    btnOpen?.addEventListener('click', (e) => {
-      e.preventDefault();
-      open();
+    btnOpen.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          open();
+        });
     });
 
-    btnClose?.addEventListener('click', close);
-    overlay?.addEventListener('click', close);
+    if(btnClose) btnClose.addEventListener('click', close);
+    if(overlay) overlay.addEventListener('click', close);
 
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && modal.classList.contains('is-open')) close();
     });
 
-    // auto-abrir si el backend lo pide (clase is-open ya la pone PHP)
     if (modal.classList.contains('is-open')) {
       overlay.hidden = false;
       modal.hidden   = false;
@@ -10143,12 +10435,11 @@
     }
   }
 
-
   function initLoginModalSubmit() {
-    const form = document.getElementById('loginForm'); // <form id="loginForm">
+    const form = document.getElementById('loginForm');
     if (!form) return;
 
-    const errorsBox = document.getElementById('auth-errors'); // <div id="auth-errors">
+    const errorsBox = document.getElementById('auth-errors');
 
     function renderErrors(errs) {
       if (!errorsBox) return;
@@ -10162,7 +10453,7 @@
     }
 
     form.addEventListener('submit', async (e) => {
-      e.preventDefault(); // ← evita navegación a /login
+      e.preventDefault();
       renderErrors([]);
 
       const btn = form.querySelector('.login-submit') || form.querySelector('button[type="submit"]');
@@ -10191,7 +10482,6 @@
         }
 
         if (data.ok) {
-          // éxito -> redirige (o reload)
           window.location.href = data.redirect || '/';
         } else {
           renderErrors(data.errors || ['Credenciales inválidas']);
@@ -10205,14 +10495,6 @@
     });
   }
 
-  // Llama las 2 funciones al cargar
-  document.addEventListener('DOMContentLoaded', () => {
-    initLoginModal();
-    initLoginModalSubmit();
-  });
-
-
-  // ------------------------- SWIPER RECOMENDADOS -------------------------
   function initSwiperRecomendados() {
     const recomendados = document.querySelectorAll('.card-propiedad .swiper');
     recomendados.forEach(swiperElement => {
@@ -10226,7 +10508,6 @@
     });
   }
 
-  // ------------------------- GALERÍAS PRINCIPAL Y MODAL -------------------------
   function initGalerias() {
     let swiperMiniaturas, swiperPrincipal, swiperModal;
     const miniaturas = document.querySelector('.galeria-miniaturas');
@@ -10298,28 +10579,30 @@
       });
     }
 
-    cerrar?.addEventListener('click', () => {
-      modal.classList.add('oculto');
-      document.body.style.overflow = '';
-    });
+    if(cerrar) {
+        cerrar.addEventListener('click', () => {
+          modal.classList.add('oculto');
+          document.body.style.overflow = '';
+        });
+    }
 
-    modal?.addEventListener('click', e => {
-      if (e.target === modal) {
-        modal.classList.add('oculto');
-        document.body.style.overflow = '';
-      }
-    });
+    if(modal) {
+        modal.addEventListener('click', e => {
+          if (e.target === modal) {
+            modal.classList.add('oculto');
+            document.body.style.overflow = '';
+          }
+        });
+    }
 
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape' && !modal.classList.contains('oculto')) {
+      if (e.key === 'Escape' && modal && !modal.classList.contains('oculto')) {
         modal.classList.add('oculto');
         document.body.style.overflow = '';
       }
     });
   }
 
-
-  // ------------------------- CONFIRMACIÓN ELIMINAR -------------------------
   function confirmarEliminacionPropiedad() {
     const formularios = document.querySelectorAll('form[action="/propiedades/eliminar"]');
     formularios.forEach(form => {
@@ -10340,19 +10623,14 @@
     });
   }
 
-  // ----------------- BARRA DE BUSQUEDA POR UBICACION Y BARRIO SUGERENCIA Y BUSQUEDA AUTOMATICA ------------------------------//
   function buscadorUbicacion() {
-    // 1) Selecciona un ÚNICO input y un ÚNICO contenedor
     const input = document.querySelector('input.barra_por_ubicaciones');
     const box   = document.querySelector('.resultados_busqueda');
 
-    // 2) Si no existen en esta página, sal sin romper
     if (!(input instanceof HTMLInputElement) || !box) return;
 
-    // 3) Estado local del autocompletado
     const state = { items: [], activeIndex: -1 };
 
-    // 4) Utils
     function debounce(fn, delay = 300) {
       let t;
       return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), delay); };
@@ -10385,7 +10663,6 @@
       showBox();
     }
 
-    // 5) Consulta al endpoint con debounce
     const consultar = debounce(async (termino) => {
       if (!termino || termino.trim().length < 2) { hideBox(); return; }
       try {
@@ -10402,11 +10679,9 @@
       }
     }, 300);
 
-    // 6) Listeners principales
     input.addEventListener('input', (e) => consultar(e.target.value));
     input.addEventListener('blur', () => setTimeout(hideBox, 150));
 
-    // 👉 NECESARIO: detectar clic en una sugerencia (mousedown para no perder foco antes)
     box.addEventListener('mousedown', (e) => {
       const item = e.target.closest('.resultado-item');
       if (!item || item.classList.contains('muted')) return;
@@ -10415,7 +10690,6 @@
       if (texto) seleccionarYBuscar(texto);
     });
 
-    // 7) Navegación con teclado
     input.addEventListener('keydown', (e) => {
       const abierta = box.style.display !== 'none' && state.items.length > 0;
       switch (e.key) {
@@ -10430,7 +10704,7 @@
           state.activeIndex = (state.activeIndex - 1 + state.items.length) % state.items.length;
           render(state.items); scrollToActive(); break;
         case 'Enter':
-          if (!abierta) return; // sin dropdown: deja enviar un form normal si lo hubiera
+          if (!abierta) return;
           e.preventDefault();
           const elegido = state.activeIndex === -1
             ? (input.value.trim() || '')
@@ -10455,479 +10729,55 @@
       }
     }
 
-    // 👉 NECESARIO: redirigir con GET al seleccionar
     function seleccionarYBuscar(valor) {
       input.value = valor;
       const url = new URL(window.location.href);
       url.searchParams.set('busqueda', valor);
-      url.searchParams.set('pagina', '1'); // reset paginación al seleccionar
+      url.searchParams.set('pagina', '1');
       window.location.href = url.toString();
     }
   }
+  function initHackSafari() {
+    if (!window.matchMedia('(max-width: 1024px)').matches) return;
 
+    const scroller = document.querySelector('.filtros_scroller');
+    const header   = document.querySelector('.header');
+    const triggers = document.querySelectorAll('.tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger');
+    const overlay  = document.querySelector('.filtros_overlay');
 
-  function buscadorPorTipo() {
-    const form   = document.querySelector('.form_busqueda');
-    const trigger = document.querySelector('.tipo_trigger');
-    const panel   = document.querySelector('.tipo_panel');
-    const badge   = document.querySelector('.tipo_trigger__badge');
-    const textEl  = document.querySelector('.tipo_trigger__text');
-    const todas   = document.querySelector('#tipo_todas');
-    const checks  = form ? Array.from(form.querySelectorAll('input[name="tipo[]"]')) : [];
-    const pagina  = form ? form.querySelector('#pagina_hidden') : null;
-
-    if (!form || !trigger || !panel || !todas || !checks.length || !pagina) return;
-
-    // Abrir/cerrar panel
-    function openPanel() {
-      panel.style.display = 'block';
-      trigger.setAttribute('aria-expanded', 'true');
-      // cerrar al hacer click fuera
-      setTimeout(() => {
-        document.addEventListener('mousedown', onDocClick);
-        document.addEventListener('keydown', onEsc);
-      }, 0);
-    }
-    function closePanel() {
-      panel.style.display = 'none';
-      trigger.setAttribute('aria-expanded', 'false');
-      document.removeEventListener('mousedown', onDocClick);
-      document.removeEventListener('keydown', onEsc);
-    }
-    function onDocClick(e) {
-      if (!panel.contains(e.target) && !trigger.contains(e.target)) closePanel();
-    }
-    function onEsc(e) { if (e.key === 'Escape') closePanel(); }
-
-    trigger.addEventListener('click', () => {
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      isOpen ? closePanel() : openPanel();
-    });
-
-    // Actualiza texto/badge del trigger
-    function updateTriggerLabel() {
-      const activos = checks.filter(c => c.checked).map(c => c.value);
-      if (activos.length === 0) {
-        textEl.textContent = 'Tipo de propiedad';
-        badge.style.display = 'none';
+    const toggleHack = (activar) => {
+      if (!scroller || !header) return;
+      if (activar) {
+        scroller.style.overflow = 'visible';
+        scroller.style.transform = 'none'; // Rompe el Stacking Context
+        header.style.zIndex = '999999';
       } else {
-        textEl.textContent = activos.map(t => t.charAt(0).toUpperCase() + t.slice(1)).join(', ');
-        badge.textContent = activos.length;
-        badge.style.display = 'inline-flex';
+        scroller.style.overflow = ''; 
+        scroller.style.removeProperty('transform');
+        header.style.removeProperty('z-index');
       }
-    }
-    updateTriggerLabel();
+    };
 
-    // Lógica “Todas”
-    todas.addEventListener('change', () => {
-      if (todas.checked) {
-        checks.forEach(c => c.checked = false);
-        updateTriggerLabel();
-        // limpia tipo[] de la URL y reinicia página
-        const url = new URL(window.location.href);
-        url.searchParams.forEach((v, k) => { if (k === 'tipo[]') url.searchParams.delete(k); });
-        url.searchParams.set('pagina', '1');
-        // conserva busqueda si existe
-        const busq = form.querySelector('input[name="busqueda"]')?.value?.trim();
-        if (busq) url.searchParams.set('busqueda', busq);
-        window.location.href = url.toString();
-      }
-    });
-
-    // Cambios en cada checkbox → desmarca “Todas”, actualiza label y envía
-    checks.forEach(c => {
-      c.addEventListener('change', () => {
-        if (c.checked) todas.checked = false;
-        const alguno = checks.some(x => x.checked);
-        if (!alguno) {
-          // si no queda ninguno, activa “Todas” y limpia
-          todas.checked = true;
-          updateTriggerLabel();
-          const url = new URL(window.location.href);
-          url.searchParams.forEach((v, k) => { if (k === 'tipo[]') url.searchParams.delete(k); });
-          url.searchParams.set('pagina', '1');
-          const busq = form.querySelector('input[name="busqueda"]')?.value?.trim();
-          if (busq) url.searchParams.set('busqueda', busq);
-          window.location.href = url.toString();
-          return;
-        }
-        updateTriggerLabel();
-        pagina.value = '1';
-        form.submit(); // GET con filtros activos
-      });
-    });
-  }
-
-
-  function initFiltroPrecio() {
-    const form    = document.querySelector('.form_busqueda');
-    const trigger = document.querySelector('.precio_trigger');
-    const panel   = document.querySelector('.precio_panel');
-    if (!form || !trigger || !panel) return;
-
-    const inputMin = panel.querySelector('.precio_min');
-    const inputMax = panel.querySelector('.precio_max');
-    const btnFiltrar = panel.querySelector('.precio_filtrar');
-    const btnLimpiar = panel.querySelector('.precio_limpiar');
-    const paginaHidden = panel.querySelector('.precio_pagina_hidden');
-    const labelText = trigger.querySelector('.precio_trigger__text');
-
-    // Abrir/cerrar
-    function openPanel() {
-      panel.style.display = 'block';
-      trigger.setAttribute('aria-expanded', 'true');
-      setTimeout(() => {
-        document.addEventListener('mousedown', onDocClick);
-        document.addEventListener('keydown', onEsc);
-      }, 0);
-    }
-    function closePanel() {
-      panel.style.display = 'none';
-      trigger.setAttribute('aria-expanded', 'false');
-      document.removeEventListener('mousedown', onDocClick);
-      document.removeEventListener('keydown', onEsc);
-    }
-    function onDocClick(e) {
-      if (!panel.contains(e.target) && !trigger.contains(e.target)) closePanel();
-    }
-    function onEsc(e) { if (e.key === 'Escape') closePanel(); }
-
-    trigger.addEventListener('click', () => {
-      const open = trigger.getAttribute('aria-expanded') === 'true';
-      open ? closePanel() : openPanel();
-    });
-
-    // Helper: limpia no-dígitos (solo deja números)
-    function onlyDigits(str) {
-      return (str || '').replace(/\D+/g, '');
-    }
-
-    // Botón Filtrar → normaliza, corrige rango y envía
-    btnFiltrar.addEventListener('click', () => {
-      const rawMin = onlyDigits(inputMin.value);
-      const rawMax = onlyDigits(inputMax.value);
-
-      // setea los values “limpios” en los inputs del form (GET)
-      inputMin.value = rawMin;
-      inputMax.value = rawMax;
-
-      // swap si ambos están y min > max
-      if (rawMin && rawMax && Number(rawMin) > Number(rawMax)) {
-        inputMin.value = rawMax;
-        inputMax.value = rawMin;
-      }
-
-      // Reset a página 1
-      if (paginaHidden) paginaHidden.value = '1';
-
-      // Envía GET con todos los filtros activos
-      form.submit();
-    });
-
-    // Botón Limpiar → elimina precio_min / precio_max de la URL y recarga
-    btnLimpiar.addEventListener('click', () => {
-      inputMin.value = '';
-      inputMax.value = '';
-
-      const url = new URL(window.location.href);
-      url.searchParams.delete('precio_min');
-      url.searchParams.delete('precio_max');
-      url.searchParams.set('pagina', '1'); // reset
-
-      window.location.href = url.toString();
-    });
-
-    // Enter en inputs = Filtrar
-    [inputMin, inputMax].forEach(inp => {
-      inp.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          btnFiltrar.click();
-        }
+    // Activar hack al abrir cualquier filtro móvil
+    triggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        setTimeout(() => {
+          const algunAbierto = document.querySelector('.is-open');
+          toggleHack(!!algunAbierto);
+        }, 100);
       });
     });
 
-    // Actualiza el texto del trigger con el rango actual (si existe)
-    const currentMin = onlyDigits(inputMin.value);
-    const currentMax = onlyDigits(inputMax.value);
-    if (currentMin || currentMax) {
-      const minTxt = currentMin ? '$' + currentMin : '—';
-      const maxTxt = currentMax ? '$' + currentMax : '—';
-      labelText.textContent = `${minTxt} — ${maxTxt}`;
-    } else {
-      labelText.textContent = 'Precio';
-    }
-  }
-
-  function initPrecioMiles() {
-    const minEl = document.querySelector('.precio_min');
-    const maxEl = document.querySelector('.precio_max');
-    [minEl, maxEl].forEach(el => el && bindMilesMask(el));
-  }
-
-  function bindMilesMask(input) {
-    const fmt = new Intl.NumberFormat('es-CO', { maximumFractionDigits: 0 });
-
-    input.addEventListener('input', () => {
-      const selStart = input.selectionStart ?? input.value.length;
-      const raw = input.value;
-
-      // 1) Mantén solo dígitos
-      const digits = raw.replace(/\D+/g, '').replace(/^0+/, '');
-      if (digits === '') {
-        input.value = '';
-        return;
+    // Cerrar todo al tocar overlay o fuera
+    document.addEventListener('click', (e) => {
+      if (overlay && e.target === overlay) {
+        toggleHack(false);
       }
-
-      // 2) Cuenta cuántos dígitos había a la izquierda del caret
-      const leftRaw = raw.slice(0, selStart);
-      const leftDigitsCount = (leftRaw.match(/\d/g) || []).length;
-
-      // 3) Formatea con puntos de miles
-      const formatted = fmt.format(Number(digits));
-
-      // 4) Coloca el caret donde queden esos mismos dígitos
-      let newCaret = 0, seen = 0;
-      for (let i = 0; i < formatted.length; i++) {
-        if (/\d/.test(formatted[i])) {
-          seen++;
-          if (seen === leftDigitsCount) { newCaret = i + 1; break; }
-        }
-        // si no alcanza, queda al final
-        if (i === formatted.length - 1) newCaret = formatted.length;
+      if (!e.target.closest('.header') && !e.target.closest('.resultados_busqueda')) {
+        setTimeout(() => {
+          if (!document.querySelector('.is-open')) toggleHack(false);
+        }, 100);
       }
-
-      input.value = formatted;
-      // Reaplica caret (en móviles algunos navegadores lo ignoran, no pasa nada)
-      try { input.setSelectionRange(newCaret, newCaret); } catch {}
-    });
-
-    // Enter aplica filtro (por si no lo tienes ya en initFiltroPrecio)
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const panel = input.closest('.precio_panel');
-        panel?.querySelector('.precio_filtrar')?.click();
-      }
-    });
-
-    // Limpia ceros sobrantes al perder foco (opcional)
-    input.addEventListener('blur', () => {
-      const digits = input.value.replace(/\D+/g, '').replace(/^0+/, '');
-      input.value = digits ? new Intl.NumberFormat('es-CO').format(Number(digits)) : '';
-    });
-  }
-
-
-  function initFiltroHB() {
-    const form    = document.querySelector('.form_busqueda');
-    const trigger = document.querySelector('.hb_trigger');
-    const panel   = document.querySelector('.hb_panel');
-    if (!form || !trigger || !panel) return;
-
-    const hiddenHab   = panel.querySelector('.hb_hidden_hab');
-    const hiddenBanos = panel.querySelector('.hb_hidden_banos');
-    const exactBoxes  = panel.querySelectorAll('.hb_exact');
-    const btnApply    = panel.querySelector('.hb_apply');
-    const btnClear    = panel.querySelector('.hb_clear');
-    const paginaHid   = panel.querySelector('.hb_pagina_hidden');
-    const labelText   = trigger.querySelector('.hb_trigger__text');
-
-    // abrir/cerrar
-    function openPanel() {
-      panel.style.display = 'block';
-      trigger.setAttribute('aria-expanded', 'true');
-      setTimeout(() => {
-        document.addEventListener('mousedown', docClose);
-        document.addEventListener('keydown', onEsc);
-      }, 0);
-    }
-    function closePanel() {
-      panel.style.display = 'none';
-      trigger.setAttribute('aria-expanded', 'false');
-      document.removeEventListener('mousedown', docClose);
-      document.removeEventListener('keydown', onEsc);
-    }
-    function docClose(e) {
-      if (!panel.contains(e.target) && !trigger.contains(e.target)) closePanel();
-    }
-    function onEsc(e) { if (e.key === 'Escape') closePanel(); }
-
-    trigger.addEventListener('click', () => {
-      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
-      isOpen ? closePanel() : openPanel();
-    });
-
-    // seleccionar opción (hab o baños)
-    panel.querySelectorAll('.hb_group').forEach(group => {
-      group.addEventListener('click', (e) => {
-        const btn = e.target.closest('.hb_opt');
-        if (!btn) return;
-        const kind = btn.dataset.kind;         // 'hab' | 'banos'
-        const val  = parseInt(btn.dataset.val, 10) || 0;
-
-        // activar visualmente
-        group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        // setear hidden
-        if (kind === 'hab')   hiddenHab.value = String(val);
-        if (kind === 'banos') hiddenBanos.value = String(val);
-
-        // actualizar etiqueta del trigger (preview)
-        updateTriggerText();
-      });
-    });
-
-    // actualizar texto del trigger
-    function updateTriggerText() {
-      const hab   = parseInt(hiddenHab.value || '0', 10);
-      const banos = parseInt(hiddenBanos.value || '0', 10);
-      const habExact   = panel.querySelector('input[name="hab_exact"]')?.checked;
-      const banosExact = panel.querySelector('input[name="banos_exact"]')?.checked;
-
-      const parts = [];
-      if (hab > 0)   parts.push(`Habs: ${hab}${habExact ? '' : '+'}`);
-      if (banos > 0) parts.push(`Baños: ${banos}${banosExact ? '' : '+'}`);
-
-      labelText.textContent = parts.length ? parts.join(', ') : 'Habs. y baños';
-    }
-    updateTriggerText();
-
-    // aplicar
-    btnApply.addEventListener('click', () => {
-      // Si ambos están en 0 y los exact en false → limpiar parámetros
-      parseInt(hiddenHab.value || '0', 10);
-      parseInt(hiddenBanos.value || '0', 10);
-
-      // reset paginación
-      if (paginaHid) paginaHid.value = '1';
-
-      form.submit();
-    });
-
-    // limpiar
-    btnClear.addEventListener('click', () => {
-      hiddenHab.value = '0';
-      hiddenBanos.value = '0';
-      exactBoxes.forEach(cb => { cb.checked = false; });
-
-      // limpiar visual de botones
-      panel.querySelectorAll('.hb_group').forEach(group => {
-        group.querySelectorAll('.hb_opt').forEach(b => b.classList.remove('active'));
-        const first = group.querySelector('.hb_opt[data-val="0"]'); // "Todos"
-        first && first.classList.add('active');
-      });
-
-      updateTriggerText();
-
-      // quitar params de la URL y reset a página 1
-      const url = new URL(window.location.href);
-      url.searchParams.delete('hab');
-      url.searchParams.delete('banos');
-      url.searchParams.delete('hab_exact');
-      url.searchParams.delete('banos_exact');
-      url.searchParams.set('pagina', '1');
-      window.location.href = url.toString();
-    });
-
-    // Enter dentro del panel => aplicar
-    panel.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') { e.preventDefault(); btnApply.click(); }
-    });
-  }
-
-  function initMasFiltros() {
-    const form    = document.querySelector('.form_busqueda');
-    const trigger = document.querySelector('.mas_trigger');
-    const overlay = document.querySelector('.mas_overlay');
-    const modal   = document.querySelector('.mas_modal');
-    if (!form || !trigger || !overlay || !modal) return;
-
-    const closeBtn  = modal.querySelector('.mas_close');
-    const btnApply  = modal.querySelector('.mas_apply');
-    const btnClear  = modal.querySelector('.mas_clear');
-    const pageInput = modal.querySelector('.mas_pagina_hidden');
-    const labelText = trigger.querySelector('.mas_trigger__text');
-
-    const estratoHidden = modal.querySelector('.mf_hidden_estrato');
-    const estratoGroup  = modal.querySelector('.mf_group[data-kind="estrato"]');
-
-    function openModal() {
-      overlay.hidden = false;
-      modal.hidden = false;
-      overlay.classList.add('is-open');
-      modal.classList.add('is-open');
-      trigger.setAttribute('aria-expanded', 'true');
-      document.body.style.overflow = 'hidden';
-
-      // listeners para cerrar
-      setTimeout(() => {
-        document.addEventListener('keydown', onEsc);
-        overlay.addEventListener('click', closeModal, { once: true });
-      }, 0);
-    }
-
-    function closeModal() {
-      overlay.classList.remove('is-open');
-      modal.classList.remove('is-open');
-      overlay.hidden = true;
-      modal.hidden = true;
-      trigger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-      document.removeEventListener('keydown', onEsc);
-    }
-
-    // Al cargar, fuerza cerrado por si venías de una recarga
-    (function forceClosedOnLoad(){
-      overlay.classList.remove('is-open');
-      modal.classList.remove('is-open');
-      overlay.hidden = true;
-      modal.hidden = true;
-      trigger.setAttribute('aria-expanded', 'false');
-      document.body.style.overflow = '';
-    })();
-
-    function onEsc(e) { if (e.key === 'Escape') closeModal(); }
-
-    trigger.addEventListener('click', openModal);
-    closeBtn.addEventListener('click', closeModal);
-
-    // Selección de Estrato (chips)
-    estratoGroup.addEventListener('click', (e) => {
-      const btn = e.target.closest('.mf_opt');
-      if (!btn) return;
-      estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      estratoHidden.value = String(parseInt(btn.dataset.val || '0', 10) || 0);
-      updateTriggerText();
-    });
-
-    // Actualiza el texto del trigger según estado
-    function updateTriggerText() {
-      const eVal = parseInt(estratoHidden.value || '0', 10);
-      labelText.textContent = eVal > 0 ? `Más filtros (Estrato ${eVal})` : 'Más filtros';
-    }
-    updateTriggerText();
-
-    // Aplicar → submit GET conservando demás filtros
-    btnApply.addEventListener('click', () => {
-      if (pageInput) pageInput.value = '1';
-      form.submit();
-    });
-
-    // Limpiar → quitar estrato de la URL y reset a pág 1
-    btnClear.addEventListener('click', () => {
-      estratoHidden.value = '0';
-      estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
-      const first = estratoGroup.querySelector('.mf_opt[data-val="0"]');
-      first && first.classList.add('active');
-      updateTriggerText();
-
-      const url = new URL(window.location.href);
-      url.searchParams.delete('estrato');
-      url.searchParams.set('pagina', '1');
-      window.location.href = url.toString();
     });
   }
 

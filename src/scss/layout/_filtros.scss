@@ -2,934 +2,214 @@
 @use 'base/mixins' as m;
 @use 'sass:color';
 
-// ---------- FORM + INPUT ----------
+/* ==========================================================================
+   1. ESTILOS GENERALES Y LAYOUT
+   ========================================================================== */
 .filtros_header {
   .form_busqueda {
-    position: relative;        // ancla para el dropdown
-    width: max-content;        // el dropdown tomará este ancho (el del input)
-    font-family: v.$texto;
+    /* MÓVIL */
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column; 
     gap: 1rem;
-    margin: 0 auto;
-  }
-
-  .filtros_computadora_header {
-    .barra_por_ubicaciones {
-      width: 40rem;
-      height: 4rem;
-      padding: 0 1.2rem;
-      font-size: 1.6rem;
-      line-height: 4rem;
-      color: v.$arenaclaro;
-      background: v.$grisgrafito;
-      border: 1px solid v.$grisniebla;
-      border-radius: 1.2rem;
-      outline: none;
-
-      // sutil glow al focus
-      &:focus {
-        border-color: v.$rojotierra;
-        box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.377);
-      }
-
-      // placeholder suave
-      &::placeholder {
-        color: color.scale(v.$arenaclaro, $lightness: -35%);
-        opacity: .9;
-      }
-    }
-  }
-}
-
-// ---------- DROPDOWN ----------
-.resultados_busqueda {
-  display: none;               // JS la setea a 'block'
-  position: absolute;
-  top: calc(100% + .6rem);     // justo debajo del input
-  left: 0;
-  width: 100%;
-  max-height: 50dvh;
-  overflow-y: auto;
-  background: v.$grisgrafito;
-  color: v.$arenaclaro;
-  border: 1px solid v.$grisniebla;
-  border-radius: 1.2rem;
-  box-shadow: 0 12px 28px rgba(0,0,0,.35);
-  z-index: 220;
-  
-
-  // “notch” que une visualmente con el input
-  &::before {
-    content: '';
-    position: absolute;
-    top: -8px;
-    left: 2.4rem;             // ajústalo si quieres centrarlo
-    width: 16px;
-    height: 16px;
-    background: v.$grisgrafito;
-    border-left: 1px solid v.$grisniebla;
-    border-top: 1px solid v.$grisniebla;
-    transform: rotate(45deg);
-  }
-
-  // scroll minimal
-  &::-webkit-scrollbar { width: 10px; }
-  &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
-  &::-webkit-scrollbar-track { background: #181818; }
-}
-
-// Cada item del dropdown
-.resultado-item {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  align-items: center;
-  gap: .8rem;
-  padding: 1.1rem 1.2rem 1.1rem 1.2rem;
-  cursor: pointer;
-  font-family: v.$texto;
-  border-top: 1px solid rgba(255,255,255,.06);
-
-  // primera fila sin borde superior
-  &:first-child { border-top: 0; }
-
-  // icono a la izquierda con SVG inline (ubicación)
-  &::before {
-    content: '';
-    width: 1.6rem;
-    height: 1.6rem;
-    justify-self: center;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 1.6rem 1.6rem;
-    // pin SVG usando currentColor (toma el color del texto)
-    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1 1 18 0Z'/%3E%3Ccircle cx='12' cy='10.5' r='3'/%3E%3C/svg%3E");
-    opacity: .85;
-  }
-
-  // texto
-  span { font-size: 1.45rem; }
-
-  // hover y foco desde teclado
-  &:hover,
-  &.activo {
-    background: color.scale(v.$grisgrafito, $lightness: 8%);
-  }
-
-  // estado “muted” (sin resultados)
-  &.muted {
-    cursor: default;
-    color: rgba(255,255,255,.55);
-    &::before { display: none; }
-  }
-}
-
-// Responsive
-@media (max-width: v.$tablet_filtros) {
-  .filtros_header .filtros_computadora_header .barra_por_ubicaciones {
-    width: min(90vw, 40rem);
-  }
-  .resultados_busqueda {
-    max-height: 50dvh;
-  }
-}
-
-.filtro_tipo {
-  position: relative;
-  display: inline-block;
-  margin-top: 0; // ajusta si quieres que quede pegado al input
-
-  .tipo_trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    height: 4rem;
-    padding: 0 1.2rem;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    font-family: v.$texto;
-    font-size: 1.4rem;
-    cursor: pointer;
-    line-height: 4rem;
-
-    &:focus {
-      outline: none;
-      border-color: v.$azulniebla;
-      box-shadow: 0 0 0 3px rgba(164,200,216,.25);
-    }
-
-    &__badge {
-      min-width: 1.6rem;
-      height: 1.6rem;
-      border-radius: 999px;
-      padding: 0 .4rem;
-      background: color.scale(v.$grisgrafito, $lightness: 15%);
-      border: 1px solid v.$grisniebla;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-    }
-
-    &__chev {
-      opacity: .75;
-      transition: transform .15s ease;
-    }
-
-    &[aria-expanded="true"] .tipo_trigger__chev {
-      transform: rotate(180deg);
-    }
-  }
-
-  .tipo_panel {
-    display: none; // JS alterna a block
-    position: absolute;
-    top: calc(100% + .6rem);
-    left: 0;
-    width: 28rem; // o 100% si quieres que iguale al trigger
-    max-height: 28rem;
-    overflow-y: auto;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    box-shadow: 0 12px 28px rgba(0,0,0,.35);
-    z-index: 60; // por encima del dropdown de ubicaciones (que está en 50)
-
-    // notch
-    &::before {
-      content: '';
-      position: absolute;
-      top: -8px; left: 2.4rem;
-      width: 16px; height: 16px;
-      background: v.$grisgrafito;
-      border-left: 1px solid v.$grisniebla;
-      border-top: 1px solid v.$grisniebla;
-      transform: rotate(45deg);
-    }
-
-    // scroll minimal
-    &::-webkit-scrollbar { width: 10px; }
-    &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
-    &::-webkit-scrollbar-track { background: #181818; }
-  }
-
-  .tipo_opcion {
-    display: grid;
-    grid-template-columns: 1.8rem 1fr;
-    align-items: center;
-    gap: .8rem;
-    padding: .9rem 1.2rem;
-    border-top: 1px solid rgba(255,255,255,.06);
-    cursor: pointer;
-    user-select: none;
-
-    &:first-child { border-top: 0; }
-
-    input[type="checkbox"] {
-      width: 1.6rem; height: 1.6rem; cursor: pointer;
-      accent-color: v.$azulniebla; // soporte moderno, sino deja default
-    }
-
-    span { font-size: 1.4rem; }
-
-    &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); }
-  }
-}
-
-@media (max-width: v.$tablet_filtros) {
-  .filtro_tipo .tipo_panel {
-    width: min(90vw, 28rem);
-    max-height: 50dvh;
-  }
-}
-
-/* === PRECIO (trigger + panel) === */
-.filtro_precio {
-  position: relative;
-  display: inline-block;
-
-  /* Botón/trigger (igual al de Tipo) */
-  .precio_trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    height: 4rem;
-    padding: 0 1.2rem;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    font-family: v.$texto;
-    font-size: 1.4rem;
-    cursor: pointer;
-    line-height: 4rem;
-
-    /* el texto del rango puede crecer: recórtalo elegante */
-    .precio_trigger__text {
-      max-width: 18rem;          /* ajusta si necesitas más */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$rojotierra;
-      box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.25);
-    }
-
-    &__chev { opacity: .75; transition: transform .15s ease; }
-    &[aria-expanded="true"] .precio_trigger__chev { transform: rotate(180deg); }
-  }
-
-  /* Panel desplegable */
-  .precio_panel {
-    display: none;                 /* JS alterna a block */
-    position: absolute;
-    top: calc(100% + .6rem);
-    left: 0;
-    width: 26rem;                  /* 100% si quieres igual al trigger */
-    padding: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    box-shadow: 0 12px 28px rgba(0,0,0,.35);
-    z-index: 60;
-
-    /* notch para unirse al trigger */
-    &::before {
-      content: '';
-      position: absolute;
-      top: -8px; left: 2.4rem;
-      width: 16px; height: 16px;
-      background: v.$grisgrafito;
-      border-left: 1px solid v.$grisniebla;
-      border-top: 1px solid v.$grisniebla;
-      transform: rotate(45deg);
-    }
-  }
-
-  /* Inputs apilados */
-  .precio_inputs {
-    display: grid;
-    gap: .8rem;
-
-    label { display: grid; gap: .4rem; }
-
-    span { font-size: 1.2rem; color: rgba(255,255,255,.7); }
-
-    input {
-      height: 3.2rem;
-      padding: 0 .9rem;
-      border-radius: .8rem;
-      border: 1px solid v.$grisniebla;
-      background: #222;            /* tono más oscuro que el panel */
-      color: v.$arenaclaro;
-      font-size: 1.4rem;
-      outline: none;
-
-      &::placeholder {
-        color: rgba(255,255,255,.45);
-      }
-
-      &:focus {
-        border-color: v.$rojotierra;
-        box-shadow: 0 0 0 3px rgba(247,142,142,.20);
-      }
-    }
-  }
-
-  /* Acciones (Limpiar / Filtrar) */
-  .precio_acciones {
-    display: flex;
-    gap: .8rem;
-    justify-content: flex-end;
-    margin-top: .8rem;
-
-    button {
-      height: 3.2rem;
-      padding: 0 1.1rem;
-      border-radius: .8rem;
-      font-size: 1.3rem;
-      cursor: pointer;
-      transition: transform .05s ease, box-shadow .15s ease;
-    }
-
-    .precio_limpiar {
-      background: transparent;
-      color: v.$arenaclaro;
-      border: 1px solid v.$grisniebla;
-
-      &:hover { background: rgba(255,255,255,.05); }
-      &:active { transform: translateY(1px); }
-    }
-
-    .precio_filtrar {
-      background: v.$rojotierra;
-      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
-      color: white;
-      box-shadow: 0 6px 16px rgba(193,68,46,.25);
-
-      &:hover { box-shadow: 0 8px 20px rgba(193,68,46,.35); }
-      &:active { transform: translateY(1px); }
-    }
-  }
-}
-
-/* Orden horizontal entre filtros (como ya tienes) */
-.filtros_header .form_busqueda {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Responsive */
-@media (max-width: v.$tablet_filtros) {
-  .filtro_precio .precio_panel { width: min(90vw, 26rem); }
-  .filtro_precio .precio_trigger .precio_trigger__text { max-width: 40vw; }
-}
-
-
-
-/* ========= HABS & BAÑOS (trigger + panel) ========= */
-.filtro_hb {
-  position: relative;
-  display: inline-block;
-
-  /* Botón/trigger (idéntico a Tipo/Precio) */
-  .hb_trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    height: 4rem;
-    padding: 0 1.2rem;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    font-family: v.$texto;
-    font-size: 1.4rem;
-    cursor: pointer;
-    line-height: 4rem;
-
-    .hb_trigger__text {
-      max-width: 18rem;          // recorte elegante si hay texto largo
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &:focus {
-      outline: none;
-      border-color: v.$rojotierra;
-      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-    }
-
-    &__chev { opacity: .75; transition: transform .15s ease; }
-    &[aria-expanded="true"] .hb_trigger__chev { transform: rotate(180deg); }
-  }
-
-  /* Panel desplegable */
-  .hb_panel {
-    display: none;                 // JS alterna a 'block'
-    position: absolute;
-    top: calc(100% + .6rem);
-    left: 0;
-    width: 34rem;                  // suficiente para los “chips”
-    padding: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    box-shadow: 0 12px 28px rgba(0,0,0,.35);
-    z-index: 60;
-
-    /* notch para unirse al trigger */
-    &::before {
-      content: '';
-      position: absolute;
-      top: -8px; left: 2.4rem;
-      width: 16px; height: 16px;
-      background: v.$grisgrafito;
-      border-left: 1px solid v.$grisniebla;
-      border-top: 1px solid v.$grisniebla;
-      transform: rotate(45deg);
-    }
-  }
-
-  /* Titulares de sección */
-  .hb_title {
-    margin: .2rem 0 .8rem 0;
-    font-size: 1.35rem;
-    font-weight: 600;
-    color: rgba(255,255,255,.9);
-  }
-
-  /* Separador sutil entre bloques */
-  .hb_divider {
-    border: 0;
-    border-top: 1px solid rgba(255,255,255,.06);
-    margin: 1rem 0 1.2rem 0;
-  }
-
-  /* Grupos de opciones (chips 0,1,2,3,4,5) */
-  .hb_group {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: .6rem;
-    margin-bottom: .8rem;
-  }
-
-  .hb_opt {
-    height: 3.2rem;
-    padding: 0 .8rem;
-    border-radius: .8rem;
-    border: 1px solid v.$grisniebla;
-    background: #262626;
-    color: v.$arenaclaro;
-    font-size: 1.35rem;
-    line-height: 3.2rem;
-    text-align: center;
-    cursor: pointer;
-    transition: background .12s ease, box-shadow .12s ease, border-color .12s ease;
-
-    &:hover { background: #2e2e2e; }
-    &:focus-visible {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-      border-color: v.$rojotierra;
-    }
-
-    &.active {
-      background: color.scale(v.$rojotierra, $lightness: -5%);
-      border-color: color.scale(v.$rojotierra, $lightness: -12%);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(193,68,46,.25);
-    }
-  }
-
-  /* Toggle “número exacto” (switch minimal) */
-  .hb_exact_label {
-    display: flex;
-    align-items: center;
-    gap: .8rem;
-    font-size: 1.25rem;
-    color: rgba(255,255,255,.8);
-    user-select: none;
-
-    input[type="checkbox"] {
-      /* switch custom */
-      appearance: none;
-      width: 42px; height: 24px;
-      border-radius: 999px;
-      background: #2a2a2a;
-      border: 1px solid v.$grisniebla;
-      position: relative;
-      cursor: pointer;
-      transition: background .15s ease, border-color .15s ease;
-
-      &::after {
-        content: '';
-        position: absolute;
-        top: 2px; left: 2px;
-        width: 18px; height: 18px;
-        border-radius: 50%;
-        background: #bbb;
-        transition: transform .15s ease, background .15s ease;
-      }
-
-      &:checked {
-        background: color.scale(v.$rojotierra, $lightness: -5%);
-        border-color: color.scale(v.$rojotierra, $lightness: -12%);
-      }
-      &:checked::after {
-        transform: translateX(18px);
-        background: #fff;
-      }
-
-      &:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-      }
-    }
-  }
-
-  /* Acciones (Limpiar / Aplicar) */
-  .hb_actions {
-    display: flex;
-    gap: .8rem;
-    justify-content: flex-end;
-    margin-top: 1.2rem;
-
-    button {
-      height: 3.2rem;
-      padding: 0 1.1rem;
-      border-radius: .8rem;
-      font-size: 1.3rem;
-      cursor: pointer;
-      transition: transform .05s ease, box-shadow .15s ease;
-    }
-
-    .hb_clear {
-      background: transparent;
-      color: v.$arenaclaro;
-      border: 1px solid v.$grisniebla;
-
-      &:hover { background: rgba(255,255,255,.05); }
-      &:active { transform: translateY(1px); }
-    }
-
-    .hb_apply {
-      background: v.$rojotierra;
-      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
-      color: #fff;
-      box-shadow: 0 6px 16px rgba(193,68,46,.25);
-
-      &:hover { box-shadow: 0 8px 20px rgba(193,68,46,.35); }
-      &:active { transform: translateY(1px); }
-    }
-  }
-}
-
-/* Cohesión con layout de filtros */
-.filtros_header .form_busqueda {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-/* Responsive */
-@media (max-width: v.$tablet_filtros) {
-  .filtro_hb .hb_panel { width: min(90vw, 34rem); }
-  .filtro_hb .hb_trigger .hb_trigger__text { max-width: 40vw; }
-  .filtro_hb .hb_group { grid-template-columns: repeat(6, 1fr); } // se mantiene en 6 columnas
-}
-
-
-/* ======= TRIGGER “Más filtros” ======= */
-.filtro_mas {
-  position: relative;
-  display: inline-block;
-
-  .mas_trigger {
-    display: inline-flex;
-    align-items: center;
-    gap: .6rem;
-    height: 4rem;
-    padding: 0 1.2rem;
-    border: 1px solid v.$grisniebla;
-    border-radius: 1.2rem;
-    background: v.$grisgrafito;
-    color: v.$arenaclaro;
-    font-family: v.$texto;
-    font-size: 1.4rem;
-    line-height: 4rem;
-    cursor: pointer;
-
-    .mas_trigger__text {
-      max-width: 18rem; /* recorte elegante si muestra estado */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    &__chev { opacity: .75; transition: transform .15s ease; }
-    &[aria-expanded="true"] .mas_trigger__chev { transform: rotate(180deg); }
-
-    &:focus {
-      outline: none;
-      border-color: v.$rojotierra;
-      box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-    }
-  }
-}
-
-/* ======= OVERLAY + MODAL ======= */
-.mas_overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.55);
-  backdrop-filter: blur(2px);
-  z-index: 120; /* por encima de todo */
-}
-
-.mas_modal {
-  position: fixed;
-  z-index: 130;
-  inset: 50% auto auto 50%;
-  transform: translate(-50%, -50%);
-  width: min(92vw, 720px);
-  max-height: 75dvh !important;
-  display: flex;
-  flex-direction: column;
-
-  background: v.$grisgrafito;
-  color: v.$arenaclaro;
-  border: 1px solid v.$grisniebla;
-  border-radius: 1.2rem;
-  box-shadow: 0 18px 48px rgba(0,0,0,.5);
-
-  /* cabecera */
-  .mas_head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.2rem 1.4rem;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-
-    h3 {
-      margin: 0;
-      font-family: v.$texto;
-      font-weight: 700;
-      font-size: 1.6rem;
-      letter-spacing: .2px;
-      color: rgba(255,255,255,.95);
-    }
-
-    .mas_close {
-      width: 3.2rem; height: 3.2rem;
-      border-radius: .8rem;
-      border: 1px solid v.$grisniebla;
-      background: #262626;
-      color: v.$arenaclaro;
-      cursor: pointer;
-      transition: background .12s ease;
-      &:hover { background: #2e2e2e; }
-      &:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-        border-color: v.$rojotierra;
-      }
-    }
-  }
-
-  /* cuerpo con scroll */
-  .mas_body {
-    padding: 1.2rem 1.4rem;
-    overflow: auto;
-    flex: 1;
-
-    /* scroll minimal oscuro */
-    &::-webkit-scrollbar { width: 10px; }
-    &::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 10px; }
-    &::-webkit-scrollbar-track { background: #181818; }
-  }
-
-  /* acciones */
-  .mas_actions {
-    padding: 1rem 1.4rem;
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    border-top: 1px solid rgba(255,255,255,.06);
-
-    .mas_clear,
-    .mas_apply {
-      height: 3.4rem;
-      padding: 0 1.2rem;
-      border-radius: .8rem;
-      font-size: 1.35rem;
-      cursor: pointer;
-      transition: transform .05s ease, box-shadow .15s ease, background .12s ease, border-color .12s ease;
-    }
-
-    .mas_clear {
-      background: transparent;
-      color: v.$arenaclaro;
-      border: 1px solid v.$grisniebla;
-      &:hover { background: rgba(255,255,255,.05); }
-      &:active { transform: translateY(1px); }
-      &:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(164,200,216,.25);
-        border-color: v.$azulniebla;
-      }
-    }
-
-    .mas_apply {
-      margin-left: auto; /* se pega a la derecha */
-      background: v.$rojotierra;
-      color: #fff;
-      border: 1px solid color.scale(v.$rojotierra, $lightness: -12%);
-      box-shadow: 0 8px 20px rgba(193,68,46,.28);
-      &:hover { box-shadow: 0 10px 24px rgba(193,68,46,.38); }
-      &:active { transform: translateY(1px); }
-      &:focus-visible {
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(247,142,142,.25);
-      }
-    }
-  }
-}
-
-/* ======= SECCIONES Y CHIPS (Estrato) ======= */
-.mf_section {
-  padding: .6rem 0 1.2rem 0;
-  & + .mf_section {
-    border-top: 1px solid rgba(255,255,255,.06);
-    margin-top: 1rem;
-  }
-}
-
-.mf_title {
-  margin: .2rem 0 .9rem 0;
-  font-size: 1.35rem;
-  font-weight: 600;
-  color: rgba(255,255,255,.9);
-}
-
-.mf_group {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr)); /* Todos + 1..6 */
-  gap: .6rem;
-}
-
-.mf_opt {
-  height: 3.2rem;
-  padding: 0 .8rem;
-  border-radius: .8rem;
-  border: 1px solid v.$grisniebla;
-  background: #262626;
-  color: v.$arenaclaro;
-  font-size: 1.35rem;
-  line-height: 3.2rem;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  transition: background .12s ease, box-shadow .12s ease, border-color .12s ease;
-
-  &:hover { background: #2e2e2e; }
-  &:focus-visible {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(164,200,216,.25);
-    border-color: v.$azulniebla;
-  }
-
-  &.active {
-    background: color.scale(v.$rojotierra, $lightness: -5%);
-    border-color: color.scale(v.$rojotierra, $lightness: -12%);
-    color: #fff;
-    box-shadow: 0 6px 16px rgba(193,68,46,.25);
-  }
-}
-
-/* ======= RESPONSIVE ======= */
-@media (max-width: v.$tablet_filtros) {
-  .mas_modal { width: min(96vw, 640px); }
-  .mf_group { grid-template-columns: repeat(7, 1fr); }
-}
-
-@media (max-width: 520px) {
-  .mf_group { grid-template-columns: repeat(4, 1fr); } /* se parte en 2 filas */
-  .filtro_mas .mas_trigger .mas_trigger__text { max-width: 40vw; }
-}
-
-/* Estado por defecto: oculto */
-.mas_overlay,
-.mas_modal { display: none; }
-
-/* Cuando está abierto */
-.mas_overlay.is-open { display: block; }
-.mas_modal.is-open   { display: flex; }  /* <— usa flex para mantener el layout interno */
-
-
-/* 1) SCROLLER HORIZONTAL EN MÓVIL/TABLET (usa el wrapper .filtros_scroller) */
-@media (max-width: v.$tablet_filtros) {
-  .filtros_scroller {
     width: 100%;
-    max-width: 100vw;
-    overflow-x: auto;
-    overflow-y: visible;
+    margin: 0 auto; 
+    padding: .5rem;
+
+    /* ESCRITORIO */
+    @media (min-width: 1025px) {
+       flex-direction: row;
+       align-items: center;
+       justify-content: center;
+       width: max-content;
+    }
+  }
+
+  /* BLOQUE 1: BUSCADOR */
+  .bloque_buscador_static {
+      position: relative; 
+      z-index: 100;
+      width: 100%;
+      @media (min-width: 1025px) { width: auto; }
+  }
+
+  .filtros_computadora_header .barra_por_ubicaciones {
+      width: 100%; height: 4.5rem; padding: 0 1.2rem;
+      font-size: 1.6rem; line-height: 4.5rem;
+      color: v.$arenaclaro; background: v.$grisgrafito;
+      border: 1px solid v.$grisniebla; border-radius: 1.2rem; outline: none;
+      
+      &:focus { border-color: v.$rojotierra; box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.377); }
+      &::placeholder { color: color.scale(v.$arenaclaro, $lightness: -35%); opacity: .9; }
+
+      @media (min-width: 1025px) { width: 40rem; height: 4rem; line-height: 4rem; }
+  }
+}
+
+/* BLOQUE 2: SCROLLER DE FILTROS */
+.filtros_scroller {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
+    
+    /* === MÓVIL: FORZAR SIEMPRE EL SCROLL === */
+    /* El !important evita que el JS o el bloqueo del body lo rompan */
+    overflow-x: auto !important; 
+    padding-bottom: 5px; 
+    
+    /* Suavizado en iOS */
     -webkit-overflow-scrolling: touch;
-    padding-inline: 16px;      /* ajusta al gutter de tu layout */
-    scroll-padding-left: 16px;
-
+    
+    /* Ocultar barra */
     &::-webkit-scrollbar { display: none; }
-    -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  .filtros_scroller .form_busqueda {
-    display: inline-flex;      /* ancho real del contenido */
-    width: max-content;
-    gap: .8rem;
-    margin: 0;
-    scroll-snap-type: x proximity;
-
-    > * {
-      flex: 0 0 auto;
-      scroll-snap-align: start;
+    
+    /* === ESCRITORIO === */
+    @media (min-width: 1025px) {
+        width: auto;
+        /* En PC debe ser visible para que salgan los dropdowns hacia abajo */
+        overflow: visible !important; 
+        padding-bottom: 0;
+        z-index: 110;
     }
-    > *:first-child { margin-left: 0 !important; }
+}
+
+/* ==========================================================================
+   2. DROPDOWN SUGERENCIAS
+   ========================================================================== */
+.resultados_busqueda {
+  display: none; 
+  position: absolute; 
+  top: 100%; left: 0; width: 100%;
+  margin-top: 8px;
+  max-height: 50dvh; 
+  overflow-y: auto; 
+  background: v.$grisgrafito; 
+  color: v.$arenaclaro;
+  border: 1px solid v.$grisniebla; 
+  border-radius: 1.2rem; 
+  box-shadow: 0 15px 40px rgba(0,0,0,0.8); 
+  z-index: 220;
+  &:not(:empty) { display: block; }
+  &::before { content: ''; position: absolute; top: -8px; left: 2.4rem; width: 16px; height: 16px; background: v.$grisgrafito; border-left: 1px solid v.$grisniebla; border-top: 1px solid v.$grisniebla; transform: rotate(45deg); display: none; }
+  @media(min-width: 1025px) { &::before { display: block; } }
+}
+
+.resultado-item {
+  display: grid; grid-template-columns: 2rem 1fr; align-items: center; gap: .8rem; padding: 1.1rem 1.2rem;
+  cursor: pointer; font-family: v.$texto; border-top: 1px solid rgba(255,255,255,.06);
+  &:first-child { border-top: 0; }
+  &::before { content: ''; width: 1.6rem; height: 1.6rem; justify-self: center; background-repeat: no-repeat; background-position: center; background-size: 1.6rem 1.6rem; background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21 10.5C21 16.5 12 22 12 22S3 16.5 3 10.5a9 9 0 1 1 18 0Z'/%3E%3Ccircle cx='12' cy='10.5' r='3'/%3E%3C/svg%3E"); opacity: .85; }
+  span { font-size: 1.45rem; }
+  &:hover, &.activo { background: color.scale(v.$grisgrafito, $lightness: 8%); }
+  &.muted { cursor: default; color: rgba(255,255,255,.55); &::before { display: none; } }
+}
+
+/* ==========================================================================
+   3. ESTILOS DE LOS PANELES Y BOTONES
+   ========================================================================== */
+
+/* 🔥 ARREGLO CRÍTICO: Posicionamiento Relativo para los padres 🔥 */
+/* Sin esto, el "position: absolute" de los paneles no sabe dónde ubicarse en PC */
+.filtro_tipo, .filtro_precio, .filtro_hb, .filtro_mas {
+    position: relative;
+}
+
+@mixin trigger-style {
+  display: inline-flex; align-items: center; gap: .6rem; height: 4rem; padding: 0 1.2rem;
+  border: 1px solid v.$grisniebla; border-radius: 1.2rem; background: v.$grisgrafito;
+  color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem; cursor: pointer; line-height: 4rem;
+  white-space: nowrap; 
+  &:focus { outline: none; border-color: v.$azulniebla; box-shadow: 0 0 0 3px rgba(164,200,216,.25); }
+}
+
+@mixin panel-style {
+  opacity: 0; pointer-events: none; transform: translateY(6px); position: absolute;
+  top: calc(100% + .6rem); left: 0; background: v.$grisgrafito; color: v.$arenaclaro;
+  border: 1px solid v.$grisniebla; border-radius: 1.2rem; box-shadow: 0 12px 28px rgba(0,0,0,.35); 
+  z-index: 500; /* Z-Index alto para PC */
+}
+
+/* Clases y Mixins */
+.tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger { @include trigger-style; }
+.tipo_panel, .precio_panel, .hb_panel { @include panel-style; }
+
+/* Estilos Internos (Intactos) */
+.tipo_trigger__badge { min-width: 1.6rem; height: 1.6rem; border-radius: 999px; padding: 0 .4rem; background: color.scale(v.$grisgrafito, $lightness: 15%); border: 1px solid v.$grisniebla; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.tipo_trigger__chev, .precio_trigger__chev, .hb_trigger__chev, .mas_trigger__chev { opacity: .75; transition: transform .15s ease; }
+[aria-expanded="true"] .tipo_trigger__chev { transform: rotate(180deg); }
+
+.tipo_panel { width: 28rem; max-height: 28rem; overflow-y: auto; }
+.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$azulniebla; } span { font-size: 1.4rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
+
+.precio_panel { width: 26rem; padding: 1.2rem; }
+.precio_inputs { display: grid; gap: .8rem; label { display: grid; gap: .4rem; } input { height: 3.2rem; padding: 0 .9rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #222; color: v.$arenaclaro; font-size: 1.4rem; outline: none; } }
+.precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: white; } }
+
+.hb_panel { width: 34rem; padding: 1.2rem; }
+.hb_title { margin: .2rem 0 .8rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
+.hb_group { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }
+.hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+.hb_exact_label { display: flex; align-items: center; gap: .8rem; font-size: 1.25rem; color: rgba(255,255,255,.8); input[type="checkbox"] { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: #2a2a2a; border: 1px solid v.$grisniebla; position: relative; cursor: pointer; transition: background .15s; &::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #bbb; transition: transform .15s; } &:checked { background: v.$rojotierra; border-color: v.$rojotierra; } &:checked::after { transform: translateX(18px); background: #fff; } } }
+.hb_actions { display: flex; gap: .8rem; justify-content: flex-end; margin-top: 1.2rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .hb_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .hb_apply { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+
+/* Más filtros (Modal) */
+.mas_modal { display: none; position: fixed; z-index: 130; inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: min(92vw, 720px); max-height: 75dvh; flex-direction: column; background: v.$grisgrafito; color: v.$arenaclaro; border: 1px solid v.$grisniebla; border-radius: 1.2rem; box-shadow: 0 18px 48px rgba(0,0,0,.5); .mas_head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,.06); h3 { margin: 0; font-size: 1.6rem; color: rgba(255,255,255,.95); } .mas_close { width: 3.2rem; height: 3.2rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; cursor: pointer; } } .mas_body { padding: 1.2rem 1.4rem; overflow: auto; flex: 1; } .mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: v.$rojotierra; color: #fff; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); } } }
+.mf_section { padding: .6rem 0 1.2rem 0; & + .mf_section { border-top: 1px solid rgba(255,255,255,.06); margin-top: 1rem; } }
+.mf_title { margin: .2rem 0 .9rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
+.mf_group { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .6rem; }
+.mf_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+
+/* ==========================================================================
+   4. TARJETAS FLOTANTES MÓVIL Y ESTADOS
+   ========================================================================== */
+.filtros_overlay {
+  display: none; 
+  @media (max-width: 1024px) {
+    display: block; position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+    z-index: 9000; opacity: 0; pointer-events: none; transition: opacity .2s ease;
+    &.is-open { opacity: 1; pointer-events: auto; }
   }
 }
 
-/* 2) BOTTOM SHEET (solo móvil/tablet) PARA: tipo, precio, H/B y “más filtros”
-   Ubicaciones mantiene su dropdown actual */
-@media (max-width: v.$tablet_filtros) {
-  .filtros_overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.55);
-    backdrop-filter: blur(2px);
-    z-index: 120; display: none;
-  }
-  .filtros_overlay.is-open { display: block; }
-    body.bsheet-lock {
-    position: fixed;
-    width: 100%;
-    overflow: hidden;
-  }
+body.bsheet-lock {
+  @media (max-width: 1024px) { position: fixed; width: 100%; height: 100%; overflow: hidden; }
+}
 
-
-  /* === FORZAR bottom-sheet por filtro cuando está abierto === */
-  .filtro_tipo.is-open   .tipo_panel,
+@media (max-width: 1024px) {
+  /* MÓVIL */
+  .filtro_tipo.is-open .tipo_panel,
   .filtro_precio.is-open .precio_panel,
-  .filtro_hb.is-open     .hb_panel {
+  .filtro_hb.is-open .hb_panel,
+  .filtro_mas.is-open .mas_modal {
     position: fixed !important;
-    left: 0 !important; right: 0 !important; bottom: 0 !important; top: auto !important;
-    width: 100vw !important; max-width: 100vw !important;
-    max-height: 75dvh !important; overflow: auto !important;
-
-    display: block !important;           /* anula display:none del desktop */
-    transform: translateY(0) !important; /* visible */
-    opacity: 1 !important; pointer-events: auto !important;
-
-    border-radius: 12px 12px 0 0 !important;
-    border: 1px solid v.$grisniebla !important;
-    background: v.$grisgrafito !important;
-    box-shadow: 0 18px 48px rgba(0,0,0,.5) !important;
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 130 !important;
-  }
-
-  /* Estado cerrado (por si algún estilo previo lo muestra) */
-  @media (max-width: v.$tablet_filtros) {
-  .filtro_tipo:not(.is-open) .tipo_panel,
-  .filtro_precio:not(.is-open) .precio_panel,
-  .filtro_hb:not(.is-open) .hb_panel {
-    transform: translateY(100%);
-    opacity: 0;
-    pointer-events: none;
+    top: auto !important;
+    bottom: 20px !important;
+    left: 50% !important;
+    transform: translate3d(-50%, 0, 0) !important;
+    width: min(92vw, 360px) !important;
+    max-height: 70vh !important;
+    background: rgba(v.$grisgrafito, 0.98) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.6) !important;
+    z-index: 9999 !important;
+    display: block !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    &.mas_modal { display: flex !important; }
   }
 }
 
-}
-
-/* Ubicaciones: modo fijo en móvil/tablet */
-@media (max-width: v.$tablet_filtros) {
-  .resultados_busqueda.is-floating {
-    position: fixed !important;   /* se ancla al viewport */
-    left: var(--ub-left, 0) !important;
-    top:  var(--ub-top, 0)  !important;
-    width: var(--ub-width, 100vw) !important;
-    max-height: 50dvh !important;
-    z-index: 220 !important;       /* por encima de todo tu UI */
-    display: block !important;     /* por si el JS lo tenía en none */
-    /* quitamos el notch en móvil (opcional) */
-    &::before { display: none; }
+@media (min-width: 1025px) {
+  /* ESCRITORIO */
+  .filtro_tipo.is-open .tipo_panel, 
+  .filtro_precio.is-open .precio_panel, 
+  .filtro_hb.is-open .hb_panel {
+    opacity: 1 !important; 
+    pointer-events: auto !important; 
+    transform: translateY(0) !important;
+    display: block !important; 
   }
+  
+  .filtro_mas.is-open .mas_modal { display: flex !important; opacity: 1 !important; }
+  .filtro_mas.is-open .mas_overlay { display: block !important; }
 }
-
