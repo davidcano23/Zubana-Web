@@ -7,26 +7,44 @@
         <div class="card-propiedad">
             <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>">
             <div class="swiper img-container">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                                <img src="/imagenes/<?php echo $propiedad->imagen; ?>" alt="Imagen propiedad" loading="lazy">
-                            </div>
-                    <?php if (!empty($imagenesPorCasa[$propiedad->id])): ?>
-                        <?php foreach($imagenesPorCasa[$propiedad->id] as $imagenNombre): ?>
-                            <div class="swiper-slide">
-                                <img src="/imagenes/<?php echo $imagenNombre; ?>" alt="Imagen propiedad" loading="lazy">
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <div class="swiper-slide">
-                            <img src="/imagenes/default.jpg" alt="Sin imagen">
-                        </div>
-                    <?php endif; ?>
+            <div class="swiper-wrapper">
+                
+                <div class="swiper-slide">
+                    <img src="/imagenes/<?php echo $propiedad->imagen; ?>" alt="Imagen propiedad" loading="lazy">
                 </div>
-                <!-- Flechas -->
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
-            </div>
+
+                <?php 
+                    // --- LÓGICA DE IDENTIFICACIÓN ---
+                    // Determinamos qué tipo es para generar la llave correcta (ej: casa_20)
+                    $tipo_clave = '';
+                    $t = strtolower($propiedad->tipo);
+
+                    if(in_array($t, ['casa', 'finca', 'casa campestre'])) {
+                        $tipo_clave = 'casa';
+                    } elseif(in_array($t, ['apartamento', 'apartaestudio', 'apartaoficina'])) {
+                        $tipo_clave = 'apartamento';
+                    } elseif(in_array($t, ['local'])) {
+                        $tipo_clave = 'local';
+                    } elseif(str_contains($t, 'lote')) { 
+                        $tipo_clave = 'lote';
+                    }
+
+                    // Generamos la llave única
+                    $llaveUnica = $tipo_clave . '_' . $propiedad->id;
+                ?>
+
+                <?php if (!empty($imagenesPorCasa[$llaveUnica])): ?>
+                    <?php foreach($imagenesPorCasa[$llaveUnica] as $imagenNombre): ?>
+                        <div class="swiper-slide">
+                            <img src="/imagenes/<?php echo $imagenNombre; ?>" alt="Imagen Extra" loading="lazy">
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+
+            </div> <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+
+        </div> 
 
             <div class="contenedor_padre_computador_informacion_card">
             <h3>$<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?> </h3>

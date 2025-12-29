@@ -119,28 +119,28 @@ class ApartamentoController {
                 $imagen->save(CARPETA_IMAGENES . $nombreImagen);
             }
 
-            // Imágenes adicionales
-            if (!empty($_FILES['imagenes']['name'][0])) {
-                // Eliminar anteriores 
-                ImagenApart::eliminarTodasDeApartamento($propiedad->{'id'});
+            // // Imágenes adicionales
+            // if (!empty($_FILES['imagenes']['name'][0])) {
+            //     // Eliminar anteriores 
+            //     ImagenApart::eliminarTodasDeApartamento($propiedad->{'id'});
 
 
 
-                // Subir nuevas
-                foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
-                    if ($tmpName) {
-                        $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
-                        $imagenAdicional = $manager->read($tmpName)->cover(1200, 800);
-                        $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
+            //     // Subir nuevas
+            //     foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
+            //         if ($tmpName) {
+            //             $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
+            //             $imagenAdicional = $manager->read($tmpName)->cover(1200, 800);
+            //             $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
 
-                        $imagenExtra = new ImagenApart([
-                            'apartamento_id' => $propiedad->{'id'},
-                            'nombre' => $nombreImagenAdicional
-                        ]);
-                        $imagenExtra->guardar();
-                    }
-                }
-            }
+            //             $imagenExtra = new ImagenApart([
+            //                 'apartamento_id' => $propiedad->{'id'},
+            //                 'nombre' => $nombreImagenAdicional
+            //             ]);
+            //             $imagenExtra->guardar();
+            //         }
+            //     }
+            // }
 
             // Guardar propiedad
             $propiedad->guardar();

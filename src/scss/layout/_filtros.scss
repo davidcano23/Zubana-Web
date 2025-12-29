@@ -175,10 +175,10 @@
 .tipo_trigger__chev, .precio_trigger__chev, .hb_trigger__chev, .mas_trigger__chev { opacity: .75; transition: transform .15s ease; }
 [aria-expanded="true"] .tipo_trigger__chev { transform: rotate(180deg); }
 
-.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$rojotierra; } span { font-size: 1.4rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
+.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$rojotierra; } span { font-size: 1.6rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
 
-.precio_inputs { display: grid; gap: .8rem; label { display: grid; gap: .4rem; } input { height: 3.2rem; padding: 0 .9rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #222; color: v.$arenaclaro; font-size: 1.4rem; outline: none; } }
-.precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: white; } }
+.precio_inputs { display: grid; gap: .8rem; label { display: grid; gap: .4rem; } input { height: 3.2rem; padding: 0 .9rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #222; color: v.$arenaclaro; font-size: 1.6rem; outline: none; } }
+.precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.6rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: white; } }
 
 .hb_title { margin: .2rem 0 .8rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .hb_group { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }

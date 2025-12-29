@@ -13,6 +13,9 @@ body {
     font-size: 1.6rem;
     line-height: 1.8;
     background-color: v.$grisgrafito;
+    overflow-x: hidden; /* Corta cualquier cosa que se salga del ancho de pantalla */
+    width: 100%;
+    position: relative; /* Ayuda a mantener la estructura fija */
 }
 p {
     color: v.$arenaclaro;

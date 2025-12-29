@@ -9848,10 +9848,16 @@
 
       if(!latInput | !lngInput) return;
       
-      // Logica: Si el input tiene valor (PHP lo llenó), úsalo. Si no, usa el default.
-      let lat = latInput.value ? parseFloat(latInput.value) : 6.1551; 
-      let lng = lngInput.value ? parseFloat(lngInput.value) : -75.3737;
-      let zoomLevel = latInput.value ? 16 : 12; // Si ya tiene ubicación, haz zoom cerca.
+      // Convertimos el valor a número
+      let latVal = parseFloat(latInput.value);
+      let lngVal = parseFloat(lngInput.value);
+
+      // CORRECCIÓN: Si el valor es 0 o no existe, usamos Rionegro.
+      // Si es un número real diferente de 0, usamos ese.
+      let lat = (latVal && latVal !== 0) ? latVal : 6.1551; 
+      let lng = (lngVal && lngVal !== 0) ? lngVal : -75.3737;
+      
+      let zoomLevel = (latVal && latVal !== 0) ? 16 : 13; // Menos zoom si es la ubicación por defecto
 
       // 2. Inicializar el mapa
       const map = L.map('mapa-formulario').setView([lat, lng], zoomLevel);

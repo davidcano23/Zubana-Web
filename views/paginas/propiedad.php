@@ -66,7 +66,7 @@
 
 
             <div class="precio">
-                <h3>Desde $<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?></h3>
+                <h3>Valor $<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?></h3>
                 <p>Precio de Venta</p>
                 <p class="ubi"><?php echo $propiedad->{'ubicacion'}; ?></p>
             </div>

@@ -138,17 +138,31 @@ class PaginaController {
             $mostrandoHasta   = $offset + count($propiedades); // ya respeta cuando hay menos de 33
             $masDeDisponibles = $totalPropiedades; // tu regla de "resta 1"
 
-            // --- IMÁGENES (igual) ---
-            $imagenesTodas = array_merge(
-                ImagenCasa::todas(),
-                ImagenApart::todas(),
-                ImagenLocal::todas(),
-                ImagenLotes::todas()
-            );
+            // --- IMÁGENES CORREGIDAS ---
+            // En lugar de mezclar todas, las procesamos por tipo para crear una llave única
+            
             $imagenesPorCasa = [];
-            foreach ($imagenesTodas as $imagen) {
-                $id = $imagen->getPropiedadId();
-                $imagenesPorCasa[$id][] = $imagen->nombre;
+
+            // 1. Procesar imágenes de CASAS (incluye fincas, campestres)
+            foreach (ImagenCasa::todas() as $img) {
+                // Usamos el prefijo 'casa_' para diferenciarlas
+                $imagenesPorCasa['casa_' . $img->casa_id][] = $img->nombre;
+            }
+
+            // 2. Procesar imágenes de APARTAMENTOS (incluye apartaestudios)
+            foreach (ImagenApart::todas() as $img) {
+                $imagenesPorCasa['apartamento_' . $img->apartamento_id][] = $img->nombre;
+            }
+
+            // 3. Procesar imágenes de LOCALES
+            foreach (ImagenLocal::todas() as $img) {
+                $imagenesPorCasa['local_' . $img->local_id][] = $img->nombre;
+            }
+
+            // 4. Procesar imágenes de LOTES
+            foreach (ImagenLotes::todas() as $img) {
+                // Ojo: verifica si en tu modelo es 'lotes_id' o 'lote_id'
+                $imagenesPorCasa['lote_' . $img->lotes_id][] = $img->nombre; 
             }
 
             // --- QUERY BASE PARA PAGINACIÓN (conservar filtros y 'ordenar') ---
@@ -183,82 +197,95 @@ class PaginaController {
 
 
 
-
-    public static function propiedad(Router $router) {
+public static function propiedad(Router $router) {
         $footer = true;
 
         $id = $_GET['id'] ?? null;
         $tipo = $_GET['tipo'] ?? null;
 
-    if (!$id || !$tipo) {
-        header('Location: /');
-        exit;
-    }
-
-    switch ($tipo) {
-    case 'casa':
-    case 'finca':
-    case 'casa campestre':
-        $propiedad = Casa::find($id);
-        $propiedades = Casa::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
-        $imagenes = ImagenCasa::where('casa_id', $id);
-        break;
-
-    case 'apartamento':
-    case 'apartaestudio':
-    case 'apartaoficina':
-        $propiedad = Apartamento::find($id);
-        $propiedades = Apartamento::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
-        $imagenes = ImagenApart::where('apartamento_id', $id);
-        break;
-
-    case 'local':
-        $propiedad = Local::find($id);
-        $propiedades = Local::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
-        $imagenes = ImagenLocal::where('local_id', $id);
-        break;
-
-
-    case 'lote campestre':
-    case 'lote urbano':
-    case 'lote bodega':
-        $propiedad = Lote::find($id);
-        $propiedades = Lote::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
-        $imagenes = ImagenLotes::where('lotes_id', $id);
-        break;
-        default:
+        if (!$id || !$tipo) {
             header('Location: /');
             exit;
-    }
-
-    if (!$propiedad) {
-        header('Location: /');
-        exit;
-    }
-
-    $casaImg = ImagenCasa::todas();
-        $apartaImg = ImagenApart::todas();
-        $localImg = ImagenLocal::todas();
-        $loteImg = ImagenLotes::todas();
-
-        $imagenesTodas = array_merge($casaImg, $apartaImg, $localImg, $loteImg);
-        $imagenesPorCasa = [];
-
-        foreach ($imagenesTodas as $imagen) {
-            $id = $imagen->getPropiedadId();  // Aquí se llama de forma genérica
-            $imagenesPorCasa[$id][] = $imagen->nombre;
         }
 
+        // ... (Tu switch case está perfecto, déjalo igual) ...
+        switch ($tipo) {
+            case 'casa':
+            case 'finca':
+            case 'casa campestre':
+                $propiedad = Casa::find($id);
+                $propiedades = Casa::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
+                $imagenes = ImagenCasa::where('casa_id', $id);
+                break;
 
+            case 'apartamento':
+            case 'apartaestudio':
+            case 'apartaoficina':
+                $propiedad = Apartamento::find($id);
+                $propiedades = Apartamento::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
+                $imagenes = ImagenApart::where('apartamento_id', $id);
+                break;
 
+            case 'local':
+                $propiedad = Local::find($id);
+                $propiedades = Local::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
+                $imagenes = ImagenLocal::where('local_id', $id);
+                break;
+
+            case 'lote campestre':
+            case 'lote urbano':
+            case 'lote bodega':
+                $propiedad = Lote::find($id);
+                $propiedades = Lote::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
+                $imagenes = ImagenLotes::where('lotes_id', $id);
+                break;
+                
+            default:
+                header('Location: /');
+                exit;
+        }
+
+        if (!$propiedad) {
+            header('Location: /');
+            exit;
+        }
+
+        // ---------------------------------------------------------
+        // CORRECCIÓN AQUÍ: Usar la lógica de llaves compuestas
+        // para que las tarjetas de "Recomendados" no mezclen fotos
+        // ---------------------------------------------------------
+
+        $imagenesPorCasa = [];
+
+        // 1. Procesar imágenes de CASAS
+        foreach (ImagenCasa::todas() as $img) {
+            $imagenesPorCasa['casa_' . $img->casa_id][] = $img->nombre;
+        }
+
+        // 2. Procesar imágenes de APARTAMENTOS
+        foreach (ImagenApart::todas() as $img) {
+            $imagenesPorCasa['apartamento_' . $img->apartamento_id][] = $img->nombre;
+        }
+
+        // 3. Procesar imágenes de LOCALES
+        foreach (ImagenLocal::todas() as $img) {
+            $imagenesPorCasa['local_' . $img->local_id][] = $img->nombre;
+        }
+
+        // 4. Procesar imágenes de LOTES
+        foreach (ImagenLotes::todas() as $img) {
+            // Asegúrate que en tu base de datos la columna sea 'lotes_id'
+            $imagenesPorCasa['lote_' . $img->lotes_id][] = $img->nombre; 
+        }
+
+        // Renderizar la vista
         $router->render('paginas/propiedad', [
             'footer' => $footer,
-            'propiedad' => $propiedad,
-            'propiedades' => $propiedades,
+            'propiedad' => $propiedad,     // La propiedad principal que estamos viendo
+            'propiedades' => $propiedades, // Las 3 recomendadas de abajo
             'tipo' => $tipo,
-            'imagenes' => $imagenes,
-            'imagenesPorCasa' => $imagenesPorCasa
-
+            'imagenes' => $imagenes,       // Fotos de la propiedad principal (slider grande)
+            'imagenesPorCasa' => $imagenesPorCasa // Fotos para las cards de recomendadas
         ]);
     }
 
