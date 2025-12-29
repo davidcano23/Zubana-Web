@@ -23,6 +23,12 @@
     <label for="direccion">Direccion Exacta</label>
     <input type="text" placeholder="Calle 40 #73-21" id="direccion" name="propiedad[direccion]" value="<?php echo trim(s($propiedad?->direccion ?? '')); ?>">
 
+    <input type="hidden" id="lat" name="propiedad[latitud]" value="<?php echo s($propiedad?->latitud ?? ''); ?>">
+    <input type="hidden" id="lng" name="propiedad[longitud]" value="<?php echo s($propiedad?->longitud ?? ''); ?>">
+
+    <label>Ubicación en el Mapa (Arrastra el Pin al punto exacto):</label>
+    <div id="mapa-formulario" style="height: 400px; width: 100%; border: 1px solid #ccc; border-radius: 10px;"></div>
+
     <label for="propietario">Nombre del Propietario</label>
     <input type="text" placeholder="Propietario" id="propietario" name="propiedad[propietario]" value="<?php echo trim(s($propiedad?->propietario ?? '')); ?>">
 
@@ -56,6 +62,7 @@
     </select>
 
 </fieldset>
+
 
 
 

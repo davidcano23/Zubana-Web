@@ -375,17 +375,38 @@
             </div>
 
             <div class="descripcion precio">
-                <h4>Ubicacion</h4>
-                <?php $ubicacion = $propiedad->{'ubicacion'}; ?>
-                <iframe
-                    src="https://www.google.com/maps/embed/v1/search?key=AIzaSyAGYd7mmhUfywh_3txsmLhg81OcjLqu3so&q=<?php echo urlencode($ubicacion); ?>"
-                    width="600"
-                    height="450"
-                    style="border:0;"
-                    allowfullscreen=""
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
+                <h4>Ubicación Aproximada</h4>
+                
+                <div id="mapa-radar" style="height: 400px; width: 100%; border-radius: 10px; z-index: 1;"></div>
+
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // 1. Capturamos latitud y longitud que vienen del Modelo
+                        // Si son 0 o null, ponemos una ubicación por defecto para que no se rompa
+                        var lat = <?php echo !empty($propiedad->latitud) ? $propiedad->latitud : 6.1551; ?>;
+                        var lng = <?php echo !empty($propiedad->longitud) ? $propiedad->longitud : -75.3737; ?>;
+
+                        // 2. Iniciamos el mapa (Leaflet ya debe estar cargado en el head)
+                        var map = L.map('mapa-radar').setView([lat, lng], 14); // Zoom 14 es bueno para barrios
+
+                        // 3. Capa visual (OpenStreetMap)
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap'
+                        }).addTo(map);
+
+                        // 4. EL RADAR (Círculo Azul estilo FincaRaíz)
+                        // No ponemos un "Marker" (pin) exacto, sino un círculo
+                        var circle = L.circle([lat, lng], {
+                            color: '#b31200b6',       // Color del borde (azul oscuro)
+                            fillColor: '#ff0000ff',   // Color de relleno (azul zubana)
+                            fillOpacity: 0.2,       // Transparencia (para que se vean las calles abajo)
+                            radius: 400             // 400 metros de radio (Zona aproximada)
+                        }).addTo(map);
+
+                        // Opcional: Desactivar scroll para que no moleste al bajar en la página
+                        map.scrollWheelZoom.disable();
+                    });
+                </script>
             </div>
                     
             <?php

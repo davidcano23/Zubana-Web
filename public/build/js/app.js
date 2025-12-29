@@ -9819,6 +9819,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initGestorFiltrosDesktop(); 
     initFiltrosResponsive();
+    mapDinamicoComoFincaRaiz();
     
     // 🔥 ESTE ES EL ARREGLO CLAVE PARA MÓVIL
     initHackSafari();
@@ -9838,6 +9839,55 @@
     initLoginModalSubmit();
     initLoginModal();
   });
+
+  function mapDinamicoComoFincaRaiz() {
+    // 1. Obtener coordenadas iniciales (Si editamos, vienen de PHP. Si es nuevo, usamos default)
+      // Default: Medellín (6.24, -75.57). Cámbialo a tu ciudad principal.
+      const latInput = document.getElementById('lat');
+      const lngInput = document.getElementById('lng');
+
+      if(!latInput | !lngInput) return;
+      
+      // Logica: Si el input tiene valor (PHP lo llenó), úsalo. Si no, usa el default.
+      let lat = latInput.value ? parseFloat(latInput.value) : 6.1551; 
+      let lng = lngInput.value ? parseFloat(lngInput.value) : -75.3737;
+      let zoomLevel = latInput.value ? 16 : 12; // Si ya tiene ubicación, haz zoom cerca.
+
+      // 2. Inicializar el mapa
+      const map = L.map('mapa-formulario').setView([lat, lng], zoomLevel);
+
+      // 3. Cargar las capas de OpenStreetMap
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // 4. Agregar el PIN arrastrable (Draggable)
+      const marker = L.marker([lat, lng], {
+          draggable: true, // ¡Importante! Permite moverlo
+          autoPan: true
+      }).addTo(map);
+
+      // Función para llenar los inputs ocultos cuando cargue la página por primera vez
+      // Solo si estamos creando una nueva propiedad para que no vaya vacía
+      if(!latInput.value) {
+          latInput.value = lat;
+          lngInput.value = lng;
+      }
+
+      // 5. EVENTO: Detectar cuando el usuario mueve el pin
+      marker.on('moveend', function(e) {
+          const position = marker.getLatLng();
+          
+          // Asignar los nuevos valores a los inputs ocultos
+          latInput.value = position.lat;
+          lngInput.value = position.lng;
+          
+          // Opcional: Centrar el mapa en el nuevo punto
+          map.panTo(new L.LatLng(position.lat, position.lng));
+          
+          console.log("Nueva ubicación guardada:", position.lat, position.lng);
+      });
+    }
 
   // ==========================================================================
   // 1. GESTOR FILTROS DESKTOP
