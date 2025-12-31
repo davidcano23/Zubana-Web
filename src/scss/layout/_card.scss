@@ -39,7 +39,7 @@
 
         @include m.desktop {
             flex-direction: row;
-            height: 30rem;
+            height: auto;
             width: 85%;
             padding-bottom: 0rem;
             margin: 1.5rem auto;

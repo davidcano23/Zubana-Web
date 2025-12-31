@@ -92,16 +92,13 @@ class Casa extends ActiveRecord {
 
     public function validar() {
         if(!isset($this->area_total) || $this->area_total === '') {
-            self::$errores[] = "El campo area es obligatorio";
+            $this->area_total = 0;
         }
-        if(strlen($this->area_total) > 24 ) {
-            self::$errores[] = "El campo area no puede superar los 24 caracteres";
+        if(strlen($this->area_total) > 15 ) {
+            self::$errores[] = "El campo area no puede superar los 15 caracteres";
         }
         if(!isset($this->habitaciones) || $this->habitaciones === '') {
-            self::$errores[] = "El campo habitaciones es obligatorio";
-        }
-        if($this->habitaciones > 15 ) {
-            self::$errores[] = "El campo habitaciones no puede superar los 15 caracteres";
+            $this->habitaciones = 0;
         }
         if(!$this->sala) {
             self::$errores[] = "El campo sala es obligatorio";
@@ -110,17 +107,7 @@ class Casa extends ActiveRecord {
             self::$errores[] = "El campo lavado es obligatorio";
         }
         if(!isset($this->banos) || $this->banos === '') {
-            self::$errores[] = "El campo baños es obligatorio";
-        }
-
-        // if(!$this->nombre) {
-        //     self::$errores[] = "El campo nombre es obligatorio";
-        // }
-        // if(strlen($this->nombre) < 5 ) {
-        //     self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
-        // }
-        if(strlen($this->nombre) > 100 ) {
-            self::$errores[] = "El campo nombre no puede superar los 100 caracteres";
+            $this->banos = 0;
         }
         if(!$this->imagen) {
             self::$errores[] = "El campo imagen es obligatorio";
@@ -134,44 +121,38 @@ class Casa extends ActiveRecord {
         if(strlen($this->ubicacion) > 119 ) {
             self::$errores[] = "El campo ubicacion no puede superar los 119 caracteres";
         }
-        // if(!$this->direccion) {
-        //     self::$errores[] = "La direccion es obligatoria";
-        // }
-        if(strlen($this->direccion) > 59 ) {
-            self::$errores[] = "El campo direccion no puede superar los 59 caracteres";
+        if(!$this->direccion) {
+            $this->direccion = "N/A";
+        }
+        if(strlen($this->direccion) > 74 ) {
+            self::$errores[] = "El campo direccion no puede superar los 74 caracteres";
         }
         if(!$this->tipo) {
             self::$errores[] = "El campo tipo es obligatoria";
         }
         if(!$this->propietario) {
-            self::$errores[] = "El campo propietario es obligatoria";
+            $this->propietario = "N/A";
         }
         if(strlen($this->propietario) > 100 ) {
             self::$errores[] = "El campo propietario no puede superar los 100 caracteres";
         }
         if(!isset($this->contacto) || $this->contacto === '') {
-            self::$errores[] = "El campo contacto es obligatoria";
+            $this->contacto = "N/A";
         }
         if(strlen($this->contacto) > 15 ) {
             self::$errores[] = "El campo contacto no puede superar los 15 caracteres";
         }
-        // if(!$this->codigo) {
-        //     self::$errores[] = "El campo codigo es obligatoria";
-        // }
-        // if(strlen($this->codigo) > 5 ) {
-        //     self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
-        // }
         if(!$this->modalidad) {
             self::$errores[] = "El campo modalidad es obligatoria";
         }
         if(!isset($this->area_construida) || $this->area_construida === '') {
-            self::$errores[] = "El campo area construida es obligatoria";
+            $this->area_construida = 0;
         }
         if(strlen($this->area_construida) > 25 ) {
             self::$errores[] = "El campo area construida no puede superar los 25 caracteres";
         }
         if(!isset($this->estrato) || $this->estrato === '') {
-            self::$errores[] = "El campo estrato es obligatoria";
+            $this->estrato = 0;
         }
         if(!$this->cocina) {
             self::$errores[] = "El campo cocina es obligatoria";
@@ -213,16 +194,28 @@ class Casa extends ActiveRecord {
             self::$errores[] = "El campo descripcion es obligatorio y debe contener al menos 50 caracteres";
         }
         if(strlen($this->descripcion) > 700) {
-            self::$errores[] = "El campo descripcion no puede superar los 500 caracteres";
+            self::$errores[] = "El campo descripcion no puede superar los 700 caracteres";
         }
         if(!$this->barrio) {
-            self::$errores[] = "El campo barrio es obligatoria";
+            $this->barrio = "N/A";
         }
         if(strlen($this->barrio) > 255) {
             self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
         }
         if(!$this->administracion){
-            $this->administracion = 0;
+           $this->administracion = 0;
+        }
+        if(!$this->palabra_clave) {
+            $this->palabra_clave = "N/A";
+        }
+        if(strlen($this->palabra_clave) > 50) {
+            self::$errores[] = "La palabra clave no puede superar los 50 caracteres";
+        }
+        if(!$this->corregimiento) {
+            $this->corregimiento = "N/A";
+        }
+        if(strlen($this->corregimiento) > 50) {
+            self::$errores[] = "El corregimiento no puede superar los 50 caracteres";
         }
 
         return self::$errores;

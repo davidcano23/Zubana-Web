@@ -67,15 +67,6 @@ class Local extends ActiveRecord {
 
 
     public function validar() {
-        // if(!$this->nombre) {
-        //     self::$errores[] = "El campo nombre es obligatorio";
-        // }
-        // if(strlen($this->nombre) < 5 ) {
-        //     self::$errores[] = "El campo nombre debe contener al menos 5 caracteres";
-        // }
-        if(strlen($this->nombre) > 100 ) {
-            self::$errores[] = "El campo nombre no puede superar los 100 caracteres";
-        }
         if(!isset($this->precio) || $this->precio === '') {
             self::$errores[] = "El campo precio es obligatorio";
         }
@@ -85,9 +76,9 @@ class Local extends ActiveRecord {
         if(strlen($this->ubicacion) > 119 ) {
             self::$errores[] = "El campo ubicacion no puede superar los 119 caracteres";
         }
-        // if(!$this->direccion) {
-        //     self::$errores[] = "El campo direccion es obligatorio";
-        // }
+        if(!$this->direccion) {
+            $this->direccion = "N/A";
+        }
         if(strlen($this->direccion) > 74 ) {
             self::$errores[] = "El campo direccion no puede superar los 74 caracteres";
         }
@@ -95,13 +86,13 @@ class Local extends ActiveRecord {
             self::$errores[] = "El campo imagen es obligatorio";
         }
         if(!$this->propietario) {
-            self::$errores[] = "El campo propietario es obligatorio";
+            $this->propietario = "N/A";
         }
         if(strlen($this->propietario) > 100 ) {
             self::$errores[] = "El campo propietario no puede superar los 100 caracteres";
         }
         if(!isset($this->contacto) || $this->contacto === '') {
-            self::$errores[] = "El campo contacto es obligatorio";
+            $this->contacto = "N/A";
         }
         if(strlen($this->contacto) > 15 ) {
             self::$errores[] = "El campo contacto no puede superar los 15 caracteres";
@@ -109,29 +100,23 @@ class Local extends ActiveRecord {
         if(!$this->modalidad) {
             self::$errores[] = "El campo modalidad es obligatorio";
         }
-        // if(!$this->codigo) {
-        //     self::$errores[] = "El campo codigo es obligatorio";
-        // }
-        // if(strlen($this->codigo) > 5 ) {
-        //     self::$errores[] = "El campo codigo no puede superar los 5 caracteres";
-        // }
         if(!isset($this->area_total) || $this->area_total === '') {
-            self::$errores[] = "La area es obligatoria";
+            $this->area_total = 0;
         }
         if(strlen($this->area_total) > 25 ) {
             self::$errores[] = "El campo area total no puede superar los 25 caracteres";
         }
         if(!isset($this->area_construida) || $this->area_construida === '') {
-            self::$errores[] = "La habitaciones es obligatoria";
+            $this->area_construida = 0;
         }
         if(strlen($this->area_construida) > 25 ) {
             self::$errores[] = "El campo area construida no puede superar los 25 caracteres";
         }
         if(!isset($this->banos) || $this->banos === '') {
-            self::$errores[] = "El campo baños es obligatoria";
+            $this->banos = 0;
         }
         if(!isset($this->estrato) || $this->estrato === '') {
-            self::$errores[] = "El campo estrato es obligatoria";
+            $this->estrato = 0;
         }
         if(!$this->tipo) {
             self::$errores[] = "El campo tipo es obligatoria";
@@ -148,8 +133,8 @@ class Local extends ActiveRecord {
         if(strlen($this->descripcion) < 50) {
             self::$errores[] = "El campo descripcion es obligatorio y debe contener al menos 50 caracteres";
         }
-        if(strlen($this->descripcion) > 500) {
-            self::$errores[] = "El campo descripcion no puede superar los 500 caracteres";
+        if(strlen($this->descripcion) > 700) {
+            self::$errores[] = "El campo descripcion no puede superar los 700 caracteres";
         }
         if(!$this->barrio) {
             self::$errores[] = "El campo barrio es obligatoria";
@@ -159,6 +144,27 @@ class Local extends ActiveRecord {
         }
         if(!$this->administracion){
             self::$errores[] = "El campo Administración es obligatorio. Si no aplica, ingresa 0";
+        }
+        if(!$this->barrio) {
+            $this->barrio = "N/A";
+        }
+        if(strlen($this->barrio) > 255) {
+            self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
+        }
+        if(!$this->administracion){
+           $this->administracion = 0;
+        }
+        if(!$this->palabra_clave) {
+            $this->palabra_clave = "N/A";
+        }
+        if(strlen($this->palabra_clave) > 50) {
+            self::$errores[] = "La palabra clave no puede superar los 50 caracteres";
+        }
+        if(!$this->corregimiento) {
+            $this->corregimiento = "N/A";
+        }
+        if(strlen($this->corregimiento) > 50) {
+            self::$errores[] = "El corregimiento no puede superar los 50 caracteres";
         }
 
         return self::$errores;

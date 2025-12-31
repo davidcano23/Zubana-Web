@@ -21,7 +21,7 @@
         <?php include __DIR__ . '/formulario.php'; ?>
 
     <fieldset>
-    <legend>Tipo de Propiedad</legend>
+    <legend>Tipo de Propiedad*</legend>
 
         <label for="tipo-propiedad">Tipo de Propiedad</label>
         <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]">
@@ -48,7 +48,7 @@
         <label for="estrato">Estrato</label>
         <input type="number" placeholder="Ej: 3 - Solo el Valor" id="estrato" name="propiedad[estrato]" value="<?php echo is_numeric($propiedad?->estrato) ? $propiedad->estrato : ''; ?>">
 
-        <label for="tipo-local">Tipo de Local</label>
+        <label for="tipo-local">Tipo de Local*</label>
         <select id="tipo-local" class="select-estilizado" name="propiedad[tipo_local]">
             <option value="" disabled <?php echo empty($propiedad?->tipo_local) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
             <option value="centro comercial" <?php echo ($propiedad?->tipo_local === 'centro comercial') ? 'selected' : ''; ?>>Centro Comercial</option>
@@ -58,7 +58,7 @@
 
     <fieldset>
 
-        <legend>Descripcion de la Propiedad</legend>
+        <legend>Descripcion de la Propiedad*</legend>
         <textarea name="propiedad[descripcion]" id="descripcion"> <?php echo s($propiedad->descripcion); ?> </textarea>
     </fieldset>
 

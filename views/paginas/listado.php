@@ -48,11 +48,21 @@
 
             <div class="contenedor_padre_computador_informacion_card">
             <h3>$<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?> </h3>
+            
+            <?php if($propiedad->{'administracion'} !=0): ?>
+            <p class="texto_computador_informacion_tipo_ubicacion_barrio">+ $<?php echo number_format((int)str_replace('.', '', $propiedad->{'administracion'}), 0, ',', '.'); ?> Administracion </p>
+            <?php endif; ?>
+
+            <?php if(!$propiedad->{'barrio'} === 'N/A'): ?>
             <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $propiedad->{'tipo'} . ' en ' . $propiedad->{'barrio'} . ', ' . $propiedad->{'ubicacion'}; ?> </p>
+            <?php else: ?>
+                <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $propiedad->{'tipo'} . ' en ' . $propiedad->{'ubicacion'}; ?> </p>
+            <?php endif; ?>
 
 
         <?php if ($propiedad->{'tipo'} === 'Casa' || $propiedad->{'tipo'} === 'Casa Campestre' || $propiedad->{'tipo'} === 'Finca' || $propiedad->{'tipo'} === 'Apartamento' || $propiedad->{'tipo'} === 'Apartaestudio' || $propiedad->{'tipo'} === 'Apartaoficina') : ?>  
             <div class="carac">
+                <?php if($propiedad->{'banos'} != 0): ?>
                 <?php if($propiedad->{'banos'} == 1): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/inodoro.png" alt="">
@@ -64,11 +74,14 @@
                     <p><?php echo $propiedad->{'banos'};?> Baños</p>
                 </div>
                 <?php endif; ?>
+                <?php endif; ?>
 
+                <?php if($propiedad->{'habitaciones'} != 0): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/dormitorio.png" alt="">
                     <p><?php echo $propiedad->{'habitaciones'};?> Habs</p>
                 </div>
+                <?php endif; ?>
 
                 <?php if($propiedad->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">
@@ -93,18 +106,25 @@
                     <img src="/img/estrato.png" alt="">
                 <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
                 </div>
+                <?php endif; ?>
 
+                <?php if($propiedad->{'area_total'} != 0): ?>
                 <div class="contenedor_caracteristicas area_computador_total">
                         <img src="/img/area.png" alt="">
                         <p><?php echo $propiedad->{'area_total'}; ?>m²</p>
-                    </div>
+                </div>
                 <?php endif; ?>
+                
             </div>
         <?php endif; ?>
 
         <?php if ($propiedad->{'tipo'} === 'Local') : ?>  
             <div class="carac">
+
+            <?php if($propiedad->{'banos'} != 0): ?>
                 <p>Baños: <?php echo $propiedad->{'banos'};?></p>
+            <?php endif; ?>
+
                 <?php if($propiedad->estrato != 0): ?>
                 <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
                 <?php endif; ?>
@@ -117,9 +137,6 @@
                 <?php if (!empty($propiedad->area_total) || $propiedad->area_total != 0) { ?>
                     <p class="area_movil">Area: <?php echo $propiedad->{'area_total'}; ?>m²</p>
                 <?php } ?>
-
-
-                <!-- <p class="texto_movil_informacion_tipo_ubicacion_barrio">Tipo de Propiedad: <?php echo $propiedad->{'tipo'};?></p> -->
                 
             </div>
 
@@ -130,24 +147,51 @@
                 <p class="parrafo_descripcion_computador"> <?php echo $propiedad->{'descripcion'}; ?> </p>
             </div>
 
-            <!-- <div class="ubicacion">
-                <p> <?php echo $propiedad->{'ubicacion'}; ?> </p>
-                <?php if(!empty($propiedad->barrio)): ?>
-                <p> <?php echo $propiedad->{'barrio'}; ?> </p>
-                <?php endif; ?>
-            </div> -->
-
             <div class="botones_contacto_actualizacion_eliminar_propiedad">
 
                     <?php
+            $dominio = "https://" . $_SERVER['HTTP_HOST'];
+            $url_actual = $dominio . $_SERVER['REQUEST_URI'];
 
-                        $mensaje = "https://zubanabienraiz.com/propiedad?id=" . $propiedad->{'id'} . "&tipo=" . $propiedad->{'tipo'};
+            $mensaje  = "Hola, estoy interesado en esta propiedad:\n\n";
+            $mensaje .= $url_actual . "\n\n";
 
-                        $base = "Hola Estoy interesado en esta Propiedad: $mensaje";
+            // Datos comunes
+            if ($propiedad->area_total > 0)
+                $mensaje .= "° Área Total: {$propiedad->area_total} m²\n";
 
-                        $mensaje_url = urlencode($base);
+            if (isset($propiedad->area_construida) && $propiedad->area_construida > 0)
+                $mensaje .= "° Área Construida: {$propiedad->area_construida} m²\n";
 
-                    ?>
+            if (isset($propiedad->banos) && $propiedad->banos > 0)
+                $mensaje .= "° Baños: {$propiedad->banos}\n";
+
+            if (isset($propiedad->habitaciones) && $propiedad->habitaciones > 0)
+                $mensaje .= "° Habitaciones: {$propiedad->habitaciones}\n";
+
+            if (isset($propiedad->estrato) && $propiedad->estrato > 0)
+                $mensaje .= "° Estrato: {$propiedad->estrato}\n";
+
+            if (!empty($propiedad->tipo_unidad))
+                $mensaje .= "° Tipo de Unidad: {$propiedad->tipo_unidad}\n";
+
+            $mensaje .= "° Tipo de Propiedad: {$propiedad->tipo}\n";
+
+            // Extras
+            if (isset($propiedad->sala) && $propiedad->sala === 'Si')
+                $mensaje .= "° Sala Comedor\n";
+
+            if (isset($propiedad->cocina) && $propiedad->cocina === 'Si')
+                $mensaje .= "° Cocina Integral\n";
+
+            if (isset($propiedad->zona_ropa) && $propiedad->zona_ropa === 'Si')
+                $mensaje .= "° Zona de Ropa\n";
+
+            if (isset($propiedad->garaje) && $propiedad->garaje === 'Si')
+                $mensaje .= "° Garaje\n";
+
+            $mensaje_url = urlencode($mensaje);
+            ?>
 
                 <a href="https://wa.me/573117856360?text=<?php echo $mensaje_url; ?>" class="boton_whatsapp_card">
                     <img src="https://img.icons8.com/ios-filled/50/25D366/whatsapp.png" alt="WhatsApp">

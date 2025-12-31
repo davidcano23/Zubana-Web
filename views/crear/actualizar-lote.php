@@ -22,7 +22,7 @@
     <fieldset>
     <legend>Tipo de Propiedad</legend>
 
-        <label for="tipo-propiedad">Tipo de Propiedad</label>
+        <label for="tipo-propiedad">Tipo de Propiedad*</label>
         <select id="tipo-propiedad" class="select-estilizado" name="propiedad[tipo]">
             <option value="" disabled <?php echo empty($propiedad?->tipo) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
             <option value="Lote Campestre" <?php echo ($propiedad?->tipo === 'Lote Campestre') ? 'selected' : ''; ?>>Lote Campestre</option>
@@ -55,7 +55,7 @@
         value="<?php echo is_numeric($propiedad?->estrato) ? $propiedad->estrato : ''; ?>"
     >
 
-    <label for="tipo-unidad">Tipo de Unidad</label>
+    <label for="tipo-unidad">Tipo de Unidad*</label>
     <select id="tipo-unidad" class="select-estilizado" name="propiedad[tipo_unidad]">
         <option value="" disabled <?php echo empty($propiedad?->tipo_unidad) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
         <option value="abierta" <?php echo ($propiedad?->tipo_unidad === 'abierta') ? 'selected' : ''; ?>>Abierta</option>
@@ -66,7 +66,7 @@
 
     <fieldset>
 
-        <legend>Descripcion de la Propiedad</legend>
+        <legend>Descripcion de la Propiedad*</legend>
         <textarea name="propiedad[descripcion]" id="descripcion"> <?php echo s($propiedad->descripcion); ?> </textarea>
     </fieldset>
 
