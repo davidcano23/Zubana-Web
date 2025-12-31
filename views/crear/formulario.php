@@ -3,10 +3,10 @@
     <legend>Informacion General</legend>
 
     <label for="precio">Precio*</label>
-    <input type="text" placeholder="Precio de la propiedad" id="precio" name="propiedad[precio]" value="<?php echo trim(s($propiedad?->precio ?? '')); ?>">
+    <input type="text" placeholder="Precio de la propiedad" class="precio" id="precio" name="propiedad[precio]" value="<?php echo trim(s($propiedad?->precio ?? '')); ?>">
 
     <label for="precio">Administración</label>
-    <input type="text" placeholder="Si la propiedad no tiene administración, ingresa 0." id="administracion" name="propiedad[administracion]" value="<?php echo trim(s($propiedad?->administracion ?? '')); ?>">
+    <input type="text" placeholder="Si la propiedad no tiene administración, ingresa 0." class="administracion" id="administracion" name="propiedad[administracion]" value="<?php echo trim(s($propiedad?->administracion ?? '')); ?>">
 
     <label for="ubicacion">Municipio*</label>
     <input type="text" placeholder="Ej: Llanogrande - Antioquia" id="ubicacion" name="propiedad[ubicacion]" value="<?php echo trim(s($propiedad?->ubicacion ?? '')); ?>">

@@ -535,7 +535,7 @@ function initMasFiltros() {
 // ------------------------- UTILIDADES Y OTROS -------------------------
 
 function initPrecioMiles() {
-  document.querySelectorAll('.precio_min, .precio_max').forEach(el => bindMilesMask(el));
+  document.querySelectorAll('.precio_min, .precio_max, .precio, .administracion').forEach(el => bindMilesMask(el));
 }
 
 function bindMilesMask(input) {

@@ -20,8 +20,9 @@ class FincaController {
         $datos = $_POST['propiedad'];
 
             // Convertir precio con puntos a número entero
-            if (isset($datos['precio'])) {
+            if (isset($datos['precio']) && isset($datos['administracion'])) {
                 $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
+                $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
             }
 
             $propiedad = new Casa($datos);
@@ -101,8 +102,9 @@ class FincaController {
         $args = $_POST['propiedad'];
 
         // Convertir precio con puntos a número entero
-        if (isset($args['precio'])) {
+        if (isset($args['precio']) && isset($args['administracion'])) {
             $args['precio'] = intval(str_replace('.', '', $args['precio']));
+            $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
         }
 
         $propiedad->sincronizar($args);

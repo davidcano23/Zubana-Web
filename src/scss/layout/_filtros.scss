@@ -268,6 +268,10 @@ body.bsheet-lock {
   .filtro_mas.is-open .mas_modal { 
       display: flex !important; 
       opacity: 1 !important; 
+
+      /* 🔥 AQUÍ FALTABA ESTA LÍNEA CLAVE 🔥 */
+      pointer-events: auto !important;
+
       /* Forzamos position fixed centrado en escritorio también */
       position: fixed !important;
       inset: 50% auto auto 50% !important;
