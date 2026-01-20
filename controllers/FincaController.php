@@ -4,7 +4,7 @@ namespace Controllers;
 
 use MVC\Router;
 use Model\Casa;
-use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Drivers\Imagick\Driver;
 use Intervention\Image\ImageManager;
 use Model\ImagenCasa;
 
@@ -32,7 +32,14 @@ class FincaController {
 
         if($_FILES['propiedad']['tmp_name']['imagen']) {
             $manager = new ImageManager(Driver::class);
-            $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(1200,800); 
+            try {
+                $imagen = $manager
+                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
+                    ->cover(1200,800);
+            } catch (\Throwable $e) {
+                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+            }
+
             $propiedad->setImagen($nombreImagen); // Esto sigue para la imagen principal
         }
 
@@ -61,18 +68,23 @@ class FincaController {
                         // Generar nombre único
                         $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
 
-                        // Procesar imagen
-                        $imagenAdicional = $manager->read($tmpName)->cover(1200,800);
+                        try {
+                            $imagenAdicional = $manager
+                                ->read($tmpName)
+                                ->cover(1200, 800);
 
-                        // Guardarla en el servidor
-                        $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
+                            $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
 
-                        // Guardarla en la DB
-                        $imagenExtra = new ImagenCasa([
-                            'casa_id' => $idPropiedad,
-                            'nombre' => $nombreImagenAdicional
-                        ]);
-                        $imagenExtra->guardar();
+                            $imagenExtra = new ImagenCasa([
+                                'casa_id' => $idPropiedad,
+                                'nombre' => $nombreImagenAdicional
+                            ]);
+                            $imagenExtra->guardar();
+
+                        } catch (\Throwable $e) {
+                            // Saltar imagen inválida (HEIC u otra)
+                            continue;
+                        }
                     }
                 }
             }
@@ -120,7 +132,13 @@ class FincaController {
         $nombreImagen = md5(uniqid(rand(),true) ).".webp";
 
             $manager = new ImageManager(Driver::class);
-            $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(1200,800); 
+            try {
+                $imagen = $manager
+                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
+                    ->cover(1200,800);
+            } catch (\Throwable $e) {
+                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+            }
             $propiedad->setImagen($nombreImagen);
         }
 

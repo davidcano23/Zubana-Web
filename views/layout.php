@@ -386,10 +386,11 @@
         </form>
         </div>
 
-
+    <script src="https://unpkg.com/heic2any/dist/heic2any.min.js"></script>
     <script src="../build/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 
 </body>
 </html>

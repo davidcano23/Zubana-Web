@@ -122,11 +122,24 @@
             <div class="carac">
 
             <?php if($propiedad->{'banos'} != 0): ?>
-                <p>Baños: <?php echo $propiedad->{'banos'};?></p>
-            <?php endif; ?>
+                <?php if($propiedad->{'banos'} == 1): ?>
+                <div class="contenedor_caracteristicas">
+                    <img src="/img/inodoro.png" alt="">
+                    <p><?php echo $propiedad->{'banos'};?> Baño</p>
+                </div>
+                <?php else: ?>
+                    <div class="contenedor_caracteristicas">
+                    <img src="/img/inodoro.png" alt="">
+                    <p><?php echo $propiedad->{'banos'};?> Baños</p>
+                </div>
+                <?php endif; ?>
+                <?php endif; ?>
 
                 <?php if($propiedad->estrato != 0): ?>
-                <p>Estrato: <?php echo $propiedad->{'estrato'};?></p>
+                <div class="contenedor_caracteristicas">
+                    <img src="/img/estrato.png" alt="">
+                <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
+                </div>
                 <?php endif; ?>
             </div>
         <?php endif; ?>

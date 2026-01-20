@@ -25,7 +25,75 @@ document.addEventListener('DOMContentLoaded', function () {
   initGalerias();
   initLoginModalSubmit();
   initLoginModal();
+
+  const imagenPrincipal = document.getElementById('imagen');
+  const imagenesExtras = document.getElementById('imagenes');
+
+  if (imagenPrincipal) {
+      imagenPrincipal.addEventListener('change', function () {
+          convertirHEIC(this);
+      });
+  }
+
+  if (imagenesExtras) {
+      imagenesExtras.addEventListener('change', function () {
+          convertirHEIC(this);
+      });
+  }
 });
+
+
+function convertirHEIC(input) {
+    // Seguridad: si no existe el input o no hay archivos
+    if (!input || !input.files || input.files.length === 0) {
+        return;
+    }
+
+    const archivos = Array.from(input.files);
+    const archivosConvertidos = [];
+
+    let requiereConversion = false;
+
+    archivos.forEach(file => {
+        if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+            requiereConversion = true;
+        }
+    });
+
+    // Si no hay HEIC, no hacemos nada
+    if (!requiereConversion) {
+        return;
+    }
+
+    Promise.all(
+        archivos.map(file => {
+            if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
+                return heic2any({
+                    blob: file,
+                    toType: "image/jpeg",
+                    quality: 0.9
+                }).then(converted => {
+                    return new File(
+                        [converted],
+                        file.name.replace(/\.heic$/i, '.jpg'),
+                        { type: 'image/jpeg' }
+                    );
+                });
+            } else {
+                return file;
+            }
+        })
+    ).then(filesFinales => {
+        const dataTransfer = new DataTransfer();
+        filesFinales.forEach(f => dataTransfer.items.add(f));
+        input.files = dataTransfer.files;
+    }).catch(error => {
+        console.error('Error convirtiendo HEIC:', error);
+        alert('Error al convertir imagen HEIC');
+    });
+  }
+
+
 
 function mapDinamicoComoFincaRaiz() {
   // 1. Obtener coordenadas iniciales (Si editamos, vienen de PHP. Si es nuevo, usamos default)
@@ -1000,4 +1068,5 @@ function buscadorUbicacion() {
     url.searchParams.set('pagina', '1');
     window.location.href = url.toString();
   }
+
 }

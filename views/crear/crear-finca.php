@@ -16,7 +16,7 @@
 
     <a href="/tipo-propiedad" class="bt-regresar">Regresar</a>
 
-    <form action="" class="formulario" method="POST" enctype="multipart/form-data">
+    <form action="" class="formulario" method="POST" enctype="multipart/form-data" id="form-propiedad">
 
         <?php include __DIR__ . '/formulario.php'; ?>
 

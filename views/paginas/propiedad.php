@@ -439,7 +439,7 @@
             if (!empty($propiedad->tipo_unidad))
                 $mensaje .= "° Tipo de Unidad: {$propiedad->tipo_unidad}\n";
 
-            $mensaje .= "° Tipo de Propiedad: {$propiedad->tipo}\n";
+                $mensaje .= "° Tipo de Propiedad: {$propiedad->tipo}\n";
 
             // Extras
             if (isset($propiedad->sala) && $propiedad->sala === 'Si')
