@@ -177,15 +177,15 @@ class PropiedadController {
 
         $mapaModelos = [
             'Casa' => 'Casa',
-            'Apartamento' => 'Apartamento',
+            'Casa Campestre' => 'Casa',
             'Finca' => 'Casa',
-            'Lote Rural' => 'Lote',
-            'Lote Bodega' => 'Lote',
-            'Lote Urbanizable' => 'Lote',
-            'Local' => 'Local',
+            'Apartamento' => 'Apartamento',
             'Apartaestudio' => 'Apartamento',
             'Apartaoficina' => 'Apartamento',
-            'Oficina' => 'Oficina'
+            'Lote Urbano' => 'Lote',
+            'Lote Bodega' => 'Lote',
+            'Lote Campestre' => 'Lote',
+            'Local' => 'Local'
         ];
 
         if ($id && isset($mapaModelos[$tipo])) {

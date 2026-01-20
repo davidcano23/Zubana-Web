@@ -103,7 +103,7 @@ class Lote extends ActiveRecord {
             self::$errores[] = "El campo area total no puede superar los 25 caracteres";
         }
         if(!isset($this->estrato) || $this->estrato === '') {
-            self::$errores[] = "El campo estrato es obligatoria";
+            $this->estrato = 0;
         }
         if(!$this->tipo_unidad) {
             self::$errores[] = "El campo tipo de unidad es obligatoria";

@@ -76,7 +76,7 @@ class LocalController {
                             $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
 
                             $imagenExtra = new ImagenLocal([
-                                'casa_id' => $idPropiedad,
+                                'local_id' => $idPropiedad,
                                 'nombre' => $nombreImagenAdicional
                             ]);
                             $imagenExtra->guardar();

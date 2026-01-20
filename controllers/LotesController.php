@@ -76,7 +76,7 @@ class LotesController {
                             $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
 
                             $imagenExtra = new ImagenLotes([
-                                'casa_id' => $idPropiedad,
+                                'lotes_id' => $idPropiedad,
                                 'nombre' => $nombreImagenAdicional
                             ]);
                             $imagenExtra->guardar();

@@ -76,7 +76,7 @@ class ApartamentoController {
                             $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
 
                             $imagenExtra = new ImagenApart([
-                                'casa_id' => $idPropiedad,
+                                'apartamento_id' => $idPropiedad,
                                 'nombre' => $nombreImagenAdicional
                             ]);
                             $imagenExtra->guardar();
