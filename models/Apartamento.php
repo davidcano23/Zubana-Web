@@ -136,23 +136,8 @@ class Apartamento extends ActiveRecord {
         if(!isset($this->banos) || $this->banos === '') {
             $this->banos = 0;
         }
-        if(!$this->zona_ropa) {
-            self::$errores[] = "El campo zona_ropa es obligatoria";
-        }
-        if(!$this->cocina) {
-            self::$errores[] = "El campo cocina es obligatoria";
-        }
-        if(!$this->sala_comedor) {
-            self::$errores[] = "El campo sala_comedor es obligatoria";
-        }
-        if(!$this->balcon) {
-            self::$errores[] = "El campo balcon es obligatoria";
-        }
         if(!isset($this->estrato) || $this->estrato === '') {
             $this->estrato = 0;
-        }
-        if(!$this->garaje) {
-            self::$errores[] = "El campo garaje es obligatoria";
         }
         if(!$this->tipo_unidad) {
             self::$errores[] = "El campo tipo_unidad es obligatoria";
@@ -160,27 +145,54 @@ class Apartamento extends ActiveRecord {
         if(!$this->tipo) {
             self::$errores[] = "El campo tipo es obligatoria";
         }
+        if(!$this->zona_ropa) {
+            $this->zona_ropa = "NO";
+        }
+
+        if(!$this->cocina) {
+            $this->cocina = "NO";
+        }
+
+        if(!$this->sala_comedor) {
+            $this->sala_comedor = "NO";
+        }
+
+        if(!$this->balcon) {
+            $this->balcon = "NO";
+        }
+
+        if(!$this->garaje) {
+            $this->garaje = "NO";
+        }
+
         if(!$this->vigilancia) {
-            self::$errores[] = "El campo Vigilancia es obligatoria";
+            $this->vigilancia = "NO";
         }
+
         if(!$this->zonas_verdes) {
-            self::$errores[] = "El campo Zonas Verdes es obligatoria";
+            $this->zonas_verdes = "NO";
         }
+
         if(!$this->juegos) {
-            self::$errores[] = "El campo Juegos Infantiles es obligatoria";
+            $this->juegos = "NO";
         }
+
         if(!$this->coworking) {
-            self::$errores[] = "El campo Coworking es obligatoria";
+            $this->coworking = "NO";
         }
+
         if(!$this->gimnasio) {
-            self::$errores[] = "El campo Gimnasio es obligatoria";
+            $this->gimnasio = "NO";
         }
+
         if(!$this->piscina) {
-            self::$errores[] = "El campo Piscina es obligatoria";
+            $this->piscina = "NO";
         }
+
         if(!$this->cancha) {
-            self::$errores[] = "El campo Cancha Deportivas es obligatoria";
+            $this->cancha = "NO";
         }
+
         if(!$this->actualizacion) {
             self::$errores[] = "El campo actualizacion es obligatoria";
         }
