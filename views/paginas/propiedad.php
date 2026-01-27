@@ -421,6 +421,15 @@
             $mensaje .= $url_actual . "\n\n";
 
             // Datos comunes
+            if (isset($propiedad->id))
+                $mensaje .= "° Codigo Propiedad: {$propiedad->id}\n";
+
+            if (isset($propiedad->precio))
+                $mensaje .= "° Precio: {$propiedad->precio}\n";
+
+            if (isset($propiedad->ubicacion))
+                $mensaje .= "° Ubicacion: {$propiedad->ubicacion}\n";
+
             if ($propiedad->area_total > 0)
                 $mensaje .= "° Área Total: {$propiedad->area_total} m²\n";
 

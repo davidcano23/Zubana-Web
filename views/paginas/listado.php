@@ -170,6 +170,15 @@
             $mensaje .= $url_actual . "\n\n";
 
             // Datos comunes
+            if (isset($recomendada->id))
+                $mensaje .= "° Codigo Propiedad: {$recomendada->id}\n";
+
+            if (isset($recomendada->precio))
+                $mensaje .= "° Precio: {$recomendada->precio}\n";
+
+            if (isset($recomendada->ubicacion))
+                $mensaje .= "° Ubicacion: {$recomendada->ubicacion}\n";
+
             if ($recomendada->area_total > 0)
                 $mensaje .= "° Área Total: {$recomendada->area_total} m²\n";
 
@@ -188,7 +197,7 @@
             if (!empty($recomendada->tipo_unidad))
                 $mensaje .= "° Tipo de Unidad: {$recomendada->tipo_unidad}\n";
 
-            $mensaje .= "° Tipo de Propiedad: {$recomendada->tipo}\n";
+                $mensaje .= "° Tipo de Propiedad: {$recomendada->tipo}\n";
 
             // Extras
             if (isset($recomendada->sala) && $recomendada->sala === 'Si')
