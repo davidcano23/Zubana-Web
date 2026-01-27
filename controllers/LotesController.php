@@ -27,36 +27,39 @@ class LotesController {
 
             $propiedad = new Lote($datos);
 
-        //Gnerar un nombre unico
-        $nombreImagen = md5(uniqid(rand(),true) ).".webp";
-        if($_FILES['propiedad']['tmp_name']['imagen']) {
-            $manager = new ImageManager(Driver::class);
+       $manager = new ImageManager(Driver::class);
+
+        if (!empty($_FILES['propiedad']['tmp_name']['imagen'])) {
+
+            $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+
             try {
                 $imagen = $manager
                     ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
+                    ->cover(1200, 800);
+
+                $propiedad->setImagen($nombreImagen);
+
             } catch (\Throwable $e) {
                 $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
             }
-            $propiedad->setImagen($nombreImagen);
         }
 
-        $errores = $propiedad->validar();
+        // ⛔ NO sobrescribir errores
+        $errores = array_merge($errores, $propiedad->validar());
 
-        
-        //Revisar el arreglo de errores
-        if(empty($errores)) {
+        if (empty($errores)) {
 
-            //SUBIDA DE ARCHIVOS
-
-            if(!is_dir(CARPETA_IMAGENES)) {
+            if (!is_dir(CARPETA_IMAGENES)) {
                 mkdir(CARPETA_IMAGENES);
             }
 
-            //Guardar la imagen en el servidor
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            if (isset($imagen)) {
+                $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            }
 
-            $resultado = $propiedad->guardar();
+            $propiedad->guardar();
+
 
             // Obtener ID insertado
             $idPropiedad = $propiedad->{'id'};

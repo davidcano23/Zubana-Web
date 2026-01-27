@@ -9824,6 +9824,8 @@
     // 🔥 ESTE ES EL ARREGLO CLAVE PARA MÓVIL
     initHackSafari();
 
+    initHeicToJpgInputs(); 
+
     initBuscadorPorTipo();
     initFiltroPrecio();
     initFiltroHB();
@@ -9838,72 +9840,171 @@
     initGalerias();
     initLoginModalSubmit();
     initLoginModal();
-
-    const imagenPrincipal = document.getElementById('imagen');
-    const imagenesExtras = document.getElementById('imagenes');
-
-    if (imagenPrincipal) {
-        imagenPrincipal.addEventListener('change', function () {
-            convertirHEIC(this);
-        });
-    }
-
-    if (imagenesExtras) {
-        imagenesExtras.addEventListener('change', function () {
-            convertirHEIC(this);
-        });
-    }
   });
 
+  function initHeicToJpgInputs() {
+    const inputPrincipal = document.getElementById('imagen');
+    const inputAdicionales = document.getElementById('imagenes');
 
-  function convertirHEIC(input) {
-      // Seguridad: si no existe el input o no hay archivos
-      if (!input || !input.files || input.files.length === 0) {
-          return;
+    if (!inputPrincipal && !inputAdicionales) return;
+
+    const form = (inputPrincipal || inputAdicionales)?.closest('form');
+    if (!form) return;
+
+    const submitBtn = form.querySelector('input[type="submit"], button[type="submit"]');
+
+    // Worker
+    const worker = new Worker('/js/heic-worker.js');
+    const pending = new Map();
+
+    worker.onmessage = (e) => {
+      const { id, ok, buffer, name, error } = e.data;
+      const item = pending.get(id);
+      if (!item) return;
+
+      pending.delete(id);
+
+      if (!ok) {
+        item.reject(new Error(error || 'Error convirtiendo HEIC'));
+        return;
       }
 
-      const archivos = Array.from(input.files);
+      const file = new File([buffer], name, { type: 'image/jpeg', lastModified: Date.now() });
+      item.resolve(file);
+    };
 
-      let requiereConversion = false;
+    function replaceInputFiles(input, filesArray) {
+      const dt = new DataTransfer();
+      filesArray.forEach(f => dt.items.add(f));
+      input.files = dt.files;
+    }
 
-      archivos.forEach(file => {
-          if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-              requiereConversion = true;
-          }
-      });
+    function fileLooksHeic(file) {
+      const name = (file?.name || '').toLowerCase();
+      const type = (file?.type || '').toLowerCase();
+      return type.includes('heic') || type.includes('heif') || name.endsWith('.heic') || name.endsWith('.heif');
+    }
 
-      // Si no hay HEIC, no hacemos nada
-      if (!requiereConversion) {
+    function convertHeicInWorker(file, timeoutMs = 60000) {
+      return new Promise(async (resolve, reject) => {
+        const id = crypto.randomUUID();
+
+        let buffer;
+        try {
+          buffer = await file.arrayBuffer();
+        } catch (err) {
+          reject(err);
           return;
-      }
+        }
 
-      Promise.all(
-          archivos.map(file => {
-              if (file.type === 'image/heic' || file.name.toLowerCase().endsWith('.heic')) {
-                  return heic2any({
-                      blob: file,
-                      toType: "image/jpeg",
-                      quality: 0.9
-                  }).then(converted => {
-                      return new File(
-                          [converted],
-                          file.name.replace(/\.heic$/i, '.jpg'),
-                          { type: 'image/jpeg' }
-                      );
-                  });
-              } else {
-                  return file;
-              }
-          })
-      ).then(filesFinales => {
-          const dataTransfer = new DataTransfer();
-          filesFinales.forEach(f => dataTransfer.items.add(f));
-          input.files = dataTransfer.files;
-      }).catch(error => {
-          console.error('Error convirtiendo HEIC:', error);
-          alert('Error al convertir imagen HEIC');
+        const t = setTimeout(() => {
+          pending.delete(id);
+          reject(new Error('Timeout convirtiendo HEIC'));
+        }, timeoutMs);
+
+        pending.set(id, {
+          resolve: (f) => { clearTimeout(t); resolve(f); },
+          reject: (err) => { clearTimeout(t); reject(err); }
+        });
+
+        worker.postMessage(
+          { id, buffer, name: file.name, type: file.type, quality: 0.92 },
+          [buffer]
+        );
       });
     }
+
+    async function processPrincipal() {
+      if (!inputPrincipal?.files?.length) return;
+
+      const file = inputPrincipal.files[0];
+      if (!fileLooksHeic(file)) return;
+
+      const jpgFile = await convertHeicInWorker(file);
+      replaceInputFiles(inputPrincipal, [jpgFile]);
+    }
+
+    async function processAdicionales(maxFiles = 15) {
+      if (!inputAdicionales?.files?.length) return;
+
+      const originals = Array.from(inputAdicionales.files).slice(0, maxFiles);
+      const out = [];
+
+      for (const f of originals) {
+        if (!fileLooksHeic(f)) {
+          out.push(f);
+          continue;
+        }
+        const jpgFile = await convertHeicInWorker(f);
+        out.push(jpgFile);
+      }
+
+      replaceInputFiles(inputAdicionales, out);
+    }
+
+    let isSubmitting = false;
+
+    form.addEventListener('submit', async (e) => {
+      if (isSubmitting) return;
+
+      isSubmitting = true;
+      e.preventDefault();
+
+      // UI lock
+      if (submitBtn) submitBtn.disabled = true;
+      showLoading('Convirtiendo imágenes…');
+
+      try {
+        await processPrincipal();
+        await processAdicionales(15);
+
+        // Ya convertido todo: enviar
+        showLoading('Enviando formulario…');
+        form.submit();
+      } catch (err) {
+        console.error('HEIC error:', err);
+        alert(`No se pudo convertir una imagen HEIC.\n\nDetalle: ${err?.message || err}`);
+        hideLoading();
+        if (submitBtn) submitBtn.disabled = false;
+        isSubmitting = false;
+      }
+
+    });
+  }
+
+
+  function ensureLoadingOverlay() {
+    let overlay = document.querySelector('.ui-loading-overlay');
+    if (overlay) return overlay;
+
+    overlay = document.createElement('div');
+    overlay.className = 'ui-loading-overlay';
+    overlay.innerHTML = `
+    <div class="ui-loading-card" role="status" aria-live="polite">
+      <div class="ui-loading-spinner"></div>
+      <div class="ui-loading-text">Procesando…</div>
+    </div>
+  `;
+    document.body.appendChild(overlay);
+    return overlay;
+  }
+
+  function showLoading(message = 'Procesando…') {
+    const overlay = ensureLoadingOverlay();
+    overlay.querySelector('.ui-loading-text').textContent = message;
+    overlay.classList.add('is-active');
+    // bloquear scroll
+    document.documentElement.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function hideLoading() {
+    const overlay = document.querySelector('.ui-loading-overlay');
+    if (overlay) overlay.classList.remove('is-active');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+  }
+
 
 
 

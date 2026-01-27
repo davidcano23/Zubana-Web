@@ -142,9 +142,6 @@ class Local extends ActiveRecord {
         if(strlen($this->barrio) > 255) {
             self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
         }
-        if(!$this->administracion){
-            self::$errores[] = "El campo Administración es obligatorio. Si no aplica, ingresa 0";
-        }
         if(!$this->barrio) {
             $this->barrio = "N/A";
         }

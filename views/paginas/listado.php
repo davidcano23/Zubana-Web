@@ -2,22 +2,22 @@
     $auth = $_SESSION['login'] ?? null;
 ?>
 
-<?php foreach($propiedades as $propiedad){ ?>
+<?php foreach($propiedades as $recomendada){ ?>
     
         <div class="card-propiedad">
-            <a href="/propiedad?id=<?php echo $propiedad->id; ?>&tipo=<?php echo strtolower($propiedad->tipo); ?>">
+            <a href="/propiedad?id=<?php echo $recomendada->id; ?>&tipo=<?php echo strtolower($recomendada->tipo); ?>">
             <div class="swiper img-container">
             <div class="swiper-wrapper">
                 
                 <div class="swiper-slide">
-                    <img src="/imagenes/<?php echo $propiedad->imagen; ?>" alt="Imagen propiedad" loading="lazy">
+                    <img src="/imagenes/<?php echo $recomendada->imagen; ?>" alt="Imagen propiedad" loading="lazy">
                 </div>
 
                 <?php 
                     // --- LÓGICA DE IDENTIFICACIÓN ---
                     // Determinamos qué tipo es para generar la llave correcta (ej: casa_20)
                     $tipo_clave = '';
-                    $t = strtolower($propiedad->tipo);
+                    $t = strtolower($recomendada->tipo);
 
                     if(in_array($t, ['casa', 'finca', 'casa campestre'])) {
                         $tipo_clave = 'casa';
@@ -30,7 +30,7 @@
                     }
 
                     // Generamos la llave única
-                    $llaveUnica = $tipo_clave . '_' . $propiedad->id;
+                    $llaveUnica = $tipo_clave . '_' . $recomendada->id;
                 ?>
 
                 <?php if (!empty($imagenesPorCasa[$llaveUnica])): ?>
@@ -47,98 +47,98 @@
         </div> 
 
             <div class="contenedor_padre_computador_informacion_card">
-            <h3>$<?php echo number_format((int)str_replace('.', '', $propiedad->{'precio'}), 0, ',', '.'); ?> </h3>
+            <h3>$<?php echo number_format((int)str_replace('.', '', $recomendada->{'precio'}), 0, ',', '.'); ?> </h3>
             
-            <?php if($propiedad->{'administracion'} !=0): ?>
-            <p class="texto_computador_informacion_tipo_ubicacion_barrio">+ $<?php echo number_format((int)str_replace('.', '', $propiedad->{'administracion'}), 0, ',', '.'); ?> Administracion </p>
+            <?php if($recomendada->{'administracion'} !=0): ?>
+            <p class="texto_computador_informacion_tipo_ubicacion_barrio">+ $<?php echo number_format((int)str_replace('.', '', $recomendada->{'administracion'}), 0, ',', '.'); ?> Administracion </p>
             <?php endif; ?>
 
-            <?php if(!$propiedad->{'barrio'} === 'N/A'): ?>
-            <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $propiedad->{'tipo'} . ' en ' . $propiedad->{'barrio'} . ', ' . $propiedad->{'ubicacion'}; ?> </p>
+            <?php if(!$recomendada->{'barrio'} === 'N/A'): ?>
+            <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $recomendada->{'tipo'} . ' en ' . $recomendada->{'barrio'} . ', ' . $recomendada->{'ubicacion'}; ?> </p>
             <?php else: ?>
-                <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $propiedad->{'tipo'} . ' en ' . $propiedad->{'ubicacion'}; ?> </p>
+                <p class="texto_computador_informacion_tipo_ubicacion_barrio"> <?php echo $recomendada->{'tipo'} . ' en ' . $recomendada->{'ubicacion'}; ?> </p>
             <?php endif; ?>
 
 
-        <?php if ($propiedad->{'tipo'} === 'Casa' || $propiedad->{'tipo'} === 'Casa Campestre' || $propiedad->{'tipo'} === 'Finca' || $propiedad->{'tipo'} === 'Apartamento' || $propiedad->{'tipo'} === 'Apartaestudio' || $propiedad->{'tipo'} === 'Apartaoficina') : ?>  
+        <?php if ($recomendada->{'tipo'} === 'Casa' || $recomendada->{'tipo'} === 'Casa Campestre' || $recomendada->{'tipo'} === 'Finca' || $recomendada->{'tipo'} === 'Apartamento' || $recomendada->{'tipo'} === 'Apartaestudio' || $recomendada->{'tipo'} === 'Apartaoficina') : ?>  
             <div class="carac">
-                <?php if($propiedad->{'banos'} != 0): ?>
-                <?php if($propiedad->{'banos'} == 1): ?>
+                <?php if($recomendada->{'banos'} != 0): ?>
+                <?php if($recomendada->{'banos'} == 1): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/inodoro.png" alt="">
-                    <p><?php echo $propiedad->{'banos'};?> Baño</p>
+                    <p><?php echo $recomendada->{'banos'};?> Baño</p>
                 </div>
                 <?php else: ?>
                     <div class="contenedor_caracteristicas">
                     <img src="/img/inodoro.png" alt="">
-                    <p><?php echo $propiedad->{'banos'};?> Baños</p>
+                    <p><?php echo $recomendada->{'banos'};?> Baños</p>
                 </div>
                 <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if($propiedad->{'habitaciones'} != 0): ?>
+                <?php if($recomendada->{'habitaciones'} != 0): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/dormitorio.png" alt="">
-                    <p><?php echo $propiedad->{'habitaciones'};?> Habs</p>
+                    <p><?php echo $recomendada->{'habitaciones'};?> Habs</p>
                 </div>
                 <?php endif; ?>
 
-                <?php if($propiedad->estrato != 0): ?>
+                <?php if($recomendada->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/estrato.png" alt="">
-                <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
+                <p><?php echo $recomendada->{'estrato'};?> Estrato</p>
                 </div>
                 <?php endif; ?>
 
-                <?php if (!empty($propiedad->area_total) || $propiedad->area_total != 0) { ?>
+                <?php if (!empty($recomendada->area_total) || $recomendada->area_total != 0) { ?>
                     <div class="contenedor_caracteristicas area_computador_total">
                         <img src="/img/area.png" alt="">
-                        <p><?php echo $propiedad->{'area_total'}; ?>m²</p>
+                        <p><?php echo $recomendada->{'area_total'}; ?>m²</p>
                     </div>
                 <?php } ?>
             </div>
         <?php endif; ?>
 
-        <?php if ($propiedad->{'tipo'} === 'Lote Campestre' || $propiedad->{'tipo'} === 'Lote Urbano' || $propiedad->{'tipo'} === 'Lote Bodega') : ?>  
+        <?php if ($recomendada->{'tipo'} === 'Lote Campestre' || $recomendada->{'tipo'} === 'Lote Urbano' || $recomendada->{'tipo'} === 'Lote Bodega') : ?>  
             <div class="carac">
-                <?php if($propiedad->estrato != 0): ?>
+                <?php if($recomendada->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/estrato.png" alt="">
-                <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
+                <p><?php echo $recomendada->{'estrato'};?> Estrato</p>
                 </div>
                 <?php endif; ?>
 
-                <?php if($propiedad->{'area_total'} != 0): ?>
+                <?php if($recomendada->{'area_total'} != 0): ?>
                 <div class="contenedor_caracteristicas area_computador_total">
                         <img src="/img/area.png" alt="">
-                        <p><?php echo $propiedad->{'area_total'}; ?>m²</p>
+                        <p><?php echo $recomendada->{'area_total'}; ?>m²</p>
                 </div>
                 <?php endif; ?>
                 
             </div>
         <?php endif; ?>
 
-        <?php if ($propiedad->{'tipo'} === 'Local') : ?>  
+        <?php if ($recomendada->{'tipo'} === 'Local') : ?>  
             <div class="carac">
 
-            <?php if($propiedad->{'banos'} != 0): ?>
-                <?php if($propiedad->{'banos'} == 1): ?>
+            <?php if($recomendada->{'banos'} != 0): ?>
+                <?php if($recomendada->{'banos'} == 1): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/inodoro.png" alt="">
-                    <p><?php echo $propiedad->{'banos'};?> Baño</p>
+                    <p><?php echo $recomendada->{'banos'};?> Baño</p>
                 </div>
                 <?php else: ?>
                     <div class="contenedor_caracteristicas">
                     <img src="/img/inodoro.png" alt="">
-                    <p><?php echo $propiedad->{'banos'};?> Baños</p>
+                    <p><?php echo $recomendada->{'banos'};?> Baños</p>
                 </div>
                 <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if($propiedad->estrato != 0): ?>
+                <?php if($recomendada->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">
                     <img src="/img/estrato.png" alt="">
-                <p><?php echo $propiedad->{'estrato'};?> Estrato</p>
+                <p><?php echo $recomendada->{'estrato'};?> Estrato</p>
                 </div>
                 <?php endif; ?>
             </div>
@@ -147,8 +147,8 @@
             <div class="metros-descripcion">
 
                 
-                <?php if (!empty($propiedad->area_total) || $propiedad->area_total != 0) { ?>
-                    <p class="area_movil">Area: <?php echo $propiedad->{'area_total'}; ?>m²</p>
+                <?php if (!empty($recomendada->area_total) || $recomendada->area_total != 0) { ?>
+                    <p class="area_movil">Area: <?php echo $recomendada->{'area_total'}; ?>m²</p>
                 <?php } ?>
                 
             </div>
@@ -157,12 +157,12 @@
 
             <div class="descripcion_computador_informacion_card">
                 <h4 class="titulo_descripcion_computador">Informacion</h4>
-                <p class="parrafo_descripcion_computador"> <?php echo $propiedad->{'descripcion'}; ?> </p>
+                <p class="parrafo_descripcion_computador"> <?php echo $recomendada->{'descripcion'}; ?> </p>
             </div>
 
             <div class="botones_contacto_actualizacion_eliminar_propiedad">
 
-                    <?php
+            <?php
             $dominio = "https://" . $_SERVER['HTTP_HOST'];
             $url_actual = $dominio . $_SERVER['REQUEST_URI'];
 
@@ -170,37 +170,37 @@
             $mensaje .= $url_actual . "\n\n";
 
             // Datos comunes
-            if ($propiedad->area_total > 0)
-                $mensaje .= "° Área Total: {$propiedad->area_total} m²\n";
+            if ($recomendada->area_total > 0)
+                $mensaje .= "° Área Total: {$recomendada->area_total} m²\n";
 
-            if (isset($propiedad->area_construida) && $propiedad->area_construida > 0)
-                $mensaje .= "° Área Construida: {$propiedad->area_construida} m²\n";
+            if (isset($recomendada->area_construida) && $recomendada->area_construida > 0)
+                $mensaje .= "° Área Construida: {$recomendada->area_construida} m²\n";
 
-            if (isset($propiedad->banos) && $propiedad->banos > 0)
-                $mensaje .= "° Baños: {$propiedad->banos}\n";
+            if (isset($recomendada->banos) && $recomendada->banos > 0)
+                $mensaje .= "° Baños: {$recomendada->banos}\n";
 
-            if (isset($propiedad->habitaciones) && $propiedad->habitaciones > 0)
-                $mensaje .= "° Habitaciones: {$propiedad->habitaciones}\n";
+            if (isset($recomendada->habitaciones) && $recomendada->habitaciones > 0)
+                $mensaje .= "° Habitaciones: {$recomendada->habitaciones}\n";
 
-            if (isset($propiedad->estrato) && $propiedad->estrato > 0)
-                $mensaje .= "° Estrato: {$propiedad->estrato}\n";
+            if (isset($recomendada->estrato) && $recomendada->estrato > 0)
+                $mensaje .= "° Estrato: {$recomendada->estrato}\n";
 
-            if (!empty($propiedad->tipo_unidad))
-                $mensaje .= "° Tipo de Unidad: {$propiedad->tipo_unidad}\n";
+            if (!empty($recomendada->tipo_unidad))
+                $mensaje .= "° Tipo de Unidad: {$recomendada->tipo_unidad}\n";
 
-            $mensaje .= "° Tipo de Propiedad: {$propiedad->tipo}\n";
+            $mensaje .= "° Tipo de Propiedad: {$recomendada->tipo}\n";
 
             // Extras
-            if (isset($propiedad->sala) && $propiedad->sala === 'Si')
+            if (isset($recomendada->sala) && $recomendada->sala === 'Si')
                 $mensaje .= "° Sala Comedor\n";
 
-            if (isset($propiedad->cocina) && $propiedad->cocina === 'Si')
+            if (isset($recomendada->cocina) && $recomendada->cocina === 'Si')
                 $mensaje .= "° Cocina Integral\n";
 
-            if (isset($propiedad->zona_ropa) && $propiedad->zona_ropa === 'Si')
+            if (isset($recomendada->zona_ropa) && $recomendada->zona_ropa === 'Si')
                 $mensaje .= "° Zona de Ropa\n";
 
-            if (isset($propiedad->garaje) && $propiedad->garaje === 'Si')
+            if (isset($recomendada->garaje) && $recomendada->garaje === 'Si')
                 $mensaje .= "° Garaje\n";
 
             $mensaje_url = urlencode($mensaje);
@@ -213,13 +213,13 @@
 
                 <?php if($auth): ?>
 
-                <a class="boton_whatsapp_card" href="/propiedades/actualizar-<?php echo trim($propiedad->actualizacion);?>?id=<?php echo $propiedad->id; ?>&tipo=<?php echo trim($propiedad->tipo); ?>">
+                <a class="boton_whatsapp_card" href="/propiedades/actualizar-<?php echo trim($recomendada->actualizacion);?>?id=<?php echo $recomendada->id; ?>&tipo=<?php echo trim($recomendada->tipo); ?>">
                     Actualizar
                 </a>
 
                 <form method="POST" class="w-100" action="/propiedades/eliminar">
-                    <input type="hidden" name="id" value="<?php echo $propiedad->{'id'}; ?>">
-                    <input type="hidden" name="tipo" value="<?php echo $propiedad->{'tipo'}; ?>">
+                    <input type="hidden" name="id" value="<?php echo $recomendada->{'id'}; ?>">
+                    <input type="hidden" name="tipo" value="<?php echo $recomendada->{'tipo'}; ?>">
                     <input type="submit" class="boton_whatsapp_card boton_eliminacion" value="Eliminar">
                 </form>
 

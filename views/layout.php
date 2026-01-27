@@ -7,11 +7,37 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <?php
+        <?php
+    // Dominio + URL actual
     $dominio = "https://" . $_SERVER['HTTP_HOST'];
     $url_actual = $dominio . $_SERVER['REQUEST_URI'];
+    
+    // Título (usa nombre si existe)
+    $metaTitle = !empty($propiedad->nombre)
+        ? $propiedad->nombre . " | Zubana BienRaíz"
+        : "Zubana BienRaíz";
+    
+    // Descripción limpia (sin HTML)
+    $rawDesc = $propiedad->descripcion ?? "Encuentra propiedades únicas con Zubana BienRaíz";
+    $rawDesc = trim(strip_tags($rawDesc));
+    $metaDesc = mb_substr($rawDesc, 0, 200);
+    
+    // Imagen principal (prioridad: primera de $imagenes -> propiedad->imagen -> default)
+    $imgRel = null;
+    
+    // Si en tu vista llega $imagenes como array
+    if (isset($imagenes) && is_array($imagenes) && !empty($imagenes[0]->nombre)) {
+        $imgRel = "/imagenes/" . $imagenes[0]->nombre;
+    } elseif (!empty($propiedad->imagen)) {
+        $imgRel = "/imagenes/" . $propiedad->imagen;
+    } else {
+        $imgRel = "/img/preview-default.jpg";
+    }
+    
+    $metaImage = $dominio . $imgRel;
+    $metaUrl   = $url_actual;
     ?>
-
+    
     <?php
     $imagen_principal = null;
 
@@ -26,31 +52,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-    <title><?php echo htmlspecialchars($propiedad->titulo ?? 'Zubana BienRaíz'); ?></title>
+    <title><?= htmlspecialchars($metaTitle ?? 'Zubana BienRaíz') ?></title>
 
-    <meta name="description"
-          content="<?php echo htmlspecialchars(substr($propiedad->descripcion ?? 'Encuentra propiedades únicas con Zubana BienRaíz', 0, 160)); ?>">
+    <meta name="description" content="<?= htmlspecialchars($metaDesc ?? 'Encuentra propiedades únicas con Zubana BienRaíz') ?>">
 
     <!-- Open Graph -->
-    <meta property="og:title"
-          content="<?php echo htmlspecialchars($propiedad->titulo ?? 'Zubana BienRaíz'); ?>">
-
-    <meta property="og:description"
-          content="<?php echo htmlspecialchars(substr($propiedad->descripcion ?? '', 0, 160)); ?>">
-
-    <meta property="og:image"
-          content="<?php echo $imagen_principal; ?>">
-
-    <meta property="og:url"
-          content="<?php echo $url_actual; ?>">
-
     <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= htmlspecialchars($metaUrl ?? '') ?>">
+    <meta property="og:title" content="<?= htmlspecialchars($metaTitle ?? 'Zubana BienRaíz') ?>">
+    <meta property="og:description" content="<?= htmlspecialchars($metaDesc ?? '') ?>">
+    <meta property="og:image" content="<?= htmlspecialchars($metaImage ?? '') ?>">
+    <meta property="og:image:secure_url" content="<?= htmlspecialchars($metaImage ?? '') ?>">
 
-    <link rel="icon" href="<?php echo $dominio; ?>/img/icono_pestanapng.png" type="image/png">
-    <link rel="stylesheet" href="../build/css/app.css">
+    <!-- Twitter (opcional pero recomendado) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="<?= htmlspecialchars($metaTitle ?? 'Zubana BienRaíz') ?>">
+    <meta name="twitter:description" content="<?= htmlspecialchars($metaDesc ?? '') ?>">
+    <meta name="twitter:image" content="<?= htmlspecialchars($metaImage ?? '') ?>">
+
+    <link rel="icon" href="<?= htmlspecialchars(($dominio ?? '') . '/img/icono_pestanapng.png') ?>" type="image/png">
+    <link rel="stylesheet" href="/build/css/app.css">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 </head>
+
 
 <body>
     <header class="header">
@@ -386,7 +411,7 @@
         </form>
         </div>
 
-    <script src="https://unpkg.com/heic2any/dist/heic2any.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/heic-to@1.3.0/dist/iife/heic-to.js"></script>
     <script src="../build/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
