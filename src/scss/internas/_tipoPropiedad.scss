@@ -51,7 +51,7 @@
       display: grid;
       grid-template-columns: auto 1fr auto;
       align-items: center;
-      gap: .5rem;
+      gap: 1rem;
 
       padding: 1.1rem 1.2rem;
       border-radius: 16px;
@@ -102,14 +102,14 @@
           font-family: v.$secundaria;
           font-weight: v.$bold;
           letter-spacing: .2px;
-          font-size: clamp(1.2rem, 1rem + .4vw, 1.8rem);
+          font-size: clamp(1.4rem, 1rem + .4vw, 1.8rem);
           line-height: 1.1;
         }
         .tp-desc{
           font-family: v.$texto;
           font-weight: v.$regular;
           color: color-mix(in srgb, v.$arenaclaro 70%, transparent);
-          font-size: clamp(1rem, .8rem + .2vw, 1.3rem);
+          font-size: clamp(1.2rem, .8rem + .2vw, 1.3rem);
           line-height: 1.2;
         }
       }

@@ -10443,75 +10443,184 @@
   }
 
   function initMasFiltros() {
-    // Aplicar a TODAS las instancias de mas_modal
     document.querySelectorAll('.mas_modal').forEach(modal => {
-        const form = modal.closest('form') || document.querySelector('.form_busqueda');
-        if(!form) return;
+      const form = modal.closest('form') || document.querySelector('.form_busqueda');
+      if (!form) return;
 
-        const root = modal.closest('.filtro_mas');
-        const trigger = root ? root.querySelector('.mas_trigger') : null;
-        const labelText = trigger ? trigger.querySelector('.mas_trigger__text') : null;
-        
-        const closeBtn  = modal.querySelector('.mas_close');
-        const btnApply  = modal.querySelector('.mas_apply');
-        const btnClear  = modal.querySelector('.mas_clear');
-        const pageInput = modal.querySelector('.mas_pagina_hidden');
-        
-        const estratoHidden = modal.querySelector('.mf_hidden_estrato');
-        const estratoGroup  = modal.querySelector('.mf_group[data-kind="estrato"]');
+      const root = modal.closest('.filtro_mas');
+      const trigger = root ? root.querySelector('.mas_trigger') : null;
+      const labelText = trigger ? trigger.querySelector('.mas_trigger__text') : null;
 
-        // Funcionalidad cerrar con X
-        if(closeBtn) {
-            closeBtn.addEventListener('click', (e) => {
-               e.preventDefault();
-               // Cerramos buscando el root padre y quitando la clase
-               if(root) root.classList.remove('is-open');
-            });
-        }
+      const closeBtn  = modal.querySelector('.mas_close');
+      const btnApply  = modal.querySelector('.mas_apply');
+      const btnClear  = modal.querySelector('.mas_clear');
+      const pageInput = modal.querySelector('.mas_pagina_hidden');
 
-        function updateTriggerText() {
-          if (!labelText || !estratoHidden) return;
+      // --- Estrato ---
+      const estratoHidden = modal.querySelector('.mf_hidden_estrato');
+      const estratoGroup  = modal.querySelector('.mf_group[data-kind="estrato"]');
+
+      // --- Tipo Unidad ---
+      const tipoUnidadHidden = modal.querySelector('.mf_hidden_tipo_unidad');
+      const tipoUnidadGroup  = modal.querySelector('.mf_group[data-kind="tipo_unidad"]');
+
+      // --- Modalidad ---
+      const modalidadHidden = modal.querySelector('.mf_hidden_modalidad');
+      const modalidadGroup  = modal.querySelector('.mf_group[data-kind="modalidad"]');
+
+      // --- Garaje ---
+      const garajeHidden = modal.querySelector('.mf_hidden_garaje');
+      const garajeGroup  = modal.querySelector('.mf_group[data-kind="garaje"]');
+
+      // Cerrar con X
+      if (closeBtn) {
+        closeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (root) root.classList.remove('is-open');
+        });
+      }
+
+      function updateTriggerText() {
+        if (!labelText) return;
+
+        const chips = [];
+
+        // Estrato
+        if (estratoHidden) {
           const eVal = parseInt(estratoHidden.value || '0', 10);
-          labelText.textContent = eVal > 0 ? `Más filtros (Estrato ${eVal})` : 'Más filtros';
-        }
-        updateTriggerText();
-
-        if(estratoGroup) {
-            estratoGroup.addEventListener('click', (e) => {
-              const btn = e.target.closest('.mf_opt');
-              if (!btn) return;
-              estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
-              btn.classList.add('active');
-              if(estratoHidden) estratoHidden.value = String(parseInt(btn.dataset.val || '0', 10) || 0);
-              updateTriggerText();
-            });
+          if (eVal > 0) chips.push(`Estrato ${eVal}`);
         }
 
-        if(btnApply) {
-            btnApply.addEventListener('click', (e) => {
-              e.preventDefault();
-              if (pageInput) pageInput.value = '1';
-              form.submit();
-            });
+        // Tipo unidad
+        if (tipoUnidadHidden) {
+          const v = (tipoUnidadHidden.value || 'Todos').trim();
+          if (v && v !== 'Todos') chips.push(`Unidad ${v}`);
         }
 
-        if(btnClear) {
-            btnClear.addEventListener('click', () => {
-              if(estratoHidden) estratoHidden.value = '0';
-              if(estratoGroup) {
-                  estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
-                  const first = estratoGroup.querySelector('.mf_opt[data-val="0"]');
-                  first && first.classList.add('active');
-              }
-              updateTriggerText();
-              const url = new URL(window.location.href);
-              url.searchParams.delete('estrato');
-              url.searchParams.set('pagina', '1');
-              window.location.href = url.toString();
-            });
+        // Modalidad
+        if (modalidadHidden) {
+          const v = (modalidadHidden.value || 'Todos').trim();
+          if (v && v !== 'Todos') chips.push(`Modalidad ${v}`);
         }
+
+        // Garaje
+        if (garajeHidden) {
+          const v = (garajeHidden.value || 'Todos').trim();
+          if (v && v !== 'Todos') chips.push(`Garaje ${v}`);
+        }
+
+        labelText.textContent = chips.length ? `Más filtros (${chips.join(', ')})` : 'Más filtros';
+      }
+
+      updateTriggerText();
+
+      // Estrato click
+      if (estratoGroup) {
+        estratoGroup.addEventListener('click', (e) => {
+          const btn = e.target.closest('.mf_opt');
+          if (!btn) return;
+          estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (estratoHidden) estratoHidden.value = String(parseInt(btn.dataset.val || '0', 10) || 0);
+          updateTriggerText();
+        });
+      }
+
+      // Tipo unidad click
+      if (tipoUnidadGroup) {
+        tipoUnidadGroup.addEventListener('click', (e) => {
+          const btn = e.target.closest('.mf_opt');
+          if (!btn) return;
+          tipoUnidadGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (tipoUnidadHidden) tipoUnidadHidden.value = btn.dataset.val || 'Todos';
+          updateTriggerText();
+        });
+      }
+
+      // Modalidad click
+      if (modalidadGroup) {
+        modalidadGroup.addEventListener('click', (e) => {
+          const btn = e.target.closest('.mf_opt');
+          if (!btn) return;
+          modalidadGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (modalidadHidden) modalidadHidden.value = btn.dataset.val || 'Todos';
+          updateTriggerText();
+        });
+      }
+
+      // Garaje click
+      if (garajeGroup) {
+        garajeGroup.addEventListener('click', (e) => {
+          const btn = e.target.closest('.mf_opt');
+          if (!btn) return;
+          garajeGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (garajeHidden) garajeHidden.value = btn.dataset.val || 'Todos';
+          updateTriggerText();
+        });
+      }
+
+      // Apply
+      if (btnApply) {
+        btnApply.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (pageInput) pageInput.value = '1';
+          form.submit();
+        });
+      }
+
+      // Clear
+      if (btnClear) {
+        btnClear.addEventListener('click', () => {
+          // Estrato -> 0
+          if (estratoHidden) estratoHidden.value = '0';
+          if (estratoGroup) {
+            estratoGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+            const first = estratoGroup.querySelector('.mf_opt[data-val="0"]');
+            first && first.classList.add('active');
+          }
+
+          // Tipo unidad -> Todos
+          if (tipoUnidadHidden) tipoUnidadHidden.value = 'Todos';
+          if (tipoUnidadGroup) {
+            tipoUnidadGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+            const first = tipoUnidadGroup.querySelector('.mf_opt[data-val="Todos"]');
+            first && first.classList.add('active');
+          }
+
+          // Modalidad -> Todos
+          if (modalidadHidden) modalidadHidden.value = 'Todos';
+          if (modalidadGroup) {
+            modalidadGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+            const first = modalidadGroup.querySelector('.mf_opt[data-val="Todos"]');
+            first && first.classList.add('active');
+          }
+
+          // Garaje -> Todos
+          if (garajeHidden) garajeHidden.value = 'Todos';
+          if (garajeGroup) {
+            garajeGroup.querySelectorAll('.mf_opt').forEach(b => b.classList.remove('active'));
+            const first = garajeGroup.querySelector('.mf_opt[data-val="Todos"]');
+            first && first.classList.add('active');
+          }
+
+          updateTriggerText();
+
+          // Limpiar URL
+          const url = new URL(window.location.href);
+          url.searchParams.delete('estrato');
+          url.searchParams.delete('tipo_unidad');
+          url.searchParams.delete('modalidad');
+          url.searchParams.delete('garaje');
+          url.searchParams.set('pagina', '1');
+          window.location.href = url.toString();
+        });
+      }
     });
   }
+
 
   // ------------------------- UTILIDADES Y OTROS -------------------------
 

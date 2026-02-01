@@ -192,7 +192,7 @@
 .mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: v.$rojotierra; color: #fff; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); } } 
 .mf_section { padding: .6rem 0 1.2rem 0; & + .mf_section { border-top: 1px solid rgba(255,255,255,.06); margin-top: 1rem; } }
 .mf_title { margin: .2rem 0 .9rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
-.mf_group { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .6rem; }
+.mf_group { display: grid; grid-template-columns: repeat(7, minmax(0, auto)); gap: .5rem; }
 .mf_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
 
 /* ==========================================================================
@@ -273,9 +273,10 @@ body.bsheet-lock {
       pointer-events: auto !important;
 
       /* Forzamos position fixed centrado en escritorio también */
-      position: fixed !important;
-      inset: 50% auto auto 50% !important;
-      transform: translate(-50%, -50%) !important;
+      position: absolute !important;
+      // inset: 50% auto auto 50% !important;
+      transform: translate(-100%, -0%) !important;
+      top: 50px;
   }
   .filtro_mas.is-open .mas_overlay { display: block !important; }
 }

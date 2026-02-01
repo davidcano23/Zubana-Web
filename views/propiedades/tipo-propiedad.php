@@ -17,9 +17,9 @@
       </span>
       <span class="tp-text">
         <span class="tp-name">Casa</span>
-        <span class="tp-desc">Unifamiliares, bifamiliares…</span>
+        <span class="tp-desc">Unifamiliares, campestres</span>
       </span>
-      <span class="tp-cta">Crear</span>
+      <!-- <span class="tp-cta">Crear</span> -->
     </a>
 
     <!-- Finca -->
@@ -33,9 +33,9 @@
       </span>
       <span class="tp-text">
         <span class="tp-name">Finca</span>
-        <span class="tp-desc">Rurales, campestres, recreo</span>
+        <span class="tp-desc">Rurales, campestres</span>
       </span>
-      <span class="tp-cta">Crear</span>
+      <!-- <span class="tp-cta">Crear</span> -->
     </a>
 
     <!-- Apartamento -->
@@ -49,9 +49,9 @@
       </span>
       <span class="tp-text">
         <span class="tp-name">Apartamento</span>
-        <span class="tp-desc">Apartaestudio, dúplex, penthouse</span>
+        <span class="tp-desc">Apartaestudio, Apartaoficina</span>
       </span>
-      <span class="tp-cta">Crear</span>
+      <!-- <span class="tp-cta">Crear</span> -->
     </a>
 
     <!-- Lotes -->
@@ -65,9 +65,9 @@
       </span>
       <span class="tp-text">
         <span class="tp-name">Lotes</span>
-        <span class="tp-desc">Urbanizables, rurales, campestres</span>
+        <span class="tp-desc">Urbanos, rurales, campestres</span>
       </span>
-      <span class="tp-cta">Crear</span>
+      <!-- <span class="tp-cta">Crear</span> -->
     </a>
 
     <!-- Local -->
@@ -84,7 +84,7 @@
         <span class="tp-name">Local</span>
         <span class="tp-desc">Comercial, oficinas, bodegas</span>
       </span>
-      <span class="tp-cta">Crear</span>
+      <!-- <span class="tp-cta">Crear</span> -->
     </a>
   </section>
 

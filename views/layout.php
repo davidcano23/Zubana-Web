@@ -273,6 +273,38 @@
                                                 </div>
                                                 <input type="hidden" name="estrato" class="mf_hidden_estrato" value="<?= (int)$estratoGet ?>">
                                             </section>
+
+                                            <section class="mf_section">
+                                            <p class="mf_title">Tipo de unidad</p>
+                                            <div class="mf_group" data-kind="tipo_unidad">
+                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Todos') ? 'active' : '' ?>" data-val="Todos">Todos</button>
+                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Abierta') ? 'active' : '' ?>" data-val="Abierta">Abierta</button>
+                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Cerrada') ? 'active' : '' ?>" data-val="Cerrada">Cerrada</button>
+                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Publica') ? 'active' : '' ?>" data-val="Publica">Pública</button>
+                                            </div>
+                                            <input type="hidden" name="tipo_unidad" class="mf_hidden_tipo_unidad" value="<?= htmlspecialchars($tipoUnidadGet ?? 'Todos', ENT_QUOTES) ?>">
+                                            </section>
+
+                                            <section class="mf_section">
+                                            <p class="mf_title">Modalidad</p>
+                                            <div class="mf_group" data-kind="modalidad">
+                                                <button type="button" class="mf_opt <?= ($modalidadGet === 'Todos') ? 'active' : '' ?>" data-val="Todos">Todos</button>
+                                                <button type="button" class="mf_opt <?= ($modalidadGet === 'Directo') ? 'active' : '' ?>" data-val="Directo">Directo</button>
+                                                <button type="button" class="mf_opt <?= ($modalidadGet === 'Colegaje') ? 'active' : '' ?>" data-val="Colegaje">Colegaje</button>
+                                            </div>
+                                            <input type="hidden" name="modalidad" class="mf_hidden_modalidad" value="<?= htmlspecialchars($modalidadGet ?? 'Todos', ENT_QUOTES) ?>">
+                                            </section>
+
+                                            <section class="mf_section">
+                                            <p class="mf_title">Garaje</p>
+                                            <div class="mf_group" data-kind="garaje">
+                                                <button type="button" class="mf_opt <?= ($garajeGet === 'Todos') ? 'active' : '' ?>" data-val="Todos">Todos</button>
+                                                <button type="button" class="mf_opt <?= ($garajeGet === 'Si') ? 'active' : '' ?>" data-val="Si">Sí</button>
+                                                <button type="button" class="mf_opt <?= ($garajeGet === 'No') ? 'active' : '' ?>" data-val="No">No</button>
+                                            </div>
+                                            <input type="hidden" name="garaje" class="mf_hidden_garaje" value="<?= htmlspecialchars($garajeGet ?? 'Todos', ENT_QUOTES) ?>">
+                                            </section>
+
                                         </div>
                                         <div class="mas_actions">
                                             <button type="button" class="mas_clear">Limpiar filtros</button>

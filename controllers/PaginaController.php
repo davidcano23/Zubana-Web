@@ -55,6 +55,25 @@ class PaginaController {
 
             $estrato = isset($_GET['estrato']) ? (int)$_GET['estrato'] : 0;
 
+            // === NUEVOS FILTROS (Más filtros) ===
+
+            // Modalidad (todas las tablas)
+            $MODALIDAD_VALIDOS = ['Todos', 'Directo', 'Colegaje'];
+            $modalidad = $_GET['modalidad'] ?? 'Todos';
+            if (!in_array($modalidad, $MODALIDAD_VALIDOS, true)) $modalidad = 'Todos';
+
+            // Garaje (solo casa/apartamento)
+            $GARAJE_VALIDOS = ['Todos', 'Si', 'No'];
+            $garaje = $_GET['garaje'] ?? 'Todos';
+            if (!in_array($garaje, $GARAJE_VALIDOS, true)) $garaje = 'Todos';
+
+            // Tipo de unidad (casa/apartamento/lotes)
+            $TIPO_UNIDAD_VALIDOS = ['Todos', 'Abierta', 'Cerrada', 'Publica'];
+            $tipoUnidad = $_GET['tipo_unidad'] ?? 'Todos';
+            if (!in_array($tipoUnidad, $TIPO_UNIDAD_VALIDOS, true)) $tipoUnidad = 'Todos';
+
+
+
             // Áreas (si las usas en otros filtros)
             $areaTipo = $_GET['area_tipo'] ?? '';
             $areaMin  = isset($_GET['area_min']) ? (int)preg_replace('/\D+/', '', $_GET['area_min']) : null;
@@ -84,6 +103,11 @@ class PaginaController {
             if (!is_null($precioMaxNum)) $condBase[] = "precio <= {$precioMaxNum}";
             if ($estrato > 0)           $condBase[] = "estrato = {$estrato}";
 
+            if ($modalidad !== 'Todos') {
+                $modalidadEsc = mysqli_real_escape_string($link, $modalidad);
+                $condBase[] = "modalidad = '{$modalidadEsc}'";
+            }
+
             $buildWhere = static function(array $conds): string {
                 return $conds ? 'WHERE ' . implode(' AND ', $conds) : '';
             };
@@ -96,10 +120,27 @@ class PaginaController {
             if ($hab > 0) { $includeLocal = false; $includeLote  = false; }
             if ($banos > 0) { $includeLote  = false; }
 
-            // --- CONDICIONES POR TABLA ---
+            /// --- CONDICIONES POR TABLA ---
             $condCasa  = $condBase;
             $condApart = $condBase;
             $condLocal = $condBase;
+            $condLotes = $condBase;
+
+            // tipo_unidad: casa, apartamento y lotes (NO local)
+            if ($tipoUnidad !== 'Todos') {
+                $tipoUnidadEsc = mysqli_real_escape_string($link, $tipoUnidad);
+                $condCasa[]  = "tipo_unidad = '{$tipoUnidadEsc}'";
+                $condApart[] = "tipo_unidad = '{$tipoUnidadEsc}'";
+                $condLotes[] = "tipo_unidad = '{$tipoUnidadEsc}'";
+            }
+
+            // garaje: solo casa y apartamento
+            if ($garaje !== 'Todos') {
+                $garajeEsc = mysqli_real_escape_string($link, $garaje);
+                $condCasa[]  = "garaje = '{$garajeEsc}'";
+                $condApart[] = "garaje = '{$garajeEsc}'";
+            }
+
 
             if ($hab > 0) {
                 $condCasa[]  = $habExact   ? "habitaciones = {$hab}" : "habitaciones >= {$hab}";
@@ -114,7 +155,8 @@ class PaginaController {
             $whereCasa  = $buildWhere($condCasa);
             $whereApart = $buildWhere($condApart);
             $whereLocal = $buildWhere($condLocal);
-            $whereLotes = $buildWhere($condBase);
+            $whereLotes = $buildWhere($condLotes);
+
 
             // --- CONSULTAS POR TABLA (pueden venir ya ORDER BY id DESC, da igual porque re-ordenamos luego) ---
             $casas        = $includeCasa  ? Casa::consultarSQL("SELECT * FROM casa {$whereCasa} ORDER BY id DESC") : [];
@@ -189,6 +231,10 @@ class PaginaController {
                 'mostrandoDesde'    => $mostrandoDesde,
                 'mostrandoHasta'    => $mostrandoHasta,
                 'masDeDisponibles'  => $masDeDisponibles,
+                'tipoUnidadGet' => $tipoUnidad,
+                'modalidadGet'  => $modalidad,
+                'garajeGet'     => $garaje,
+                'estratoGet'    => $estrato
             ]);
         }
 
