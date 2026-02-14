@@ -280,7 +280,7 @@
                                                 <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Todos') ? 'active' : '' ?>" data-val="Todos">Todos</button>
                                                 <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Abierta') ? 'active' : '' ?>" data-val="Abierta">Abierta</button>
                                                 <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Cerrada') ? 'active' : '' ?>" data-val="Cerrada">Cerrada</button>
-                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Publica') ? 'active' : '' ?>" data-val="Publica">Pública</button>
+                                                <button type="button" class="mf_opt <?= ($tipoUnidadGet === 'Independiente') ? 'active' : '' ?>" data-val="Independiente">Independiente</button>
                                             </div>
                                             <input type="hidden" name="tipo_unidad" class="mf_hidden_tipo_unidad" value="<?= htmlspecialchars($tipoUnidadGet ?? 'Todos', ENT_QUOTES) ?>">
                                             </section>

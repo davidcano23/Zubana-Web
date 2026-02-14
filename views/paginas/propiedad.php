@@ -153,6 +153,20 @@
                 </div>
                 <?php endif; ?>
 
+                <?php if (isset($propiedad->{'jacuzzi'}) && $propiedad->{'jacuzzi'} === 'Si') : ?>
+                <div class="carac">
+                <img src="/img/jacuzzi.png" alt="Icono Jacuzzi" loading="lazy">
+                <p>Jacuzzi</p>
+                </div>
+                <?php endif; ?>
+
+                <?php if (isset($propiedad->{'turco'}) && $propiedad->{'turco'} === 'Si') : ?>
+                <div class="carac">
+                <img src="/img/turco.png" alt="Icono turco" loading="lazy">
+                <p>Turco</p>
+                </div>
+                <?php endif; ?>
+
             </div>
         <?php endif; ?>
 
@@ -231,6 +245,20 @@
                 <div class="carac">
                 <img src="/img/balcon.png" alt="Icono Balcon">
                 <p>Balcon</p>
+                </div>
+                <?php endif; ?>
+
+                <?php if (isset($propiedad->{'jacuzzi'}) && $propiedad->{'jacuzzi'} === 'Si') : ?>
+                <div class="carac">
+                <img src="/img/jacuzzi.png" alt="Icono Jacuzzi" loading="lazy">
+                <p>Jacuzzi</p>
+                </div>
+                <?php endif; ?>
+
+                <?php if (isset($propiedad->{'turco'}) && $propiedad->{'turco'} === 'Si') : ?>
+                <div class="carac">
+                <img src="/img/turco.png" alt="Icono turco" loading="lazy">
+                <p>Turco</p>
                 </div>
                 <?php endif; ?>
 
@@ -315,8 +343,7 @@
             </div>
         <?php endif; ?>
 
-
-        <?php if (in_array($tipo, ['casa', 'casa campestre', 'finca', 'apartamento', 'apartaestudio','apartaoficina'])) : ?>            
+        <?php if (in_array($tipo, ['casa', 'casa campestre', 'finca', 'apartamento', 'apartaestudio','apartaoficina']) && $propiedad->{'tipo_unidad'} !== 'Independiente') : ?>            
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la Urbanizacion</h4>
 

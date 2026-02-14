@@ -6,7 +6,7 @@ class Apartamento extends ActiveRecord {
     
     protected static $tabla = 'apartamento';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco'];
 
     public $id;
     public $nombre;
@@ -44,6 +44,8 @@ class Apartamento extends ActiveRecord {
     public $palabra_clave;
     public $latitud;
     public $longitud;
+    public $jacuzzi;
+    public $turco;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -87,6 +89,8 @@ class Apartamento extends ActiveRecord {
     $this->palabra_clave = $args['palabra_clave'] ?? '';
     $this->latitud = $args['latitud'] ?? 0;
     $this->longitud = $args['longitud'] ?? 0;
+    $this->jacuzzi = $args['jacuzzi'] ?? '';
+    $this->turco = $args['turco'] ?? '';
     }
 
 
@@ -191,6 +195,14 @@ class Apartamento extends ActiveRecord {
 
         if(!$this->cancha) {
             $this->cancha = "NO";
+        }
+
+        if(!$this->jacuzzi) {
+            $this->jacuzzi = "NO";
+        }
+
+        if(!$this->turco) {
+            $this->turco = "NO";
         }
 
         if(!$this->actualizacion) {

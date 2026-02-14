@@ -68,7 +68,7 @@ class PaginaController {
             if (!in_array($garaje, $GARAJE_VALIDOS, true)) $garaje = 'Todos';
 
             // Tipo de unidad (casa/apartamento/lotes)
-            $TIPO_UNIDAD_VALIDOS = ['Todos', 'Abierta', 'Cerrada', 'Publica'];
+            $TIPO_UNIDAD_VALIDOS = ['Todos', 'Abierta', 'Cerrada', 'Independiente'];
             $tipoUnidad = $_GET['tipo_unidad'] ?? 'Todos';
             if (!in_array($tipoUnidad, $TIPO_UNIDAD_VALIDOS, true)) $tipoUnidad = 'Todos';
 

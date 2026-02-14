@@ -15,7 +15,7 @@ class Casa extends ActiveRecord {
         'vigilancia', 'zonas_verdes', 'juegos', 'coworking',
         'gimnasio', 'piscina', 'cancha',
         'actualizacion', 'descripcion', 'barrio', 'administracion',
-        'corregimiento', 'palabra_clave', 'latitud', 'longitud'
+        'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco'
     ];
 
     public $id;
@@ -54,6 +54,8 @@ class Casa extends ActiveRecord {
     public $palabra_clave;
     public $latitud;
     public $longitud;
+    public $jacuzzi;
+    public $turco;
 
     public static function setDB($database) {
         self::$db = $database;
@@ -96,6 +98,8 @@ class Casa extends ActiveRecord {
         $this->palabra_clave = $args['palabra_clave'] ?? '';
         $this->latitud = $args['latitud'] ?? 0;
         $this->longitud = $args['longitud'] ?? 0;
+        $this->jacuzzi = $args['jacuzzi'] ?? '';
+        $this->turco = $args['turco'] ?? '';
     }
 
     public function validar() {
@@ -175,6 +179,8 @@ class Casa extends ActiveRecord {
         if(!$this->gimnasio) $this->gimnasio = "NO";
         if(!$this->piscina) $this->piscina = "NO";
         if(!$this->cancha) $this->cancha = "NO";
+        if(!$this->jacuzzi)  $this->jacuzzi = "NO";
+        if(!$this->turco)  $this->turco = "NO";
 
         if(!$this->actualizacion) {
             self::$errores[] = "El campo actualizacion es obligatorio";

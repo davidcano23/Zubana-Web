@@ -80,12 +80,26 @@
             <option value="No" <?php echo ($propiedad?->garaje === 'No') ? 'selected' : ''; ?>>No</option>
         </select>
 
+        <label for="jacuzzi">Jacuzzi*</label>
+        <select id="jacuzzi" class="select-estilizado" name="propiedad[jacuzzi]">
+            <option value="" disabled <?php echo empty($propiedad?->jacuzzi) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
+            <option value="Si" <?php echo ($propiedad?->jacuzzi === 'Si') ? 'selected' : ''; ?>>Si</option>
+            <option value="No" <?php echo ($propiedad?->jacuzzi === 'No') ? 'selected' : ''; ?>>No</option>
+        </select>
+
+        <label for="turco">Turco*</label>
+        <select id="turco" class="select-estilizado" name="propiedad[turco]">
+            <option value="" disabled <?php echo empty($propiedad?->turco) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
+            <option value="Si" <?php echo ($propiedad?->turco === 'Si') ? 'selected' : ''; ?>>Si</option>
+            <option value="No" <?php echo ($propiedad?->turco === 'No') ? 'selected' : ''; ?>>No</option>
+        </select>
+
         <label for="tipo-unidad">Tipo de Unidad*</label>
         <select id="tipo-unidad" class="select-estilizado" name="propiedad[tipo_unidad]">
             <option value="" disabled <?php echo empty($propiedad?->tipo_unidad) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
             <option value="abierta" <?php echo ($propiedad?->tipo_unidad === 'abierta') ? 'selected' : ''; ?>>Abierta</option>
             <option value="cerrada" <?php echo ($propiedad?->tipo_unidad === 'cerrada') ? 'selected' : ''; ?>>Cerrada</option>
-            <option value="publica" <?php echo ($propiedad?->tipo_unidad === 'publica') ? 'selected' : ''; ?>>Publica</option>
+            <option value="Independiente" <?php echo ($propiedad?->tipo_unidad === 'Independiente') ? 'selected' : ''; ?>>Independiente</option>
         </select>
     </fieldset>
 

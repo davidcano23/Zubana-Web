@@ -54,7 +54,7 @@ class ApiBusquedaController {
      */
     private static function sugerenciasTabla(mysqli $db, string $tabla, string $q): array {
 
-        $campos = ['ubicacion', 'barrio', 'corregimiento', 'palabra_clave'];
+        $campos = ['ubicacion', 'corregimiento', 'barrio', 'palabra_clave'];
         $out = [];
 
         foreach ($campos as $campo) {
