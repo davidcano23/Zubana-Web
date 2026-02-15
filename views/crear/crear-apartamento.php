@@ -39,7 +39,7 @@
         <legend>Información Apartamento</legend>
 
         <label for="area">Área del Apartamento</label>
-        <input type="text" placeholder="En m2 el valor" id="area" name="propiedad[area_total]" value="<?php echo trim(s($propiedad?->area_total ?? '')); ?>">
+        <input type="text" placeholder="En m2 el valor" id="area" class="areas" name="propiedad[area_total]" value="<?php echo trim(s($propiedad?->area_total ?? '')); ?>">
 
         <label for="wc">Baños</label>
         <input type="number" placeholder="Ej: 5 - Solo el Valor" id="wc" name="propiedad[banos]" value="<?php echo is_numeric($propiedad?->banos) ? $propiedad->banos : ''; ?>">

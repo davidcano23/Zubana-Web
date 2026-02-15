@@ -93,7 +93,7 @@
                 <?php if (!empty($recomendada->area_total) || $recomendada->area_total != 0) { ?>
                     <div class="contenedor_caracteristicas area_computador_total">
                         <img src="/img/area.png" alt="">
-                        <p><?php echo $recomendada->{'area_total'}; ?>m²</p>
+                        <p><?php echo number_format((int)str_replace('.', '', $recomendada->{'area_total'}), 0, ',', '.'); ?>m²</p>
                     </div>
                 <?php } ?>
             </div>
@@ -111,7 +111,7 @@
                 <?php if($recomendada->{'area_total'} != 0): ?>
                 <div class="contenedor_caracteristicas area_computador_total">
                         <img src="/img/area.png" alt="">
-                        <p><?php echo $recomendada->{'area_total'}; ?>m²</p>
+                        <p><?php echo number_format((int)str_replace('.', '', $recomendada->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
                 

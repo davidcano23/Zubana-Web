@@ -5,7 +5,7 @@ namespace Controllers;
 use MVC\Router;
 use Model\Apartamento;
 use Model\ImagenApart;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 
 class ApartamentoController {
@@ -20,9 +20,10 @@ class ApartamentoController {
             $datos = $_POST['propiedad'];
 
             // Convertir precio con puntos a número entero
-            if (isset($datos['precio']) && isset($datos['administracion'])) {
+            if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total'])) {
                 $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
                 $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
+                $datos['area_total'] = intval(str_replace('.', '', $datos['aarea_total']));
             }
 
             $propiedad = new Apartamento($datos);
@@ -109,9 +110,10 @@ class ApartamentoController {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $args = $_POST['propiedad'];
 
-        if (isset($args['precio']) && isset($args['administracion'])) {
+        if (isset($args['precio']) && isset($args['administracion']) && isset($args['area_total'])) {
             $args['precio'] = intval(str_replace('.', '', $args['precio']));
             $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
+            $args['area_total'] = intval(str_replace('.', '', $args['area_total']));
         }
 
         $propiedad->sincronizar($args);

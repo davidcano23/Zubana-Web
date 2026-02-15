@@ -20,9 +20,11 @@ class FincaController {
         $datos = $_POST['propiedad'];
 
             // Convertir precio con puntos a número entero
-            if (isset($datos['precio']) && isset($datos['administracion'])) {
+            if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total']) && isset($datos['area_construida'])) {
                 $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
                 $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
+                $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
+                $datos['area_construida'] = intval(str_replace('.', '', $datos['administracion']));
             }
 
             $propiedad = new Casa($datos);
@@ -114,9 +116,11 @@ class FincaController {
         $args = $_POST['propiedad'];
 
         // Convertir precio con puntos a número entero
-        if (isset($args['precio']) && isset($args['administracion'])) {
+        if (isset($args['precio']) && isset($args['administracion']) && isset($args['area_total']) && isset($args['area_construida'])) {
             $args['precio'] = intval(str_replace('.', '', $args['precio']));
             $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
+            $args['area_total'] = intval(str_replace('.', '', $args['area_total']));
+            $args['area_construida'] = intval(str_replace('.', '', $args['area_construida']));
         }
 
         $propiedad->sincronizar($args);

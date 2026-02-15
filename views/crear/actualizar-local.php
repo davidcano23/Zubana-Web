@@ -37,10 +37,10 @@
         <legend>Información Local Comercial</legend>
 
         <label for="area_total">Área Total</label>
-        <input type="text" placeholder="En m2 el valor" id="area_total" name="propiedad[area_total]" value="<?php echo trim(s($propiedad?->area_total ?? '')); ?>">
+        <input type="text" placeholder="En m2 el valor" id="area_total" class="areas" name="propiedad[area_total]" value="<?php echo trim(s($propiedad?->area_total ?? '')); ?>">
 
         <label for="area_construida">Área Construida</label>
-        <input type="text" placeholder="En m2 el valor" id="area_construida" name="propiedad[area_construida]" value="<?php echo trim(s($propiedad?->area_construida ?? '')); ?>">
+        <input type="text" placeholder="En m2 el valor" id="area_construida" class="areac" name="propiedad[area_construida]" value="<?php echo trim(s($propiedad?->area_construida ?? '')); ?>">
 
         <label for="wc">Baños</label>
         <input type="number" placeholder="Ej: 5 - Solo el Valor" id="wc" name="propiedad[banos]" value="<?php echo is_numeric($propiedad?->banos) ? $propiedad->banos : ''; ?>">

@@ -83,14 +83,14 @@
                 <?php if($propiedad->area_total != 0): ?>
                 <div class="carac">
                 <img src="/img/area.png" alt="Icono Area" loading="lazy">
-                <p>Área Total: <?php echo $propiedad->{'area_total'}; ?>m²</p>
+                <p>Área Total: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 
                 <?php if($propiedad->area_construida != 0): ?>
                 <div class="carac">
                 <img src="/img/area_construida.png" alt="Icono Area Construida" loading="lazy">
-                <p>Área Construida: <?php echo $propiedad->{'area_construida'}; ?>m²</p>
+                <p>Área Construida: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_construida'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 
@@ -178,7 +178,7 @@
                 <?php if($propiedad->area_total != 0): ?>
                 <div class="carac">
                 <img src="/img/area_construida.png" alt="Icono Area Construida" loading="lazy">
-                <p>Área Construida: <?php echo $propiedad->{'area_total'}; ?>m²</p>
+                <p>Área Construida: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 
@@ -273,7 +273,7 @@
                 <?php if($propiedad->area_total != 0): ?>
                 <div class="carac">
                 <img src="/img/area.png" alt="Icono Area" loading="lazy">
-                <p>Área Total: <?php echo $propiedad->{'area_total'}; ?>m²</p>
+                <p>Área Total: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 
@@ -305,14 +305,14 @@
                 <?php if($propiedad->area_total != 0): ?>
                 <div class="carac">
                 <img src="/img/area.png" alt="Icono Area" loading="lazy">
-                <p>Área Total: <?php echo $propiedad->{'area_total'}; ?>m²</p>
+                <p>Área Total: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 
                 <?php if($propiedad->area_construida != 0): ?>
                 <div class="carac">
                 <img src="/img/area_construida.png" alt="Icono Area Construida" loading="lazy">
-                <p>Área Construida: <?php echo $propiedad->{'area_construida'}; ?>m²</p>
+                <p>Área Construida: <?php echo number_format((int)str_replace('.', '', $propiedad->{'area_construida'}), 0, ',', '.'); ?>m²</p>
                 </div>
                 <?php endif; ?>
 

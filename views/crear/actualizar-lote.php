@@ -42,6 +42,7 @@
         type="text" 
         placeholder="En m2 el valor" 
         id="area_total" 
+        class="areas"
         name="propiedad[area_total]" 
         value="<?php echo trim(s($propiedad?->area_total ?? '')); ?>"
     >
