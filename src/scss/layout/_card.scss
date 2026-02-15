@@ -303,14 +303,13 @@
 
             p {
                 font-family: v.$texto;
-                font-size: 1.4rem;
+                font-size: 1.2rem;
                 color: v.$arenaclaro;
                 font-weight: v.$regular;
                 margin: 0 0.5rem;
-                // padding: 0 0.5rem;
 
                 @include m.tablet {
-                    font-size: 1.6rem;
+                    font-size: 1.2rem;
                 }
 
                 @include m.desktop {
@@ -339,7 +338,7 @@
             p {
                 font-family: v.$texto;
                 color: v.$arenaclaro;
-                font-size: 1.6rem;
+                font-size: 1.4rem;
                 padding: 0 1rem;
                 font-weight: v.$regular;
                 height: 2.8rem;

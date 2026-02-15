@@ -23,7 +23,7 @@ class ApartamentoController {
             if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total'])) {
                 $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
                 $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
-                $datos['area_total'] = intval(str_replace('.', '', $datos['aarea_total']));
+                $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
             }
 
             $propiedad = new Apartamento($datos);

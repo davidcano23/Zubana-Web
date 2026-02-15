@@ -24,7 +24,7 @@ class FincaController {
                 $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
                 $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
                 $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
-                $datos['area_construida'] = intval(str_replace('.', '', $datos['administracion']));
+                $datos['area_construida'] = intval(str_replace('.', '', $datos['area_construida']));
             }
 
             $propiedad = new Casa($datos);

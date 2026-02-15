@@ -62,6 +62,13 @@
 
         <?php if ($recomendada->{'tipo'} === 'Casa' || $recomendada->{'tipo'} === 'Casa Campestre' || $recomendada->{'tipo'} === 'Finca' || $recomendada->{'tipo'} === 'Apartamento' || $recomendada->{'tipo'} === 'Apartaestudio' || $recomendada->{'tipo'} === 'Apartaoficina') : ?>  
             <div class="carac">
+                <?php if($recomendada->{'habitaciones'} != 0): ?>
+                <div class="contenedor_caracteristicas">
+                    <img src="/img/dormitorio.png" alt="">
+                    <p><?php echo $recomendada->{'habitaciones'};?> Habs</p>
+                </div>
+                <?php endif; ?>
+
                 <?php if($recomendada->{'banos'} != 0): ?>
                 <?php if($recomendada->{'banos'} == 1): ?>
                 <div class="contenedor_caracteristicas">
@@ -76,12 +83,12 @@
                 <?php endif; ?>
                 <?php endif; ?>
 
-                <?php if($recomendada->{'habitaciones'} != 0): ?>
-                <div class="contenedor_caracteristicas">
-                    <img src="/img/dormitorio.png" alt="">
-                    <p><?php echo $recomendada->{'habitaciones'};?> Habs</p>
-                </div>
-                <?php endif; ?>
+                <?php if (isset($recomendada->garaje) && $recomendada->garaje === "Si") { ?>
+                    <div class="contenedor_caracteristicas">
+                        <img src="/img/garaje.png" alt="Icono Garaje">
+                        <p>Garaje</p>
+                    </div>
+                <?php } ?>
 
                 <?php if($recomendada->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">
@@ -96,6 +103,8 @@
                         <p><?php echo number_format((int)str_replace('.', '', $recomendada->{'area_total'}), 0, ',', '.'); ?>m²</p>
                     </div>
                 <?php } ?>
+
+                
             </div>
         <?php endif; ?>
 
@@ -148,7 +157,7 @@
 
                 
                 <?php if (!empty($recomendada->area_total) || $recomendada->area_total != 0) { ?>
-                    <p class="area_movil">Area: <?php echo $recomendada->{'area_total'}; ?>m²</p>
+                    <p class="area_movil">Area: <?php echo number_format((int)str_replace('.', '', $recomendada->{'area_total'}), 0, ',', '.'); ?>m²</p>
                 <?php } ?>
                 
             </div>
