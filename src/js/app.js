@@ -1168,6 +1168,17 @@ function buscadorUbicacion() {
   const input = document.querySelector('input.barra_por_ubicaciones');
   const box   = document.querySelector('.resultados_busqueda');
 
+  const btnClear = document.querySelector('.btn_clear_busqueda');
+  const wrap     = document.querySelector('.input_clear_wrap');
+
+  function syncClearUI() {
+    const hasValue = input.value.trim().length > 0;
+    if (wrap) wrap.classList.toggle('has-value', hasValue);
+    if (btnClear) btnClear.style.display = hasValue ? 'grid' : 'none';
+  }
+  syncClearUI();
+
+
   if (!(input instanceof HTMLInputElement) || !box) return;
 
   const state = { items: [], activeIndex: -1 };
@@ -1220,8 +1231,35 @@ function buscadorUbicacion() {
     }
   }, 300);
 
-  input.addEventListener('input', (e) => consultar(e.target.value));
+  input.addEventListener('input', (e) =>  {
+    syncClearUI();
+    consultar(e.target.value);
+  });
   input.addEventListener('blur', () => setTimeout(hideBox, 150));
+
+  if (btnClear) {
+  btnClear.addEventListener('click', () => {
+    input.value = '';
+    hideBox();
+    syncClearUI();
+
+    const url = new URL(window.location.href);
+    url.searchParams.delete('busqueda');
+    url.searchParams.set('pagina', '1');
+    history.replaceState({}, '', url.toString());
+
+    // 👇 ESTA ES LA ÚNICA LÍNEA QUE DEBES CONECTAR CON TU APP
+    if (typeof window.refrescarPropiedades === 'function') {
+      window.refrescarPropiedades();
+    } else {
+      // fallback: si aún no tienes fetch/render sin recarga
+      window.location.href = url.toString();
+    }
+
+    input.focus();
+  });
+}
+
 
   box.addEventListener('mousedown', (e) => {
     const item = e.target.closest('.resultado-item');
@@ -1272,10 +1310,20 @@ function buscadorUbicacion() {
 
   function seleccionarYBuscar(valor) {
     input.value = valor;
+    hideBox();
+    syncClearUI();
+
     const url = new URL(window.location.href);
     url.searchParams.set('busqueda', valor);
     url.searchParams.set('pagina', '1');
-    window.location.href = url.toString();
+    history.replaceState({}, '', url.toString());
+
+    if (typeof window.refrescarPropiedades === 'function') {
+      window.refrescarPropiedades();
+    } else {
+      window.location.href = url.toString();
+    }
   }
+
 
 }

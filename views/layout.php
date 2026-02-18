@@ -131,7 +131,8 @@
 
                             <div class="bloque_buscador_static">
                                 <div class="filtros_computadora_header">
-                                    <input 
+                                    <div class="input_clear_wrap">
+                                        <input 
                                         class="barra_por_ubicaciones" 
                                         type="text" 
                                         name="busqueda"
@@ -141,7 +142,12 @@
                                         autocapitalize="off"
                                         spellcheck="false"
                                         inputmode="search"/>
-                                </div>
+
+                                        <button type="button" class="btn_clear_busqueda" aria-label="Limpiar búsqueda">
+                                        ×
+                                        </button>
+                                    </div>
+                                    </div>
                                 <div class="resultados_busqueda"></div>
                             </div>
 

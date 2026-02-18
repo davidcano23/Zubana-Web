@@ -41,6 +41,44 @@
 
       @media (min-width: 1025px) { width: 40rem; height: 4rem; line-height: 4rem; }
   }
+
+  .input_clear_wrap {
+    position: relative;
+    width: 100%;
+
+    @media (min-width: 1025px) { width: 40rem; }
+
+    .barra_por_ubicaciones {
+      padding-right: 4.2rem; // espacio para la X
+    }
+
+    .btn_clear_busqueda {
+      display: none;
+      position: absolute;
+      top: 50%;
+      right: 1.2rem;
+      transform: translateY(-50%);
+      width: 2.6rem;
+      height: 2.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.25);
+      color: v.$arenaclaro;
+      cursor: pointer;
+      place-items: center;
+      line-height: 1;
+      font-size: 2rem;
+
+      &:hover {
+        background: rgba(0,0,0,.4);
+      }
+    }
+
+    &.has-value {
+      .btn_clear_busqueda { display: grid; }
+    }
+  }
+
 }
 
 /* ==========================================================================
