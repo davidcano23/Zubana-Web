@@ -155,7 +155,7 @@
 
                                 <div class="filtro_tipo">
                                     <?php
-                                        $tiposValidos = ['casa','apartamento','casa campestre','finca','lote campestre','lote urbano','lote bodega','local','apartaestudio','apartaoficina'];
+                                        $tiposValidos = ['casa','apartamento','casa campestre','finca','lote campestre','lote urbano','lote bodega','lote urbanizable','local','apartaestudio','apartaoficina'];
                                         $seleccionados = isset($_GET['tipo']) && is_array($_GET['tipo']) ? $_GET['tipo'] : [];
                                         $hasTipos = !empty($seleccionados);
                                         $labelTipos = $hasTipos ? implode(', ', array_map('ucfirst', $seleccionados)) : 'Tipo de propiedad';

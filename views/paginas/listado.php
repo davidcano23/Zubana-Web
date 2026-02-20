@@ -108,7 +108,7 @@
             </div>
         <?php endif; ?>
 
-        <?php if ($recomendada->{'tipo'} === 'Lote Campestre' || $recomendada->{'tipo'} === 'Lote Urbano' || $recomendada->{'tipo'} === 'Lote Bodega') : ?>  
+        <?php if ($recomendada->{'tipo'} === 'Lote Campestre' || $recomendada->{'tipo'} === 'Lote Urbano' || $recomendada->{'tipo'} === 'Lote Bodega' || $recomendada->{'tipo'} === 'Lote Urbanizable') : ?>  
             <div class="carac">
                 <?php if($recomendada->estrato != 0): ?>
                 <div class="contenedor_caracteristicas">

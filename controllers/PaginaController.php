@@ -32,7 +32,7 @@ class PaginaController {
 
             $TIPOS_VALIDOS = [
                 'casa','apartamento','casa campestre','finca',
-                'lote campestre','lote urbano','lote bodega',
+                'lote campestre','lote urbano','lote bodega','lote urbanizable',
                 'local','apartaestudio','apartaoficina'
             ];
             $tipos = $_GET['tipo'] ?? [];
@@ -281,6 +281,7 @@ public static function propiedad(Router $router) {
             case 'lote campestre':
             case 'lote urbano':
             case 'lote bodega':
+            case 'lote urbanizable':
                 $propiedad = Lote::find($id);
                 $propiedades = Lote::getRecomendadas($propiedad->{'ubicacion'}, $id, 3);
                 $imagenes = ImagenLotes::where('lotes_id', $id);

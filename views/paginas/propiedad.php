@@ -266,7 +266,7 @@
         <?php endif; ?>
 
         <!-- INFORMACION PARA LOTES -->
-         <?php if (in_array($tipo, ['lote campestre', 'lote urbano', 'lote bodega'])) : ?>
+         <?php if (in_array($tipo, ['lote campestre', 'lote urbano', 'lote bodega', 'lote urbanizable'])) : ?>
             <div class="caracteristicas-propiedad precio">
                 <h4>Informacion de la propiedad</h4>
 

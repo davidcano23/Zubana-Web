@@ -29,6 +29,7 @@
             <option value="Lote Campestre" <?php echo ($propiedad?->tipo === 'Lote Campestre') ? 'selected' : ''; ?>>Lote Campestre</option>
             <option value="Lote Urbano" <?php echo ($propiedad?->tipo === 'Lote Urbano') ? 'selected' : ''; ?>>Lote Urbano</option>
             <option value="Lote Bodega" <?php echo ($propiedad?->tipo === 'Lote Bodega') ? 'selected' : ''; ?>>Lote Bodega</option>
+            <option value="Lote Urbanizable" <?php echo ($propiedad?->tipo === 'Lote Urbanizable') ? 'selected' : ''; ?>>Lote Urbanizable</option>
         </select>
 
         <input type="hidden" name="propiedad[actualizacion]" value="lote">

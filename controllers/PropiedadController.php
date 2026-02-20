@@ -189,6 +189,7 @@ class PropiedadController {
             'Lote Urbano' => 'Lote',
             'Lote Bodega' => 'Lote',
             'Lote Campestre' => 'Lote',
+            'Lote Urbanizable' => 'Lote',
             'Local' => 'Local'
         ];
 
