@@ -72,7 +72,10 @@
       &:hover {
         background: rgba(0,0,0,.4);
       }
+
     }
+
+    
 
     &.has-value {
       .btn_clear_busqueda { display: grid; }
@@ -90,14 +93,9 @@
   cursor: pointer;
   transition: background .15s ease, border-color .15s ease;
 
-  svg {
-    width: 2rem;
-    height: 2rem;
-    stroke: currentColor;
-    stroke-width: 2;
-    fill: none;
-  }
-
+  .img_clear {
+      filter: invert(1);
+    }
   &:hover {
     background: #2a2a2a;
     border-color: rgba(255,255,255,.35);
@@ -251,7 +249,7 @@
 
 .hb_title { margin: .2rem 0 .8rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .hb_group { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }
-.hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+.hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; font-size: 1.2rem; padding: 0.4rem; } }
 .hb_exact_label { display: flex; align-items: center; gap: .8rem; font-size: 1.25rem; color: rgba(255,255,255,.8); input[type="checkbox"] { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: #2a2a2a; border: 1px solid v.$grisniebla; position: relative; cursor: pointer; transition: background .15s; &::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #bbb; transition: transform .15s; } &:checked { background: v.$rojotierra; border-color: v.$rojotierra; } &:checked::after { transform: translateX(18px); background: #fff; } } }
 .hb_actions { display: flex; gap: .8rem; justify-content: flex-end; margin-top: 1.2rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .hb_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .hb_apply { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
 
