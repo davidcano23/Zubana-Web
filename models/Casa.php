@@ -63,44 +63,52 @@ class Casa extends ActiveRecord {
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
-        $this->nombre = $args['nombre'] ?? '';
-        $this->precio = $args['precio'] ?? '';
-        $this->ubicacion = $args['ubicacion'] ?? '';
-        $this->direccion = $args['direccion'] ?? '';
-        $this->imagen = $args['imagen'] ?? '';
-        $this->propietario = $args['propietario'] ?? '';
-        $this->contacto = $args['contacto'] ?? '';
-        $this->modalidad = $args['modalidad'] ?? '';
-        $this->codigo = $args['codigo'] ?? '';
+
+        $this->nombre = trim((string)($args['nombre'] ?? ''));
+        $this->precio = trim((string)($args['precio'] ?? ''));
+        $this->ubicacion = trim((string)($args['ubicacion'] ?? ''));
+        $this->direccion = trim((string)($args['direccion'] ?? ''));
+        $this->imagen = trim((string)($args['imagen'] ?? ''));
+        $this->propietario = trim((string)($args['propietario'] ?? ''));
+        $this->contacto = trim((string)($args['contacto'] ?? ''));
+        $this->modalidad = trim((string)($args['modalidad'] ?? ''));
+        $this->codigo = trim((string)($args['codigo'] ?? ''));
+
         $this->area_total = $args['area_total'] ?? '';
         $this->area_construida = $args['area_construida'] ?? '';
         $this->habitaciones = $args['habitaciones'] ?? '';
         $this->banos = $args['banos'] ?? '';
-        $this->sala = $args['sala'] ?? '';
-        $this->zona_ropa = $args['zona_ropa'] ?? '';
-        $this->cocina = $args['cocina'] ?? '';
         $this->estrato = $args['estrato'] ?? '';
-        $this->garaje = $args['garaje'] ?? '';
-        $this->tipo_unidad = $args['tipo_unidad'] ?? '';
-        $this->tipo = $args['tipo'] ?? '';
-        $this->vigilancia = $args['vigilancia'] ?? '';
-        $this->zonas_verdes = $args['zonas_verdes'] ?? '';
-        $this->juegos = $args['juegos'] ?? '';
-        $this->coworking = $args['coworking'] ?? '';
-        $this->gimnasio = $args['gimnasio'] ?? '';
-        $this->piscina = $args['piscina'] ?? '';
-        $this->cancha = $args['cancha'] ?? '';
-        $this->actualizacion = $args['actualizacion'] ?? '';
-        $this->descripcion = $args['descripcion'] ?? '';
-        $this->barrio = $args['barrio'] ?? '';
+
+        $this->sala = trim((string)($args['sala'] ?? ''));
+        $this->zona_ropa = trim((string)($args['zona_ropa'] ?? ''));
+        $this->cocina = trim((string)($args['cocina'] ?? ''));
+        $this->garaje = trim((string)($args['garaje'] ?? ''));
+
+        $this->tipo_unidad = trim((string)($args['tipo_unidad'] ?? ''));
+        $this->tipo = trim((string)($args['tipo'] ?? ''));
+
+        $this->vigilancia = trim((string)($args['vigilancia'] ?? ''));
+        $this->zonas_verdes = trim((string)($args['zonas_verdes'] ?? ''));
+        $this->juegos = trim((string)($args['juegos'] ?? ''));
+        $this->coworking = trim((string)($args['coworking'] ?? ''));
+        $this->gimnasio = trim((string)($args['gimnasio'] ?? ''));
+        $this->piscina = trim((string)($args['piscina'] ?? ''));
+        $this->cancha = trim((string)($args['cancha'] ?? ''));
+
+        $this->actualizacion = trim((string)($args['actualizacion'] ?? ''));
+        $this->descripcion = trim((string)($args['descripcion'] ?? ''));
+        $this->barrio = trim((string)($args['barrio'] ?? ''));
         $this->administracion = $args['administracion'] ?? '';
-        $this->corregimiento = $args['corregimiento'] ?? '';
-        $this->palabra_clave = $args['palabra_clave'] ?? '';
+        $this->corregimiento = trim((string)($args['corregimiento'] ?? ''));
+        $this->palabra_clave = trim((string)($args['palabra_clave'] ?? ''));
+
         $this->latitud = $args['latitud'] ?? 0;
         $this->longitud = $args['longitud'] ?? 0;
-        $this->jacuzzi = $args['jacuzzi'] ?? '';
-        $this->turco = $args['turco'] ?? '';
-    }
+
+        $this->jacuzzi = trim((string)($args['jacuzzi'] ?? ''));
+        $this->turco = trim((string)($args['turco'] ?? ''));
+            }
 
     public function validar() {
 
@@ -169,18 +177,19 @@ class Casa extends ActiveRecord {
         }
 
         // AMENITIES → NO
-        if(!$this->zona_ropa) $this->zona_ropa = "NO";
-        if(!$this->cocina) $this->cocina = "NO";
-        if(!$this->garaje) $this->garaje = "NO";
-        if(!$this->vigilancia) $this->vigilancia = "NO";
-        if(!$this->zonas_verdes) $this->zonas_verdes = "NO";
-        if(!$this->juegos) $this->juegos = "NO";
-        if(!$this->coworking) $this->coworking = "NO";
-        if(!$this->gimnasio) $this->gimnasio = "NO";
-        if(!$this->piscina) $this->piscina = "NO";
-        if(!$this->cancha) $this->cancha = "NO";
-        if(!$this->jacuzzi)  $this->jacuzzi = "NO";
-        if(!$this->turco)  $this->turco = "NO";
+        if(!$this->zona_ropa) $this->zona_ropa = "No";
+        if(!$this->cocina) $this->cocina = "No";
+        if(!$this->sala) $this->sala = "No";
+        if(!$this->garaje) $this->garaje = "No";
+        if(!$this->vigilancia) $this->vigilancia = "No";
+        if(!$this->zonas_verdes) $this->zonas_verdes = "No";
+        if(!$this->juegos) $this->juegos = "No";
+        if(!$this->coworking) $this->coworking = "No";
+        if(!$this->gimnasio) $this->gimnasio = "No";
+        if(!$this->piscina) $this->piscina = "No";
+        if(!$this->cancha) $this->cancha = "No";
+        if(!$this->jacuzzi)  $this->jacuzzi = "No";
+        if(!$this->turco)  $this->turco = "No";
 
         if(!$this->actualizacion) {
             self::$errores[] = "El campo actualizacion es obligatorio";

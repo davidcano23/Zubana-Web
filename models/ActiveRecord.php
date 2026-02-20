@@ -37,7 +37,7 @@ public function crear() {
         $query .= join(', ', array_keys($atributos));
         $query .= " ) VALUES (' ";
         $query .= join("', '", array_values($atributos));
-        $query .= " ') ";
+        $query .= "') ";
         $resultado = self::$db->query($query);
 
         //MENSAJE DE EXITO
@@ -112,7 +112,10 @@ public function sanetizarAtributos() {
     $sanitizado = [];   
 
     foreach($atributos as $key => $value) {
-        $sanitizado[$key] = self::$db->escape_string($value) ;
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+        $sanitizado[$key] = self::$db->escape_string($value);
     }
 
     return $sanitizado;

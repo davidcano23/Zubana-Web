@@ -150,59 +150,59 @@ class Apartamento extends ActiveRecord {
             self::$errores[] = "El campo tipo es obligatoria";
         }
         if(!$this->zona_ropa) {
-            $this->zona_ropa = "NO";
+            $this->zona_ropa = "No";
         }
 
         if(!$this->cocina) {
-            $this->cocina = "NO";
+            $this->cocina = "No";
         }
 
         if(!$this->sala_comedor) {
-            $this->sala_comedor = "NO";
+            $this->sala_comedor = "No";
         }
 
         if(!$this->balcon) {
-            $this->balcon = "NO";
+            $this->balcon = "No";
         }
 
         if(!$this->garaje) {
-            $this->garaje = "NO";
+            $this->garaje = "No";
         }
 
         if(!$this->vigilancia) {
-            $this->vigilancia = "NO";
+            $this->vigilancia = "No";
         }
 
         if(!$this->zonas_verdes) {
-            $this->zonas_verdes = "NO";
+            $this->zonas_verdes = "No";
         }
 
         if(!$this->juegos) {
-            $this->juegos = "NO";
+            $this->juegos = "No";
         }
 
         if(!$this->coworking) {
-            $this->coworking = "NO";
+            $this->coworking = "No";
         }
 
         if(!$this->gimnasio) {
-            $this->gimnasio = "NO";
+            $this->gimnasio = "No";
         }
 
         if(!$this->piscina) {
-            $this->piscina = "NO";
+            $this->piscina = "No";
         }
 
         if(!$this->cancha) {
-            $this->cancha = "NO";
+            $this->cancha = "No";
         }
 
         if(!$this->jacuzzi) {
-            $this->jacuzzi = "NO";
+            $this->jacuzzi = "No";
         }
 
         if(!$this->turco) {
-            $this->turco = "NO";
+            $this->turco = "No";
         }
 
         if(!$this->actualizacion) {

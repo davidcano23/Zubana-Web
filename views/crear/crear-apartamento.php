@@ -47,6 +47,9 @@
         <label for="habitaciones">Habitaciones</label>
         <input type="number" placeholder="Ej: 4 - Solo el Valor" id="habitaciones" name="propiedad[habitaciones]" value="<?php echo is_numeric($propiedad?->habitaciones) ? $propiedad->habitaciones : ''; ?>">
 
+        <label for="estrato">Estrato</label>
+        <input type="number" placeholder="Ej: 3 - Solo el Valor" id="estrato" name="propiedad[estrato]" value="<?php echo is_numeric($propiedad?->estrato) ? $propiedad->estrato : ''; ?>">
+
         <label for="zona_ropa">Zona de Ropa*</label>
         <select id="zona_ropa" class="select-estilizado" name="propiedad[zona_ropa]">
             <option value="" disabled <?php echo empty($propiedad?->zona_ropa) ? 'selected' : ''; ?>>-- Selecciona una opción --</option>
@@ -74,9 +77,6 @@
             <option value="Si" <?php echo ($propiedad?->balcon === 'Si') ? 'selected' : ''; ?>>Si</option>
             <option value="No" <?php echo ($propiedad?->balcon === 'No') ? 'selected' : ''; ?>>No</option>
         </select>
-
-        <label for="estrato">Estrato</label>
-        <input type="number" placeholder="Ej: 3 - Solo el Valor" id="estrato" name="propiedad[estrato]" value="<?php echo is_numeric($propiedad?->estrato) ? $propiedad->estrato : ''; ?>">
 
         <label for="garaje">Garaje*</label>
         <select id="garaje" class="select-estilizado" name="propiedad[garaje]">
