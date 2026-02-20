@@ -70,7 +70,7 @@
     <meta name="twitter:description" content="<?= htmlspecialchars($metaDesc ?? '') ?>">
     <meta name="twitter:image" content="<?= htmlspecialchars($metaImage ?? '') ?>">
 
-    <link rel="icon" href="<?= htmlspecialchars(($dominio ?? '') . '/img/icono_pestanapng.png') ?>" type="image/png">
+    <link rel="icon" href="<?= htmlspecialchars(($dominio ?? '') . '/img/icono_pestanapng.png') ?>" type="image/png"> <!-- Icono Pestaña -->
     <link rel="stylesheet" href="/build/css/app.css">
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -83,8 +83,8 @@
 
         <div class="nombre-logo">
         <a href="/">
-            <img src="/img/logo_ZB.png" alt="" class="logo-principal">
-            <img src="/img/logo_header_horizontal.png" alt="" class="logo-secundario">
+            <img src="/img/logo_ZB.png" alt="" class="logo-principal"> <!-- Logo de Celular -->
+            <img src="/img/logo_header_horizontal.png" alt="" class="logo-secundario"> <!-- Logo PC -->
             
         </a>
         </div>
@@ -344,7 +344,7 @@
         <!-- CINTA SUPERIOR -->
         <div class="zf-footer__bar">
             <a class="zf-brand" href="/" aria-label="Inicio Z Bien Raíz">
-            <img class="zf-brand__logo" src="/img/logo_ZB.png" alt="Z Bien Raíz" width="36" height="36" loading="lazy">
+            <img class="zf-brand__logo" src="/img/logo_ZB.png" alt="Z Bien Raíz" width="36" height="36" loading="lazy"> <!--Logo del Footer -->
             </a>
             <p class="zf-tagline">Conecta con tu casa, directo y fácil.</p>
             <a class="zf-cta" href="https://wa.me/573117856360" target="_blank" rel="noopener">WhatsApp</a>
@@ -405,7 +405,7 @@
             <span aria-hidden="true">•</span>
             <a href="/politica-de-privacidad">Política de Privacidad</a>
             </nav>
-            <p class="zf-copy">© 2025 Z Bien Raíz</p>
+            <p class="zf-copy">© 2025 Z Bien Raíz</p> <!-- Nombre de la empresa y año -->
         </div>
         </footer>
 

@@ -10984,6 +10984,8 @@
     const btnClear = document.querySelector('.btn_clear_busqueda');
     const wrap     = document.querySelector('.input_clear_wrap');
 
+    if(!btnClear || !wrap) return;
+
     function syncClearUI() {
       const hasValue = input.value.trim().length > 0;
       if (wrap) wrap.classList.toggle('has-value', hasValue);
