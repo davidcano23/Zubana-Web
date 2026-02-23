@@ -56,6 +56,7 @@ class Casa extends ActiveRecord {
     public $longitud;
     public $jacuzzi;
     public $turco;
+    public $created_at;
 
     public static function setDB($database) {
         self::$db = $database;
@@ -108,6 +109,8 @@ class Casa extends ActiveRecord {
 
         $this->jacuzzi = trim((string)($args['jacuzzi'] ?? ''));
         $this->turco = trim((string)($args['turco'] ?? ''));
+
+        $this->created_at = $args['created_at'] ?? null;
             }
 
     public function validar() {

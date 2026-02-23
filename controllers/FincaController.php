@@ -4,7 +4,7 @@ namespace Controllers;
 
 use MVC\Router;
 use Model\Casa;
-use Intervention\Image\Drivers\Imagick\Driver;
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Model\ImagenCasa;
 

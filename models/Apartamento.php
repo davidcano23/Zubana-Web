@@ -46,6 +46,7 @@ class Apartamento extends ActiveRecord {
     public $longitud;
     public $jacuzzi;
     public $turco;
+    public $created_at;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -91,6 +92,7 @@ class Apartamento extends ActiveRecord {
     $this->longitud = $args['longitud'] ?? 0;
     $this->jacuzzi = $args['jacuzzi'] ?? '';
     $this->turco = $args['turco'] ?? '';
+    $this->created_at = $args['created_at'] ?? null;
     }
 
 

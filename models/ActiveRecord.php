@@ -35,9 +35,15 @@ public function crear() {
         //Insertar en la base de datos
         $query = "INSERT INTO " . static::$tabla . " ( ";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES (' ";
-        $query .= join("', '", array_values($atributos));
-        $query .= "') ";
+        $query .= " ) VALUES ( ";
+
+        $valores = array_map(
+            fn($v) => $v === null ? "NULL" : "'$v'",
+            array_values($atributos)
+        );
+
+        $query .= join(', ', $valores);
+        $query .= " )";
         $resultado = self::$db->query($query);
 
         //MENSAJE DE EXITO
@@ -112,11 +118,12 @@ public function sanetizarAtributos() {
     $sanitizado = [];   
 
     foreach($atributos as $key => $value) {
-        if (is_string($value)) {
-            $value = trim($value);
+            if ($value === null) {
+                $sanitizado[$key] = null;
+            } else {
+                $sanitizado[$key] = self::$db->escape_string(trim((string)$value));
+            }
         }
-        $sanitizado[$key] = self::$db->escape_string($value);
-    }
 
     return $sanitizado;
 }
@@ -222,6 +229,15 @@ public function sanetizarAtributos() {
                 return ($b->id ?? 0) <=> ($a->id ?? 0);
             };
 
+            $cmpFechaDesc = static function($a, $b) {
+                $fa = isset($a->created_at) ? strtotime($a->created_at) : 0;
+                $fb = isset($b->created_at) ? strtotime($b->created_at) : 0;
+
+                $r = $fb <=> $fa;
+                // desempate por id (buena práctica)
+                return $r !== 0 ? $r : (($b->id ?? 0) <=> ($a->id ?? 0));
+            };
+
             switch ($criterio) {
                 case 'mayor_precio':
                     usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
@@ -249,9 +265,9 @@ public function sanetizarAtributos() {
                     break;
 
                 case 'mas_recientes':
-                default:
-                    usort($propiedades, $cmpIdDesc); // id DESC
-                    break;
+                    default:
+                        usort($propiedades, $cmpFechaDesc);
+                        break;
             }
 
             return $propiedades;

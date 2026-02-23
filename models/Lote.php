@@ -30,6 +30,7 @@ class Lote extends ActiveRecord {
     public $palabra_clave;
     public $latitud;
     public $longitud;
+    public $created_at;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -59,6 +60,7 @@ class Lote extends ActiveRecord {
     $this->palabra_clave = $args['palabra_clave'] ?? '';
     $this->latitud = $args['latitud'] ?? 0;
     $this->longitud = $args['longitud'] ?? 0;
+    $this->created_at = $args['created_at'] ?? null;
     }
 
 
