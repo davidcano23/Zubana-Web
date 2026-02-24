@@ -6,7 +6,7 @@ class Lote extends ActiveRecord {
     
     protected static $tabla = 'lotes';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'estrato','tipo_unidad', 'tipo','actualizacion','descripcion','barrio', 'administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'estrato','tipo_unidad', 'tipo','actualizacion','descripcion','barrio', 'administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'video_url'];
 
     public $id;
     public $nombre;
@@ -31,6 +31,7 @@ class Lote extends ActiveRecord {
     public $latitud;
     public $longitud;
     public $created_at;
+    public $video_url;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -61,6 +62,7 @@ class Lote extends ActiveRecord {
     $this->latitud = $args['latitud'] ?? 0;
     $this->longitud = $args['longitud'] ?? 0;
     $this->created_at = $args['created_at'] ?? null;
+    $this->video_url = $args['video_url'] ?? '';
     }
 
 
@@ -145,6 +147,9 @@ class Lote extends ActiveRecord {
         }
         if(strlen($this->corregimiento) > 50) {
             self::$errores[] = "El corregimiento no puede superar los 50 caracteres";
+        }
+        if(!$this->video_url) {
+            $this->video_url = "N/A";
         }
 
         return self::$errores;

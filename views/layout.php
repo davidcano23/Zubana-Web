@@ -4,6 +4,14 @@
     $footer = $footer ?? false;
 ?>
 
+<!-- <?php 
+    $passwordPlano = '123456';
+
+    $passwordHasheado = password_hash($passwordPlano, PASSWORD_BCRYPT);
+
+    echo $passwordHasheado;
+?> -->
+
 
 <!DOCTYPE html>
 <html lang="en">

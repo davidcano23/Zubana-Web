@@ -6,7 +6,7 @@ class Apartamento extends ActiveRecord {
     
     protected static $tabla = 'apartamento';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco', 'video_url'];
 
     public $id;
     public $nombre;
@@ -47,6 +47,7 @@ class Apartamento extends ActiveRecord {
     public $jacuzzi;
     public $turco;
     public $created_at;
+    public $video_url;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -93,6 +94,7 @@ class Apartamento extends ActiveRecord {
     $this->jacuzzi = $args['jacuzzi'] ?? '';
     $this->turco = $args['turco'] ?? '';
     $this->created_at = $args['created_at'] ?? null;
+    $this->video_url = $args['video_url'] ?? '';
     }
 
 
@@ -239,6 +241,9 @@ class Apartamento extends ActiveRecord {
         }
         if(strlen($this->corregimiento) > 50) {
             self::$errores[] = "El corregimiento no puede superar los 50 caracteres";
+        }
+        if(!$this->video_url) {
+            $this->video_url = "N/A";
         }
 
         return self::$errores;

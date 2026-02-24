@@ -15,7 +15,8 @@ class Casa extends ActiveRecord {
         'vigilancia', 'zonas_verdes', 'juegos', 'coworking',
         'gimnasio', 'piscina', 'cancha',
         'actualizacion', 'descripcion', 'barrio', 'administracion',
-        'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco'
+        'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco',
+        'video_url'
     ];
 
     public $id;
@@ -57,6 +58,7 @@ class Casa extends ActiveRecord {
     public $jacuzzi;
     public $turco;
     public $created_at;
+    public $video_url;
 
     public static function setDB($database) {
         self::$db = $database;
@@ -111,6 +113,8 @@ class Casa extends ActiveRecord {
         $this->turco = trim((string)($args['turco'] ?? ''));
 
         $this->created_at = $args['created_at'] ?? null;
+
+        $this->video_url = $args['video_url'] ?? '';
             }
 
     public function validar() {
@@ -216,6 +220,10 @@ class Casa extends ActiveRecord {
 
         if(!$this->corregimiento) {
             $this->corregimiento = "N/A";
+        }
+
+        if(!$this->video_url) {
+            $this->video_url = "N/A";
         }
 
         return self::$errores;

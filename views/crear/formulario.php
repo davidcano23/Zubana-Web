@@ -57,6 +57,9 @@
     <input type="file" name="imagenes[]" id="imagenes" multiple accept="image/*" required>
     <?php endif; ?>
 
+    <label for="video_url">Video de YouTube (opcional)</label>
+    <input type="text" placeholder="Pega aquí el enlace del video de YouTube del inmueble." id="video_url" name="propiedad[video_url]" value="<?php echo trim(s($propiedad?->video_url ?? '')); ?>">
+
     
 
 </fieldset>

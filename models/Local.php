@@ -6,7 +6,7 @@ class Local extends ActiveRecord {
     
     protected static $tabla = 'local';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'area_construida', 'banos', 'estrato','tipo', 'tipo_local','actualizacion','descripcion','barrio', 'administracion','corregimiento','palabra_clave', 'latitud', 'longitud'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'area_construida', 'banos', 'estrato','tipo', 'tipo_local','actualizacion','descripcion','barrio', 'administracion','corregimiento','palabra_clave', 'latitud', 'longitud', 'video_url'];
 
     public $id;
     public $nombre;
@@ -33,6 +33,7 @@ class Local extends ActiveRecord {
     public $latitud;
     public $longitud;
     public $created_at;
+    public $video_url;
 
     //Definir la conexion a la BD
     public static function setDB($database) {
@@ -65,6 +66,7 @@ class Local extends ActiveRecord {
     $this->latitud = $args['latitud'] ?? 0;
     $this->longitud = $args['longitud'] ?? 0;
     $this->created_at = $args['created_at'] ?? null;
+    $this->video_url = $args['video_url'] ?? '';
     }
 
 
@@ -161,6 +163,9 @@ class Local extends ActiveRecord {
         }
         if(strlen($this->corregimiento) > 50) {
             self::$errores[] = "El corregimiento no puede superar los 50 caracteres";
+        }
+        if(!$this->video_url) {
+            $this->video_url = "N/A";
         }
 
         return self::$errores;

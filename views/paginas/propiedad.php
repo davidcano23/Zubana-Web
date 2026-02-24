@@ -1,5 +1,21 @@
 <?php 
     $auth = $_SESSION['login'] ?? null;
+
+    function youtubeEmbedUrl($url) {
+    if (empty($url)) return null;
+
+    // youtube.com/watch?v=ID
+    if (preg_match('/watch\?v=([^\&]+)/', $url, $matches)) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+
+    // youtu.be/ID
+    if (preg_match('/youtu\.be\/([^\?]+)/', $url, $matches)) {
+        return 'https://www.youtube.com/embed/' . $matches[1];
+    }
+
+    return null;
+}
 ?>
 
 <main class="contenedor propiedad-info">
@@ -399,6 +415,28 @@
 
             </div>
         <?php endif; ?>
+
+        <?php 
+            $videoEmbed = youtubeEmbedUrl($propiedad->video_url ?? null);
+        ?>
+
+        <?php if ($videoEmbed): ?>
+                <div class="video-propiedad precio">
+                    <h4>Video del Inmueble</h4>
+
+                    <div class="video-wrapper">
+                        <iframe 
+                            src="<?php echo $videoEmbed; ?>"
+                            title="Video de la propiedad"
+                            frameborder="0"
+                            loading="lazy"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+        <?php endif; ?>
+
 
             <div class="descripcion precio">
                 <h4>Descripcion</h4>
