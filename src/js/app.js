@@ -111,7 +111,7 @@ function initHeicToJpgInputs() {
     replaceInputFiles(inputPrincipal, [jpgFile]);
   }
 
-  async function processAdicionales(maxFiles = 15) {
+  async function processAdicionales(maxFiles = 50) {
     if (!inputAdicionales?.files?.length) return;
 
     const originals = Array.from(inputAdicionales.files).slice(0, maxFiles);
@@ -143,7 +143,7 @@ function initHeicToJpgInputs() {
 
     try {
       await processPrincipal();
-      await processAdicionales(15);
+      await processAdicionales(50);
 
       // Ya convertido todo: enviar
       showLoading('Enviando formulario…');

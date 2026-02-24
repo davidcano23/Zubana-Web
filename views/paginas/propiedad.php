@@ -415,12 +415,12 @@
 
             </div>
         <?php endif; ?>
-
+        
         <?php 
             $videoEmbed = youtubeEmbedUrl($propiedad->video_url ?? null);
         ?>
 
-        <?php if ($videoEmbed): ?>
+        <?php if ($videoEmbed && $propiedad->video_url !== "N/A"): ?>w
                 <div class="video-propiedad precio">
                     <h4>Video del Inmueble</h4>
 

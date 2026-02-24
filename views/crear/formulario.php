@@ -53,7 +53,7 @@
 
 
     <?php if($actualizar): ?>
-    <label for="imagenes">Imágenes Adicionales (hasta 15):*</label>
+    <label for="imagenes">Imágenes Adicionales (hasta 50):*</label>
     <input type="file" name="imagenes[]" id="imagenes" multiple accept="image/*" required>
     <?php endif; ?>
 
