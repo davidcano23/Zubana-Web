@@ -299,6 +299,8 @@
                                             <input type="hidden" name="tipo_unidad" class="mf_hidden_tipo_unidad" value="<?= htmlspecialchars($tipoUnidadGet ?? 'Todos', ENT_QUOTES) ?>">
                                             </section>
 
+                                        <?php if($auth): ?>
+
                                             <section class="mf_section">
                                             <p class="mf_title">Modalidad</p>
                                             <div class="mf_group" data-kind="modalidad">
@@ -309,6 +311,8 @@
                                             <input type="hidden" name="modalidad" class="mf_hidden_modalidad" value="<?= htmlspecialchars($modalidadGet ?? 'Todos', ENT_QUOTES) ?>">
                                             </section>
 
+                                        <?php endif; ?>
+                                            
                                             <section class="mf_section">
                                             <p class="mf_title">Garaje</p>
                                             <div class="mf_group" data-kind="garaje">
