@@ -20,21 +20,19 @@ class ImagenApart extends ActiveRecord {
         return $this->apartamento_id;
     }
 
-    public static function eliminarTodasDeApartamento($apartamentoId) {
-        $imagenes = self::whereAll('apartamento_id', $apartamentoId);
+    public static function eliminarTodasDeApartamento(int $apartamentoId): void {
+        $imagenes = self::where('apartamento_id', $apartamentoId);
 
         foreach ($imagenes as $imagen) {
-            $ruta = CARPETA_IMAGENES . $imagen->{'nombre'};
+            $ruta = CARPETA_IMAGENES . $imagen->nombre;
             if (file_exists($ruta)) {
                 unlink($ruta);
             }
             $imagen->eliminarImagenes();
         }
-
-        
     }
 
-    public function borrarImagen() {
+    public function borrarImagen(): void {
         $rutaImagen = CARPETA_IMAGENES . $this->nombre;
         if (file_exists($rutaImagen)) {
             unlink($rutaImagen);

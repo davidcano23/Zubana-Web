@@ -60,10 +60,6 @@ class Casa extends ActiveRecord {
     public $created_at;
     public $video_url;
 
-    public static function setDB($database) {
-        self::$db = $database;
-    }
-
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
 
@@ -117,7 +113,7 @@ class Casa extends ActiveRecord {
         $this->video_url = $args['video_url'] ?? '';
             }
 
-    public function validar() {
+    public function validar(): array {
 
         if(!isset($this->precio) || $this->precio === '') {
             self::$errores[] = "El campo precio es obligatorio";

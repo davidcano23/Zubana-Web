@@ -33,11 +33,6 @@ class Lote extends ActiveRecord {
     public $created_at;
     public $video_url;
 
-    //Definir la conexion a la BD
-    public static function setDB($database) {
-        self::$db = $database;
-    }
-
     public function __construct($args = []) {
     $this->id = $args['id'] ?? null;
     $this->nombre = $args['nombre'] ?? '';
@@ -66,7 +61,7 @@ class Lote extends ActiveRecord {
     }
 
 
-    public function validar() {
+    public function validar(): array {
         if(!isset($this->precio) || $this->precio === '') {
             self::$errores[] = "El campo precio es obligatorio";
         }

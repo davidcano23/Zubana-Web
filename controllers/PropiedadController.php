@@ -4,96 +4,63 @@ namespace Controllers;
 
 use MVC\Router;
 use Model\Casa;
-use Model\Apartamento;
-use Intervention\Image\Drivers\Gd\Driver; //Temporal el Cambio a Gd
-use Intervention\Image\ImageManager;
 use Model\ImagenCasa;
-use Model\Local;
-use Model\Lote;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class PropiedadController {
 
-    public static function tipoPropiedad(Router $router) {
-        // Renderizar vista
-    $router->render('propiedades/tipo-propiedad', [
-        
-    ]);
+    public static function tipoPropiedad(Router $router): void {
+        $router->render('propiedades/tipo-propiedad', []);
     }
 
-    public static function crearCasa(Router $router) {
-    $propiedad = new Casa();
+    public static function crearCasa(Router $router): void {
+        $propiedad = new Casa();
+        $errores = Casa::getErrores();
 
-    // Arreglo mensaje de errores
-    $errores = Casa::getErrores();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $datos = $_POST['propiedad'];
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $datos = $_POST['propiedad'];
-
-            // Convertir precio con puntos a número entero
-            if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total']) && isset($datos['area_construida'])) {
-                $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
-                $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
-                $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
+            if (isset($datos['precio'], $datos['administracion'], $datos['area_total'], $datos['area_construida'])) {
+                $datos['precio']          = intval(str_replace('.', '', $datos['precio']));
+                $datos['administracion']  = intval(str_replace('.', '', $datos['administracion']));
+                $datos['area_total']      = intval(str_replace('.', '', $datos['area_total']));
                 $datos['area_construida'] = intval(str_replace('.', '', $datos['area_construida']));
             }
 
-            $propiedad = new Casa($datos);
+            $propiedad    = new Casa($datos);
+            $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+            $manager      = new ImageManager(Driver::class);
 
-        // Generar un nombre único para la imagen
-        $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
-
-        if($_FILES['propiedad']['tmp_name']['imagen']) {
-            $manager = new ImageManager(Driver::class);
-            try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-            } catch (\Throwable $e) {
-                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
-            }
-            $propiedad->setImagen($nombreImagen); // Esto sigue para la imagen principal
-        }
-
-        $errores = $propiedad->validar();
-
-        // Revisar errores
-        if (empty($errores)) {
-            // Crear carpeta si no existe
-            if (!is_dir(CARPETA_IMAGENES)) {
-                mkdir(CARPETA_IMAGENES);
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                try {
+                    $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(1200, 800);
+                } catch (\Throwable) {
+                    $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+                }
+                $propiedad->setImagen($nombreImagen);
             }
 
-            // Guardar imagen principal en el servidor
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            $errores = array_merge($errores, $propiedad->validar());
 
-            // Guardar propiedad (casa) en DB
-            $resultado = $propiedad->guardar();
+            if (empty($errores)) {
+                if (!is_dir(CARPETA_IMAGENES)) mkdir(CARPETA_IMAGENES);
 
-            // Obtener ID insertado
-            $idPropiedad = $propiedad->{'id'};
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
 
-            // Guardar imágenes adicionales si existen
-            if (!empty($_FILES['imagenes']['name'][0])) {
-                foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
-                    if ($tmpName) {
-                        // Generar nombre único
-                        $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
+                $propiedad->guardar();
+                $idPropiedad = $propiedad->id;
 
+                if (!empty($_FILES['imagenes']['name'][0])) {
+                    foreach ($_FILES['imagenes']['tmp_name'] as $tmpName) {
+                        if (!$tmpName) continue;
                         try {
-                            $imagenAdicional = $manager
-                                ->read($tmpName)
-                                ->cover(1200, 800);
-
-                            $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
-
-                            $imagenExtra = new ImagenCasa([
-                                'casa_id' => $idPropiedad,
-                                'nombre' => $nombreImagenAdicional
-                            ]);
-                            $imagenExtra->guardar();
-
-                        } catch (\Throwable $e) {
-                            // Saltar imagen inválida (HEIC u otra)
+                            $nombreAdicional = md5(uniqid(rand(), true)) . ".webp";
+                            $manager->read($tmpName)->cover(1200, 800)->save(CARPETA_IMAGENES . $nombreAdicional);
+                            (new ImagenCasa(['casa_id' => $idPropiedad, 'nombre' => $nombreAdicional]))->guardar();
+                        } catch (\Throwable) {
                             continue;
                         }
                     }
@@ -101,111 +68,77 @@ class PropiedadController {
             }
         }
 
+        $router->render('crear/crear-casa', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
 
-    // Renderizar vista
-    $router->render('crear/crear-casa', [
-        'propiedad' => $propiedad,
-        'errores' => $errores
-    ]);
-}
+    public static function actualizarCasa(Router $router): void {
+        $id        = validarORedireccion('/');
+        $propiedad = Casa::find($id);
+        $errores   = Casa::getErrores();
 
-    public static function actualizarCasa(Router $router) {
-
-            $propiedad = validarORedireccion('/');
-            $id = validarORedireccion('/');
-            $propiedad = Casa::find($id);
-
-        //Arreglo mensaje de errores
-                $errores = Casa::getErrores();
-
-                if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $args = $_POST['propiedad'];
 
-        // Convertir precio con puntos a número entero
-        if (isset($args['precio']) && isset($args['administracion']) && isset($args['area_total']) && isset($args['area_construida'])) {
-                $args['precio'] = intval(str_replace('.', '', $args['precio']));
-                $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
-                $args['area_total'] = intval(str_replace('.', '', $args['area_total']));
+            if (isset($args['precio'], $args['administracion'], $args['area_total'], $args['area_construida'])) {
+                $args['precio']          = intval(str_replace('.', '', $args['precio']));
+                $args['administracion']  = intval(str_replace('.', '', $args['administracion']));
+                $args['area_total']      = intval(str_replace('.', '', $args['area_total']));
                 $args['area_construida'] = intval(str_replace('.', '', $args['area_construida']));
             }
 
-        $propiedad->sincronizar($args);
-        ;
-
+            $propiedad->sincronizar($args);
             $errores = $propiedad->validar();
 
-            
-
-            if($_FILES['propiedad']['tmp_name']['imagen']) {
-
-            //Subida de archivos
-            $nombreImagen = md5(uniqid(rand(),true) ).".webp";
-
-                $manager = new ImageManager(Driver::class);
+            $nombreImagen = '';
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
                 try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-                } catch (\Throwable $e) {
+                    $imagen = (new ImageManager(Driver::class))
+                        ->read($_FILES['propiedad']['tmp_name']['imagen'])
+                        ->cover(1200, 800);
+                } catch (\Throwable) {
                     $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
                 }
                 $propiedad->setImagen($nombreImagen);
             }
 
-        if (empty($errores)) {
-        // Guardar imagen solo si existe
-        if ($_FILES['propiedad']['tmp_name']['imagen']) {
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen); // usa la imagen ya seteada
+            if (empty($errores)) {
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
+                $propiedad->guardar();
+            }
         }
 
-        $propiedad->guardar();
+        $router->render('crear/actualizar-casa', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
-    }
 
+    public static function eliminar(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') return;
 
-        // Renderizar vista
-        $router->render('crear/actualizar-casa', [
-            'propiedad' => $propiedad,
-            'errores' => $errores
-        ]);
-        }
-
-
-
-    public static function eliminar() {
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
-        $tipo = trim($_POST['tipo']); // 👈 Limpia espacios
+        $id   = filter_var($_POST['id'], FILTER_VALIDATE_INT);
+        $tipo = trim($_POST['tipo']);
 
         $mapaModelos = [
-            'Casa' => 'Casa',
-            'Casa Campestre' => 'Casa',
-            'Finca' => 'Casa',
-            'Apartamento' => 'Apartamento',
-            'Apartaestudio' => 'Apartamento',
-            'Apartaoficina' => 'Apartamento',
-            'Lote Urbano' => 'Lote',
-            'Lote Bodega' => 'Lote',
-            'Lote Campestre' => 'Lote',
-            'Lote Urbanizable' => 'Lote',
-            'Local' => 'Local'
+            'Casa'              => 'Casa',
+            'Casa Campestre'    => 'Casa',
+            'Finca'             => 'Casa',
+            'Apartamento'       => 'Apartamento',
+            'Apartaestudio'     => 'Apartamento',
+            'Apartaoficina'     => 'Apartamento',
+            'Lote Urbano'       => 'Lote',
+            'Lote Bodega'       => 'Lote',
+            'Lote Campestre'    => 'Lote',
+            'Lote Urbanizable'  => 'Lote',
+            'Local'             => 'Local',
         ];
 
         if ($id && isset($mapaModelos[$tipo])) {
-            $claseModelo = "Model\\" . $mapaModelos[$tipo];
-
-            if (class_exists($claseModelo)) {
-                $propiedad = $claseModelo::find($id);
-                if ($propiedad) {
-                    $propiedad->eliminar();
-                }
+            $clase = "Model\\" . $mapaModelos[$tipo];
+            if (class_exists($clase)) {
+                $propiedad = $clase::find($id);
+                if ($propiedad) $propiedad->eliminar();
             }
         }
     }
-    } //Fin Eliminar
-
-
-
 }

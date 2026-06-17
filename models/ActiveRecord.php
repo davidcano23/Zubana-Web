@@ -1,176 +1,157 @@
-<?php 
+<?php
 
 namespace Model;
 
 class ActiveRecord {
-    //BASE DE DATOS
+
     protected static $db;
     protected static $columnasDB = [];
     protected static $tabla = '';
 
-    //ERRORES
     public static $errores = [];
 
-    //DEFINIR LA CONEXION A LA DATABASE
-    public static function setDB($database) {
+    public static function setDB($database): void {
         self::$db = $database;
     }
 
-public function guardar() {
-    if(!is_null($this->{'id'})) {
-        //Actualizar
-        $this->actualizar();
-    } else {
-        //Creamos un nuevo registro
-        $this->crear();
+    public static function escapeString(string $value): string {
+        return self::$db->escape_string($value);
     }
-}
 
+    public function guardar(): void {
+        if (!is_null($this->{'id'})) {
+            $this->actualizar();
+        } else {
+            $this->crear();
+        }
+    }
 
-public function crear() {
+    public function crear(): void {
+        $atributos = $this->sanetizarAtributos();
 
-    //Sanetizar los datos antes de enviarlos a la base de datos
-    $atributos = $this->sanetizarAtributos();
-
-        //Insertar en la base de datos
-        $query = "INSERT INTO " . static::$tabla . " ( ";
+        $query  = "INSERT INTO " . static::$tabla . " (";
         $query .= join(', ', array_keys($atributos));
-        $query .= " ) VALUES ( ";
-
-        $valores = array_map(
+        $query .= ") VALUES (";
+        $query .= join(', ', array_map(
             fn($v) => $v === null ? "NULL" : "'$v'",
             array_values($atributos)
-        );
+        ));
+        $query .= ")";
 
-        $query .= join(', ', $valores);
-        $query .= " )";
         $resultado = self::$db->query($query);
 
-        //MENSAJE DE EXITO
-        if($resultado) {
-            $this->{'id'} = self::$db->insert_id; 
+        if ($resultado) {
+            $this->{'id'} = self::$db->{'insert_id'};
             header('location: /?Resultado=1');
         }
-}
-
-public function actualizar() {
-    //Sanetizar los datos antes de enviarlos a la base de datos
-    $atributos = $this->sanetizarAtributos();
-
-    $valores = [];
-
-    foreach($atributos as $key => $value) {
-        $valores[] = "{$key}='{$value}'";
     }
 
-    $query = "UPDATE " . static::$tabla . " SET ";
-    $query .=  join(', ', $valores);
-    $query .= " WHERE id = '". self::$db->escape_string($this->{'id'}). "' ";
-    $query .= " LIMIT 1 ";
-    
+    public function actualizar(): void {
+        $atributos = $this->sanetizarAtributos();
 
-    $resultado = self::$db->query($query);
+        $valores = [];
+        foreach ($atributos as $key => $value) {
+            $valores[] = $value === null ? "{$key}=NULL" : "{$key}='{$value}'";
+        }
 
-    if($resultado) {
+        $query  = "UPDATE " . static::$tabla . " SET ";
+        $query .= join(', ', $valores);
+        $query .= " WHERE id = '" . self::$db->escape_string($this->{'id'}) . "' LIMIT 1";
+
+        $resultado = self::$db->query($query);
+
+        if ($resultado) {
             header('location: /?Resultado=2');
         }
-}
+    }
 
-//ELIMINAR UN REGISTRO
-    public function eliminar() {
-        //Eliminar propiedad 
+    public function eliminar(): void {
         $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " LIMIT 1";
 
-    $resultado = self::$db->query($query);
+        $resultado = self::$db->query($query);
 
-    if($resultado) {
-        $this->borrarImagen();
+        if ($resultado) {
+            $this->borrarImagen();
             header('location: /?Resultado=3');
         }
     }
 
-    public function eliminarImagenes() {
-        //Eliminar propiedad 
+    public function eliminarImagenes(): bool {
         $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'});
 
         $resultado = self::$db->query($query);
 
-            if ($resultado) {
-                $this->borrarImagen(); // Elimina la imagen del disco
-            }
-
-            return $resultado;
-    }
-
-
-//Identificar y unir los atributos d ela BD
-public function atributos() {
-    $atributos = [];
-    foreach (static::$columnasDB as $columna) {
-        if($columna === 'id') continue;
-        $atributos[$columna] = $this->$columna;
-    }
-    return $atributos;
-}
-
-public function sanetizarAtributos() {
-    $atributos = $this->atributos();
-    $sanitizado = [];   
-
-    foreach($atributos as $key => $value) {
-            if ($value === null) {
-                $sanitizado[$key] = null;
-            } else {
-                $sanitizado[$key] = self::$db->escape_string(trim((string)$value));
-            }
+        if ($resultado) {
+            $this->borrarImagen();
         }
 
-    return $sanitizado;
-}
+        return $resultado;
+    }
 
-    //VALIDACION
-    public static function getErrores() {
+    public function eliminarImg(): bool {
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " LIMIT 1";
+        $resultado = self::$db->query($query);
+
+        if ($resultado) {
+            $this->borrarImagen();
+        }
+
+        return $resultado;
+    }
+
+    public function atributos(): array {
+        $atributos = [];
+        foreach (static::$columnasDB as $columna) {
+            if ($columna === 'id') continue;
+            $atributos[$columna] = $this->$columna;
+        }
+        return $atributos;
+    }
+
+    public function sanetizarAtributos(): array {
+        $atributos = $this->atributos();
+        $sanitizado = [];
+
+        foreach ($atributos as $key => $value) {
+            $sanitizado[$key] = $value === null ? null : self::$db->escape_string(trim((string)$value));
+        }
+
+        return $sanitizado;
+    }
+
+    public static function getErrores(): array {
         return static::$errores;
     }
 
-    public function validar() {
+    public function validar(): array {
         static::$errores = [];
         return static::$errores;
     }
 
-    public function setImagen($imagen) {
-        //Elimina la imagen previa
-        if(!is_null($this->{'id'})) {
+    public function setImagen($imagen): void {
+        if (!is_null($this->{'id'})) {
             $this->borrarImagen();
-                }
+        }
 
-        if($imagen) {
+        if ($imagen) {
             $this->{'imagen'} = $imagen;
         }
     }
 
-
-    //ElIMINAR ARCHIVO
-    public function borrarImagen() {
-        //Comprobar si existe el archivo
-            $existeArchivo = file_exists(CARPETA_IMAGENES . $this->{'imagen'});
-            if($existeArchivo) {
-                unlink(CARPETA_IMAGENES . $this->{'imagen'});
-            }
+    public function borrarImagen(): void {
+        if (file_exists(CARPETA_IMAGENES . $this->{'imagen'})) {
+            unlink(CARPETA_IMAGENES . $this->{'imagen'});
+        }
     }
 
-        // En modelos/Propiedad.php
-
-    public static function filtrar($filtros) {
+    public static function filtrar(array $filtros): array {
         $query = "SELECT * FROM " . static::$tabla . " WHERE 1=1";
 
-        // Filtro por ciudad
         if (!empty($filtros['ciudad'])) {
             $ciudad = self::$db->escape_string($filtros['ciudad']);
             $query .= " AND ciudad LIKE '%$ciudad%'";
         }
 
-        // Filtro por tipo (maneja uno o varios)
         if (!empty($filtros['tipos_array'])) {
             $tipos = array_map(fn($t) => "'" . self::$db->escape_string($t) . "'", $filtros['tipos_array']);
             $query .= " AND tipo IN (" . implode(',', $tipos) . ")";
@@ -179,15 +160,12 @@ public function sanetizarAtributos() {
             $query .= " AND tipo = '$tipo'";
         }
 
-        // Filtros de precios
         if (!empty($filtros['precio_min'])) {
             $query .= " AND precio >= " . (int)$filtros['precio_min'];
         }
         if (!empty($filtros['precio_max'])) {
             $query .= " AND precio <= " . (int)$filtros['precio_max'];
         }
-
-        // Filtros adicionales
         if (!empty($filtros['banos'])) {
             $query .= " AND banos >= " . (int)$filtros['banos'];
         }
@@ -202,223 +180,138 @@ public function sanetizarAtributos() {
             $query .= " AND barrio LIKE '%$barrio%'";
         }
 
-        // Ejecutar y retornar
         return self::consultarSQL($query);
     }
 
-    //FUNCTION ORDENAR PROPIEDADES
+    public static function ordenarResultados(array $propiedades, string $criterio): array {
+        $parsePrecio = static function ($p): int {
+            if ($p === null) return 0;
+            if (is_int($p)) return $p;
+            $num = preg_replace('/\D+/', '', (string)$p);
+            return $num !== '' ? (int)$num : 0;
+        };
 
-    // En tu clase base ActiveRecord (o en un helper estático que puedas llamar)
-        public static function ordenarResultados(array $propiedades, string $criterio): array
-        {
-            $parsePrecio = static function($p): int {
-                if ($p === null) return 0;
-                if (is_int($p)) return $p;
-                // acepta "1.200.000" o "1200000"
-                $num = preg_replace('/\D+/', '', (string)$p);
-                return $num !== '' ? (int)$num : 0;
-            };
+        $getArea = static function ($obj): float {
+            return isset($obj->area_total) && $obj->area_total !== null ? (float)$obj->area_total : 0;
+        };
 
-            $getArea = static function($obj): int|float {
-                // Si algún modelo usa otro nombre, mapéalo aquí.
-                // Por ahora asumo 'area_total'; si no existe, 0.
-                return isset($obj->area_total) && $obj->area_total !== null ? (float)$obj->area_total : 0;
-            };
+        $cmpIdDesc = static fn($a, $b) => ($b->id ?? 0) <=> ($a->id ?? 0);
 
-            $cmpIdDesc = static function($a, $b) {
-                return ($b->id ?? 0) <=> ($a->id ?? 0);
-            };
+        $cmpFechaDesc = static function ($a, $b) use ($cmpIdDesc) {
+            $fa = isset($a->created_at) ? strtotime($a->created_at) : 0;
+            $fb = isset($b->created_at) ? strtotime($b->created_at) : 0;
+            $r  = $fb <=> $fa;
+            return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+        };
 
-            $cmpFechaDesc = static function($a, $b) {
-                $fa = isset($a->created_at) ? strtotime($a->created_at) : 0;
-                $fb = isset($b->created_at) ? strtotime($b->created_at) : 0;
-
-                $r = $fb <=> $fa;
-                // desempate por id (buena práctica)
-                return $r !== 0 ? $r : (($b->id ?? 0) <=> ($a->id ?? 0));
-            };
-
-            switch ($criterio) {
-                case 'mayor_precio':
-                    usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
-                        $pa = $parsePrecio($a->precio ?? null);
-                        $pb = $parsePrecio($b->precio ?? null);
-                        $r = $pb <=> $pa;
-                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
-                    });
-                    break;
-
-                case 'menor_precio':
-                    usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
-                        $pa = $parsePrecio($a->precio ?? null);
-                        $pb = $parsePrecio($b->precio ?? null);
-                        $r = $pa <=> $pb;
-                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
-                    });
-                    break;
-
-                case 'mayor_m2':
-                    usort($propiedades, function ($a, $b) use ($getArea, $cmpIdDesc) {
-                        $r = $getArea($b) <=> $getArea($a);   // DESC
-                        return $r !== 0 ? $r : $cmpIdDesc($a, $b);
-                    });
-                    break;
-
-                case 'mas_recientes':
-                    default:
-                        usort($propiedades, $cmpFechaDesc);
-                        break;
-            }
-
-            return $propiedades;
-        }
-
-
-
-    //Lista todas las registros
-    public static function all() {
-        $query = "SELECT * FROM " . static::$tabla;
-
-        $resultado = self::consultarSQL($query);
-
-        return $resultado;
-    }
-
-    //Obtiene determinado numero de registro
-    public static function get($cantidad) {
-        $cantidad = (int) $cantidad;
-        $query = "SELECT * FROM " . static::$tabla . " ORDER BY RAND() LIMIT " . $cantidad;
-        $resultado = self::consultarSQL($query);
-        return $resultado;
-    }
-
-        public static function getRecomendadas($ubicacion, $idExcluir, $cantidad) {
-        $ubicacion = self::$db->escape_string($ubicacion);
-        $idExcluir = (int) $idExcluir;
-        $cantidad = (int) $cantidad;
-
-        $query = "SELECT * FROM " . static::$tabla . " 
-                WHERE ubicacion = '$ubicacion' 
-                AND id != $idExcluir 
-                ORDER BY RAND() 
-                LIMIT $cantidad";
-
-        return self::consultarSQL($query);
-    }
-
-        public static function where($columna, $valor) {
-        $columna = self::$db->escape_string($columna);
-        $valor = self::$db->escape_string($valor);
-
-        $query = "SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'";
-        return self::consultarSQL($query);
-    }
-
-        public static function todas() {
-            $query = "SELECT * FROM " . static::$tabla;
-            return self::consultarSQL($query);
-        }
-
-        public static function whereAll($columna, $valor) {
-        $columna = self::$db->escape_string($columna);
-        $valor = self::$db->escape_string($valor);
-
-        $query = "SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'";
-        return self::consultarSQL($query);
-    }
-
-    public function eliminarImg() {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " LIMIT 1";
-        return self::$db->query($query);
-    }
-
-
-
-
-
-
-
-    public static function contar() {
-        $query = "SELECT COUNT(*) as total FROM " . static::$tabla;
-        $resultado = self::$db->query($query);
-        $fila = $resultado->fetch_assoc();
-        return $fila['total'];
-    }
-
-    public static function getPaginadas($limite, $offset, $ordenar = null) {
-        $limite = (int) $limite;
-        $offset = (int) $offset;
-
-        $orderSQL = "";
-
-        switch ($ordenar) {
+        switch ($criterio) {
             case 'mayor_precio':
-                $orderSQL = "ORDER BY precio DESC";
-                break;
-            case 'menor_precio':
-                $orderSQL = "ORDER BY precio ASC";
-                break;
-            case 'recientes':
-                $orderSQL = "ORDER BY id DESC";
-                break;
-            case 'mayor_m2':
-                $orderSQL = "ORDER BY area_total DESC";
-                break;
-            case 'menor_m2':
-                $orderSQL = "ORDER BY area_total ASC";
+                usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
+                    $r = $parsePrecio($b->precio ?? null) <=> $parsePrecio($a->precio ?? null);
+                    return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                });
                 break;
 
+            case 'menor_precio':
+                usort($propiedades, function ($a, $b) use ($parsePrecio, $cmpIdDesc) {
+                    $r = $parsePrecio($a->precio ?? null) <=> $parsePrecio($b->precio ?? null);
+                    return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                });
+                break;
+
+            case 'mayor_m2':
+                usort($propiedades, function ($a, $b) use ($getArea, $cmpIdDesc) {
+                    $r = $getArea($b) <=> $getArea($a);
+                    return $r !== 0 ? $r : $cmpIdDesc($a, $b);
+                });
+                break;
+
+            case 'mas_recientes':
             default:
-                // 🟢 Orden por defecto: más recientes primero
-                $orderSQL = "ORDER BY id DESC";
+                usort($propiedades, $cmpFechaDesc);
                 break;
         }
+
+        return $propiedades;
+    }
+
+    public static function todas(): array {
+        return self::consultarSQL("SELECT * FROM " . static::$tabla);
+    }
+
+    public static function get(int $cantidad): array {
+        $query = "SELECT * FROM " . static::$tabla . " ORDER BY RAND() LIMIT " . $cantidad;
+        return self::consultarSQL($query);
+    }
+
+    public static function getRecomendadas(string $ubicacion, int $idExcluir, int $cantidad): array {
+        $ubicacion = self::$db->escape_string($ubicacion);
+        $query = "SELECT * FROM " . static::$tabla . "
+                  WHERE ubicacion = '$ubicacion'
+                  AND id != $idExcluir
+                  ORDER BY RAND()
+                  LIMIT $cantidad";
+        return self::consultarSQL($query);
+    }
+
+    public static function where(string $columna, $valor): array {
+        $columna = self::$db->escape_string($columna);
+        $valor   = self::$db->escape_string($valor);
+        return self::consultarSQL("SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'");
+    }
+
+    public static function contar(): int {
+        $resultado = self::$db->query("SELECT COUNT(*) as total FROM " . static::$tabla);
+        return (int)$resultado->fetch_assoc()['total'];
+    }
+
+    public static function getPaginadas(int $limite, int $offset, ?string $ordenar = null): array {
+        $orderSQL = match ($ordenar) {
+            'mayor_precio' => "ORDER BY precio DESC",
+            'menor_precio' => "ORDER BY precio ASC",
+            'mayor_m2'     => "ORDER BY area_total DESC",
+            'menor_m2'     => "ORDER BY area_total ASC",
+            default        => "ORDER BY id DESC",
+        };
 
         $query = "SELECT * FROM " . static::$tabla . " $orderSQL LIMIT $limite OFFSET $offset";
         return self::consultarSQL($query);
     }
 
-    //Busca un registro por su ID
-    public static function find($id) {
-    $id = (int) $id; // Forzamos entero
-    $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id}";
-
-    $resultado = self::consultarSQL($query);
-    return array_shift($resultado);
+    public static function find(int $id): ?object {
+        $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id}";
+        $resultado = self::consultarSQL($query);
+        return array_shift($resultado);
     }
 
-    public static function consultarSQL($query) {
-        //Consultar la base de datos
+    public static function consultarSQL(string $query): array {
         $resultado = self::$db->query($query);
-        //Interar los resultados
         $array = [];
-        while($registro = $resultado->fetch_assoc()) {
+
+        while ($registro = $resultado->fetch_assoc()) {
             $array[] = static::crearObjeto($registro);
         }
 
-        //Liberar la memoria
         $resultado->free();
 
-        //Retornar los resultados
         return $array;
     }
 
-    protected static function crearObjeto($registro) {
+    protected static function crearObjeto(array $registro): static {
         $objeto = new static;
 
-        foreach($registro as $key => $value) {
-            if(property_exists($objeto, $key)) {
+        foreach ($registro as $key => $value) {
+            if (property_exists($objeto, $key)) {
                 $objeto->$key = $value;
             }
         }
 
-        return $objeto; 
+        return $objeto;
     }
 
-    //Sincroniza el objeto en memoria con los cambios realizados por el usuario 
-    public function sincronizar($args = []) {
-        foreach($args as $key => $value) {
-            if(property_exists($this, $key) && !is_null($value) ) {
+    public function sincronizar(array $args = []): void {
+        foreach ($args as $key => $value) {
+            if (property_exists($this, $key) && !is_null($value)) {
                 $this->$key = $value;
             }
         }

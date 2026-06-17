@@ -35,11 +35,6 @@ class Local extends ActiveRecord {
     public $created_at;
     public $video_url;
 
-    //Definir la conexion a la BD
-    public static function setDB($database) {
-        self::$db = $database;
-    }
-
     public function __construct($args = []) {
     $this->id = $args['id'] ?? null;
     $this->nombre = $args['nombre'] ?? '';
@@ -70,7 +65,7 @@ class Local extends ActiveRecord {
     }
 
 
-    public function validar() {
+    public function validar(): array {
         if(!isset($this->precio) || $this->precio === '') {
             self::$errores[] = "El campo precio es obligatorio";
         }
@@ -140,13 +135,10 @@ class Local extends ActiveRecord {
         if(strlen($this->descripcion) > 700) {
             self::$errores[] = "El campo descripcion no puede superar los 700 caracteres";
         }
-        if(strlen($this->barrio) > 255) {
-            self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
-        }
-        if(!$this->barrio) {
+        if (!$this->barrio) {
             $this->barrio = "N/A";
         }
-        if(strlen($this->barrio) > 255) {
+        if (strlen($this->barrio) > 255) {
             self::$errores[] = "El campo barrio no puede superar los 255 caracteres";
         }
         if(!$this->administracion){

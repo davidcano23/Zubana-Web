@@ -1,16 +1,12 @@
-<?php 
+<?php
     $auth = $_SESSION['login'] ?? null;
     $inicio = $inicio ?? false;
     $footer = $footer ?? false;
+    $contenido = $contenido ?? '';
+    $propiedad = $propiedad ?? null;
+    $imagenes  = $imagenes  ?? [];
 ?>
 
-<!-- <?php 
-    $passwordPlano = '123456';
-
-    $passwordHasheado = password_hash($passwordPlano, PASSWORD_BCRYPT);
-
-    echo $passwordHasheado;
-?> -->
 
 
 <!DOCTYPE html>
@@ -263,7 +259,10 @@
                                 </div>
 
                                 <?php
-                                    $estratoGet = isset($_GET['estrato']) ? (int)$_GET['estrato'] : 0;
+                                    $estratoGet     = isset($_GET['estrato'])     ? (int)$_GET['estrato']           : 0;
+                                    $tipoUnidadGet  = isset($_GET['tipo_unidad']) ? $_GET['tipo_unidad']            : 'Todos';
+                                    $modalidadGet   = isset($_GET['modalidad'])   ? $_GET['modalidad']              : 'Todos';
+                                    $garajeGet      = isset($_GET['garaje'])      ? $_GET['garaje']                 : 'Todos';
                                     $labelMas = $estratoGet > 0 ? "Más filtros (Estrato {$estratoGet})" : "Más filtros";
                                 ?>
                                 <div class="filtro_mas">

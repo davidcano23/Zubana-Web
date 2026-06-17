@@ -10,168 +10,100 @@ use Intervention\Image\ImageManager;
 
 class ApartamentoController {
 
-    public static function crearApartamento(Router $router) {
-         $propiedad = new Apartamento();
+    public static function crearApartamento(Router $router): void {
+        $propiedad = new Apartamento();
+        $errores   = Apartamento::getErrores();
 
-        //Arreglo mensaje de errores
-            $errores = Apartamento::getErrores();
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $datos = $_POST['propiedad'];
 
-            // Convertir precio con puntos a número entero
-            if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total'])) {
-                $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
+            if (isset($datos['precio'], $datos['administracion'], $datos['area_total'])) {
+                $datos['precio']         = intval(str_replace('.', '', $datos['precio']));
                 $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
-                $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
+                $datos['area_total']     = intval(str_replace('.', '', $datos['area_total']));
             }
 
-            $propiedad = new Apartamento($datos);
+            $propiedad    = new Apartamento($datos);
+            $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+            $manager      = new ImageManager(Driver::class);
 
-        //Gnerar un nombre unico
-        $nombreImagen = md5(uniqid(rand(),true) ).".webp";
-        if($_FILES['propiedad']['tmp_name']['imagen']) {
-            $manager = new ImageManager(Driver::class);
-            try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-            } catch (\Throwable $e) {
-                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
-            }
-            $propiedad->setImagen($nombreImagen);
-        }
-
-        $errores = $propiedad->validar();
-
-        
-        //Revisar el arreglo de errores
-        if(empty($errores)) {
-
-            //SUBIDA DE ARCHIVOS
-
-            if(!is_dir(CARPETA_IMAGENES)) {
-                mkdir(CARPETA_IMAGENES);
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                try {
+                    $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(1200, 800);
+                } catch (\Throwable) {
+                    $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+                }
+                $propiedad->setImagen($nombreImagen);
             }
 
-            //Guardar la imagen en el servidor
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            $errores = array_merge($errores, $propiedad->validar());
 
-            $resultado = $propiedad->guardar();
+            if (empty($errores)) {
+                if (!is_dir(CARPETA_IMAGENES)) mkdir(CARPETA_IMAGENES);
 
-            // Obtener ID insertado
-            $idPropiedad = $propiedad->{'id'};
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
 
-            // Guardar imágenes adicionales si existen
-            if (!empty($_FILES['imagenes']['name'][0])) {
-                foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
-                    if ($tmpName) {
-                        // Generar nombre único
-                        $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
+                $propiedad->guardar();
+                $idPropiedad = $propiedad->id;
 
+                if (!empty($_FILES['imagenes']['name'][0])) {
+                    foreach ($_FILES['imagenes']['tmp_name'] as $tmpName) {
+                        if (!$tmpName) continue;
                         try {
-                            $imagenAdicional = $manager
-                                ->read($tmpName)
-                                ->cover(1200, 800);
-
-                            $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
-
-                            $imagenExtra = new ImagenApart([
-                                'apartamento_id' => $idPropiedad,
-                                'nombre' => $nombreImagenAdicional
-                            ]);
-                            $imagenExtra->guardar();
-
-                        } catch (\Throwable $e) {
-                            // Saltar imagen inválida (HEIC u otra)
+                            $nombreAdicional = md5(uniqid(rand(), true)) . ".webp";
+                            $manager->read($tmpName)->cover(1200, 800)->save(CARPETA_IMAGENES . $nombreAdicional);
+                            (new ImagenApart(['apartamento_id' => $idPropiedad, 'nombre' => $nombreAdicional]))->guardar();
+                        } catch (\Throwable) {
                             continue;
                         }
                     }
                 }
             }
         }
-        }
 
-        $router->render('crear/crear-apartamento', [
-        'propiedad' => $propiedad,
-        'errores' => $errores
-    ]);
+        $router->render('crear/crear-apartamento', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
 
+    public static function actualizarApartamento(Router $router): void {
+        $id        = validarORedireccion('/');
+        $propiedad = Apartamento::find($id);
+        $errores   = Apartamento::getErrores();
 
-    public static function actualizarApartamento(Router $router) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $args = $_POST['propiedad'];
 
-    $propiedad = validarORedireccion('/');
-    $id = validarORedireccion('/');
-    $propiedad = Apartamento::find($id);
-
-    $errores = Apartamento::getErrores();
-
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $args = $_POST['propiedad'];
-
-        if (isset($args['precio']) && isset($args['administracion']) && isset($args['area_total'])) {
-            $args['precio'] = intval(str_replace('.', '', $args['precio']));
-            $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
-            $args['area_total'] = intval(str_replace('.', '', $args['area_total']));
-        }
-
-        $propiedad->sincronizar($args);
-        $errores = $propiedad->validar();
-
-        $manager = new ImageManager(Driver::class); // Instanciar una sola vez
-
-        // Imagen principal
-        if ($_FILES['propiedad']['tmp_name']['imagen']) {
-            $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
-            try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-            } catch (\Throwable $e) {
-                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
-            }
-            $propiedad->setImagen($nombreImagen);
-        }
-
-        if (empty($errores)) {
-            // Guardar nueva imagen principal
-            if (isset($imagen)) {
-                $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            if (isset($args['precio'], $args['administracion'], $args['area_total'])) {
+                $args['precio']         = intval(str_replace('.', '', $args['precio']));
+                $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
+                $args['area_total']     = intval(str_replace('.', '', $args['area_total']));
             }
 
-            // // Imágenes adicionales
-            // if (!empty($_FILES['imagenes']['name'][0])) {
-            //     // Eliminar anteriores 
-            //     ImagenApart::eliminarTodasDeApartamento($propiedad->{'id'});
+            $propiedad->sincronizar($args);
+            $errores = $propiedad->validar();
 
+            $nombreImagen = '';
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+                try {
+                    $imagen = (new ImageManager(Driver::class))
+                        ->read($_FILES['propiedad']['tmp_name']['imagen'])
+                        ->cover(1200, 800);
+                } catch (\Throwable) {
+                    $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+                }
+                $propiedad->setImagen($nombreImagen);
+            }
 
-
-            //     // Subir nuevas
-            //     foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
-            //         if ($tmpName) {
-            //             $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
-            //             $imagenAdicional = $manager->read($tmpName)->cover(1200, 800);
-            //             $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
-
-            //             $imagenExtra = new ImagenApart([
-            //                 'apartamento_id' => $propiedad->{'id'},
-            //                 'nombre' => $nombreImagenAdicional
-            //             ]);
-            //             $imagenExtra->guardar();
-            //         }
-            //     }
-            // }
-
-            // Guardar propiedad
-            $propiedad->guardar();
+            if (empty($errores)) {
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
+                $propiedad->guardar();
+            }
         }
+
+        $router->render('crear/actualizar-apartamento', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
-
-    $router->render('crear/actualizar-apartamento', [
-        'propiedad' => $propiedad,
-        'errores' => $errores
-    ]);
-}
-
 }

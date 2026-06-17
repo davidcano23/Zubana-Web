@@ -4,23 +4,22 @@ namespace MVC;
 
 class Router {
 
-    public $rutasGET = [];
+    public $rutasGET  = [];
     public $rutasPOST = [];
 
-    public function get($url, $fn) {
+    public function get($url, $fn): void {
         $this->rutasGET[$url] = $fn;
     }
 
-    public function post($url, $fn) {
+    public function post($url, $fn): void {
         $this->rutasPOST[$url] = $fn;
     }
-    public function comprobarRutas() {
 
+    public function comprobarRutas(): void {
         session_start();
 
         $auth = $_SESSION['login'] ?? null;
 
-        // Arreglo de rutas protegidas
         $rutas_protegidas = [
             '/tipo-propiedad',
             '/propiedades/crear-casa',
@@ -36,55 +35,40 @@ class Router {
             '/propiedades/eliminar'
         ];
 
-        // --- CORRECCIÓN PARA HOSTINGER ---
-        // Intentamos leer PATH_INFO
+        // PATH_INFO may be absent on some hosts (e.g. Hostinger); fall back to REQUEST_URI.
         $urlActual = $_SERVER['PATH_INFO'] ?? '/';
 
-        // Si PATH_INFO no existe o es solo un slash, intentamos obtener la ruta desde REQUEST_URI
         if (!isset($_SERVER['PATH_INFO']) || $urlActual === '/') {
-            // Obtenemos la URL completa (ej: /propiedad?id=1)
-            $requestUri = $_SERVER['REQUEST_URI']; 
-            
-            // Quitamos los parámetros GET (lo que va después del ?)
-            $posicionInterrogacion = strpos($requestUri, '?');
-            
-            if ($posicionInterrogacion !== false) {
-                $urlActual = substr($requestUri, 0, $posicionInterrogacion);
-            } else {
-                $urlActual = $requestUri;
-            }
+            $requestUri = $_SERVER['REQUEST_URI'];
+            $pos = strpos($requestUri, '?');
+            $urlActual = $pos !== false ? substr($requestUri, 0, $pos) : $requestUri;
         }
-        // ---------------------------------
 
         $metodo = $_SERVER['REQUEST_METHOD'];
+        $fn     = $metodo === 'GET'
+            ? ($this->rutasGET[$urlActual]  ?? null)
+            : ($this->rutasPOST[$urlActual] ?? null);
 
-        if($metodo === 'GET') {
-            $fn = $this->rutasGET[$urlActual] ?? null;
-        } else {
-            $fn = $this->rutasPOST[$urlActual] ?? null;
-        }
-
-        // Proteger la ruta
-        if(in_array($urlActual, $rutas_protegidas ) && !$auth) {
+        if (in_array($urlActual, $rutas_protegidas) && !$auth) {
             header('location: /');
+            exit;
         }
 
-        if($fn) {
+        if ($fn) {
             call_user_func($fn, $this);
         } else {
             echo "pagina no encontrada";
         }
     }
 
-    public function render($view, $datos = []) {
-        foreach($datos as $key => $value) {
+    public function render($view, $datos = []): void {
+        foreach ($datos as $key => $value) {
             $$key = $value;
-        } 
+        }
 
-        ob_start(); //Almacenamiento en memoria durante un momento...
-
+        ob_start();
         include_once __DIR__ . "/views/$view.php";
-        $contenido = ob_get_clean(); //Limpia el buffer
+        $contenido = ob_get_clean();
         include_once __DIR__ . '/views/layout.php';
     }
 }

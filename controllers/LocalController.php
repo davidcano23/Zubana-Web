@@ -4,161 +4,108 @@ namespace Controllers;
 
 use MVC\Router;
 use Model\Local;
+use Model\ImagenLocal;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-use Model\ImagenLocal;
 
 class LocalController {
 
-    public static function crearLocal(Router $router) {
-         $propiedad = new Local();
+    public static function crearLocal(Router $router): void {
+        $propiedad = new Local();
+        $errores   = Local::getErrores();
 
-        //Arreglo mensaje de errores
-            $errores = Local::getErrores();
-
-        if($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $datos = $_POST['propiedad'];
 
-            // Convertir precio con puntos a número entero
-            if (isset($datos['precio']) && isset($datos['administracion']) && isset($datos['area_total']) && isset($datos['area_construida'])) {
-                $datos['precio'] = intval(str_replace('.', '', $datos['precio']));
-                $datos['administracion'] = intval(str_replace('.', '', $datos['administracion']));
-                $datos['area_total'] = intval(str_replace('.', '', $datos['area_total']));
+            if (isset($datos['precio'], $datos['administracion'], $datos['area_total'], $datos['area_construida'])) {
+                $datos['precio']          = intval(str_replace('.', '', $datos['precio']));
+                $datos['administracion']  = intval(str_replace('.', '', $datos['administracion']));
+                $datos['area_total']      = intval(str_replace('.', '', $datos['area_total']));
                 $datos['area_construida'] = intval(str_replace('.', '', $datos['area_construida']));
             }
 
-            $propiedad = new Local($datos);
+            $propiedad    = new Local($datos);
+            $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+            $manager      = new ImageManager(Driver::class);
 
-        //Gnerar un nombre unico
-        $nombreImagen = md5(uniqid(rand(),true) ).".webp";
-        if($_FILES['propiedad']['tmp_name']['imagen']) {
-            $manager = new ImageManager(Driver::class);
-            try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-            } catch (\Throwable $e) {
-                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
-            }
-            $propiedad->setImagen($nombreImagen);
-        }
-
-        $errores = $propiedad->validar();
-
-        
-        //Revisar el arreglo de errores
-        if(empty($errores)) {
-
-            //SUBIDA DE ARCHIVOS
-
-            if(!is_dir(CARPETA_IMAGENES)) {
-                mkdir(CARPETA_IMAGENES);
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                try {
+                    $imagen = $manager->read($_FILES['propiedad']['tmp_name']['imagen'])->cover(1200, 800);
+                } catch (\Throwable) {
+                    $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+                }
+                $propiedad->setImagen($nombreImagen);
             }
 
-            //Guardar la imagen en el servidor
-            $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+            $errores = array_merge($errores, $propiedad->validar());
 
-            $resultado = $propiedad->guardar();
+            if (empty($errores)) {
+                if (!is_dir(CARPETA_IMAGENES)) mkdir(CARPETA_IMAGENES);
 
-            // Obtener ID insertado
-            $idPropiedad = $propiedad->{'id'};
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
 
-            // Guardar imágenes adicionales si existen
-            if (!empty($_FILES['imagenes']['name'][0])) {
-                foreach ($_FILES['imagenes']['tmp_name'] as $index => $tmpName) {
-                    if ($tmpName) {
-                        // Generar nombre único
-                        $nombreImagenAdicional = md5(uniqid(rand(), true)) . ".webp";
+                $propiedad->guardar();
+                $idPropiedad = $propiedad->id;
 
+                if (!empty($_FILES['imagenes']['name'][0])) {
+                    foreach ($_FILES['imagenes']['tmp_name'] as $tmpName) {
+                        if (!$tmpName) continue;
                         try {
-                            $imagenAdicional = $manager
-                                ->read($tmpName)
-                                ->cover(1200, 800);
-
-                            $imagenAdicional->save(CARPETA_IMAGENES . $nombreImagenAdicional);
-
-                            $imagenExtra = new ImagenLocal([
-                                'local_id' => $idPropiedad,
-                                'nombre' => $nombreImagenAdicional
-                            ]);
-                            $imagenExtra->guardar();
-
-                        } catch (\Throwable $e) {
-                            // Saltar imagen inválida (HEIC u otra)
+                            $nombreAdicional = md5(uniqid(rand(), true)) . ".webp";
+                            $manager->read($tmpName)->cover(1200, 800)->save(CARPETA_IMAGENES . $nombreAdicional);
+                            (new ImagenLocal(['local_id' => $idPropiedad, 'nombre' => $nombreAdicional]))->guardar();
+                        } catch (\Throwable) {
                             continue;
                         }
                     }
                 }
             }
         }
-        }
 
-        $router->render('crear/crear-local', [
-        'propiedad' => $propiedad,
-        'errores' => $errores
-    ]);
+        $router->render('crear/crear-local', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
 
-
-    public static function actualizarLocal(Router $router) {
-
-         $propiedad = validarORedireccion('/');
-        $id = validarORedireccion('/');
+    public static function actualizarLocal(Router $router): void {
+        $id        = validarORedireccion('/');
         $propiedad = Local::find($id);
+        $errores   = Local::getErrores();
 
-       //Arreglo mensaje de errores
-            $errores = Local::getErrores();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $args = $_POST['propiedad'];
 
-            if($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-        $args = $_POST['propiedad'];
-
-        // Convertir precio con puntos a número entero
-        if (isset($args['precio']) && isset($args['administracion']) && isset($args['area_total']) && isset($args['area_construida'])) {
-            $args['precio'] = intval(str_replace('.', '', $args['precio']));
-            $args['administracion'] = intval(str_replace('.', '', $args['administracion']));
-            $args['area_total'] = intval(str_replace('.', '', $args['area_total']));
-            $args['area_construida'] = intval(str_replace('.', '', $args['area_construida']));
-        }
-
-        $propiedad->sincronizar($args);
-        ;
-
-        $errores = $propiedad->validar();
-
-        
-
-        if($_FILES['propiedad']['tmp_name']['imagen']) {
-
-        //Subida de archivos
-        $nombreImagen = md5(uniqid(rand(),true) ).".webp";
-
-            $manager = new ImageManager(Driver::class);
-            try {
-                $imagen = $manager
-                    ->read($_FILES['propiedad']['tmp_name']['imagen'])
-                    ->cover(1200,800);
-            } catch (\Throwable $e) {
-                $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+            if (isset($args['precio'], $args['administracion'], $args['area_total'], $args['area_construida'])) {
+                $args['precio']          = intval(str_replace('.', '', $args['precio']));
+                $args['administracion']  = intval(str_replace('.', '', $args['administracion']));
+                $args['area_total']      = intval(str_replace('.', '', $args['area_total']));
+                $args['area_construida'] = intval(str_replace('.', '', $args['area_construida']));
             }
-            $propiedad->setImagen($nombreImagen);
+
+            $propiedad->sincronizar($args);
+            $errores = $propiedad->validar();
+
+            $nombreImagen = '';
+            if ($_FILES['propiedad']['tmp_name']['imagen']) {
+                $nombreImagen = md5(uniqid(rand(), true)) . ".webp";
+                try {
+                    $imagen = (new ImageManager(Driver::class))
+                        ->read($_FILES['propiedad']['tmp_name']['imagen'])
+                        ->cover(1200, 800);
+                } catch (\Throwable) {
+                    $errores[] = 'La imagen principal no es un formato soportado (usa JPG o PNG).';
+                }
+                $propiedad->setImagen($nombreImagen);
+            }
+
+            if (empty($errores)) {
+                if (isset($imagen)) {
+                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                }
+                $propiedad->guardar();
+            }
         }
 
-    if (empty($errores)) {
-    // Guardar imagen solo si existe
-    if ($_FILES['propiedad']['tmp_name']['imagen']) {
-        $imagen->save(CARPETA_IMAGENES . $nombreImagen); // usa la imagen ya seteada
+        $router->render('crear/actualizar-local', ['propiedad' => $propiedad, 'errores' => $errores]);
     }
-
-    $propiedad->guardar();
-    }
-    }
-
-
-        $router->render('crear/actualizar-local', [
-        'propiedad' => $propiedad,
-        'errores' => $errores
-    ]);
-    }
-
 }
