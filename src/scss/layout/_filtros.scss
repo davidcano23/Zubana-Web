@@ -33,10 +33,10 @@
   .filtros_computadora_header .barra_por_ubicaciones {
       width: 100%; height: 4.5rem; padding: 0 1.2rem;
       font-size: 1.6rem; line-height: 4.5rem;
-      color: v.$arenaclaro; background: v.$grisgrafito;
+      color: v.$arenaclaro; background: var(--color-filtros, #{v.$grisgrafito});
       border: 1px solid v.$grisniebla; border-radius: 1.2rem; outline: none;
       
-      &:focus { border-color: v.$rojotierra; box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.377); }
+      &:focus { border-color: var(--color-acento, #{v.$rojotierra}); box-shadow: 0 0 0 3px rgba(247, 142, 142, 0.377); }
       &::placeholder { color: color.scale(v.$arenaclaro, $lightness: -35%); opacity: .9; }
 
       @media (min-width: 1025px) { width: 40rem; height: 4rem; line-height: 4rem; }
@@ -158,7 +158,7 @@
   margin-top: 8px;
   max-height: 50dvh; 
   overflow-y: auto; 
-  background: v.$grisgrafito; 
+  background: var(--color-filtros, #{v.$grisgrafito}); 
   color: v.$arenaclaro;
   border: 1px solid v.$grisniebla; 
   border-radius: 1.2rem; 
@@ -167,7 +167,7 @@
 
   &:not(:empty) { display: block; }
   @media(min-width: 1025px) { 
-      &::before { content: ''; position: absolute; top: -8px; left: 2.4rem; width: 16px; height: 16px; background: v.$grisgrafito; border-left: 1px solid v.$grisniebla; border-top: 1px solid v.$grisniebla; transform: rotate(45deg); display: block; } 
+      &::before { content: ''; position: absolute; top: -8px; left: 2.4rem; width: 16px; height: 16px; background: var(--color-filtros, #{v.$grisgrafito}); border-left: 1px solid v.$grisniebla; border-top: 1px solid v.$grisniebla; transform: rotate(45deg); display: block; } 
   }
 }
 .resultado-item {
@@ -189,7 +189,7 @@
   }
 
   span { font-size: 1.45rem; }
-  &:hover, &.activo { background: color.scale(v.$grisgrafito, $lightness: 8%); }
+  &:hover, &.activo { background: color-mix(in srgb, var(--color-filtros, #{var(--color-filtros, #{v.$grisgrafito})}) 92%, white); }
   &.muted { cursor: default; color: rgba(255,255,255,.55); &::before { display: none; } }
 }
 
@@ -201,17 +201,17 @@
 /* Trigger (Botones que abren) */
 .tipo_trigger, .precio_trigger, .hb_trigger, .mas_trigger { 
   display: inline-flex; align-items: center; gap: .6rem; height: 4rem; padding: 0 1.2rem;
-  border: 1px solid v.$grisniebla; border-radius: 1.2rem; background: v.$grisgrafito;
+  border: 1px solid v.$grisniebla; border-radius: 1.2rem; background: var(--color-filtros, #{v.$grisgrafito});
   color: v.$arenaclaro; font-family: v.$texto; font-size: 1.4rem; cursor: pointer;
   white-space: nowrap; 
-  &:focus { outline: none; border-color: v.$rojotierra; box-shadow: 0 0 0 3px rgba(204, 131, 131, 0.25); }
+  &:focus { outline: none; border-color: var(--color-acento, #{v.$rojotierra}); box-shadow: 0 0 0 3px rgba(204, 131, 131, 0.25); }
 }
 
 /* Mixin o Estilo Base de Paneles (Escritorio) */
 .tipo_panel, .precio_panel, .hb_panel, .mas_modal { 
   opacity: 0; pointer-events: none; transform: translateY(6px); position: absolute;
   top: calc(100% + .6rem); left: 0; 
-  background: v.$grisgrafito; color: v.$arenaclaro;
+  background: var(--color-filtros, #{v.$grisgrafito}); color: v.$arenaclaro;
   border: 1px solid v.$grisniebla; border-radius: 1.2rem; box-shadow: 0 12px 28px rgba(0,0,0,.35); 
   z-index: 500; 
 }
@@ -238,29 +238,29 @@
 /* === ESTILOS INTERNOS (BOTONES, GRIDS, INPUTS) === */
 /* Estos son los estilos de TU diseño que se habían perdido */
 
-.tipo_trigger__badge { min-width: 1.6rem; height: 1.6rem; border-radius: 999px; padding: 0 .4rem; background: color.scale(v.$grisgrafito, $lightness: 15%); border: 1px solid v.$grisniebla; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
+.tipo_trigger__badge { min-width: 1.6rem; height: 1.6rem; border-radius: 999px; padding: 0 .4rem; background: color-mix(in srgb, var(--color-filtros, #{v.$grisgrafito}) 85%, white); border: 1px solid v.$grisniebla; display: inline-flex; align-items: center; justify-content: center; font-size: 1.1rem; }
 .tipo_trigger__chev, .precio_trigger__chev, .hb_trigger__chev, .mas_trigger__chev { opacity: .75; transition: transform .15s ease; }
 [aria-expanded="true"] .tipo_trigger__chev { transform: rotate(180deg); }
 
-.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: v.$rojotierra; } span { font-size: 1.6rem; } &:hover { background: color.scale(v.$grisgrafito, $lightness: 8%); } }
+.tipo_opcion { display: grid; grid-template-columns: 1.8rem 1fr; align-items: center; gap: .8rem; padding: .9rem 1.2rem; border-top: 1px solid rgba(255,255,255,.06); cursor: pointer; user-select: none; &:first-child { border-top: 0; } input[type="checkbox"] { width: 1.6rem; height: 1.6rem; accent-color: var(--color-acento, #{v.$rojotierra}); } span { font-size: 1.6rem; } &:hover { background: color-mix(in srgb, var(--color-filtros, #{var(--color-filtros, #{v.$grisgrafito})}) 92%, white); } }
 
 .precio_inputs { display: grid; gap: .8rem; label { display: grid; gap: .4rem; } input { height: 3.2rem; padding: 0 .9rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #222; color: v.$arenaclaro; font-size: 1.6rem; outline: none; } }
-.precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.6rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: white; } }
+.precio_acciones { display: flex; gap: .8rem; justify-content: flex-end; margin-top: .8rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.6rem; cursor: pointer; } .precio_limpiar { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .precio_filtrar { background: var(--color-acento, #{v.$rojotierra}); border: 1px solid color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 88%, black); color: white; } }
 
 .hb_title { margin: .2rem 0 .8rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .hb_group { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .6rem; margin-bottom: .8rem; }
-.hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; font-size: 1.2rem; padding: 0.4rem; } }
-.hb_exact_label { display: flex; align-items: center; gap: .8rem; font-size: 1.25rem; color: rgba(255,255,255,.8); input[type="checkbox"] { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: #2a2a2a; border: 1px solid v.$grisniebla; position: relative; cursor: pointer; transition: background .15s; &::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #bbb; transition: transform .15s; } &:checked { background: v.$rojotierra; border-color: v.$rojotierra; } &:checked::after { transform: translateX(18px); background: #fff; } } }
-.hb_actions { display: flex; gap: .8rem; justify-content: flex-end; margin-top: 1.2rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .hb_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .hb_apply { background: v.$rojotierra; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+.hb_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 95%, black); border-color: color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 88%, black); color: #fff; font-size: 1.2rem; padding: 0.4rem; } }
+.hb_exact_label { display: flex; align-items: center; gap: .8rem; font-size: 1.25rem; color: rgba(255,255,255,.8); input[type="checkbox"] { appearance: none; width: 42px; height: 24px; border-radius: 999px; background: #2a2a2a; border: 1px solid v.$grisniebla; position: relative; cursor: pointer; transition: background .15s; &::after { content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px; border-radius: 50%; background: #bbb; transition: transform .15s; } &:checked { background: var(--color-acento, #{v.$rojotierra}); border-color: var(--color-acento, #{v.$rojotierra}); } &:checked::after { transform: translateX(18px); background: #fff; } } }
+.hb_actions { display: flex; gap: .8rem; justify-content: flex-end; margin-top: 1.2rem; button { height: 3.2rem; padding: 0 1.1rem; border-radius: .8rem; font-size: 1.3rem; cursor: pointer; } .hb_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .hb_apply { background: var(--color-acento, #{v.$rojotierra}); border: 1px solid color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 88%, black); color: #fff; } }
 
 /* Estilos internos de Más Filtros (Restaurados) */
 .mas_head { display: flex; align-items: center; justify-content: space-between; padding: 1.2rem 1.4rem; border-bottom: 1px solid rgba(255,255,255,.06); h3 { margin: 0; font-size: 1.6rem; color: rgba(255,255,255,.95); } .mas_close { width: 3.2rem; height: 3.2rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; cursor: pointer; } } 
 .mas_body { padding: 1.2rem 1.4rem; overflow: auto; flex: 1; } 
-.mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: v.$rojotierra; color: #fff; border: 1px solid color.scale(v.$rojotierra, $lightness: -12%); } } 
+.mas_actions { padding: 1rem 1.4rem; display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255,255,255,.06); .mas_clear, .mas_apply { height: 3.4rem; padding: 0 1.2rem; border-radius: .8rem; font-size: 1.35rem; cursor: pointer; } .mas_clear { background: transparent; color: v.$arenaclaro; border: 1px solid v.$grisniebla; } .mas_apply { margin-left: auto; background: var(--color-acento, #{v.$rojotierra}); color: #fff; border: 1px solid color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 88%, black); } } 
 .mf_section { padding: .6rem 0 1.2rem 0; & + .mf_section { border-top: 1px solid rgba(255,255,255,.06); margin-top: 1rem; } }
 .mf_title { margin: .2rem 0 .9rem 0; font-size: 1.35rem; font-weight: 600; color: rgba(255,255,255,.9); }
 .mf_group { display: grid; grid-template-columns: repeat(7, minmax(0, auto)); gap: .5rem; }
-.mf_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color.scale(v.$rojotierra, $lightness: -5%); border-color: color.scale(v.$rojotierra, $lightness: -12%); color: #fff; } }
+.mf_opt { height: 3.2rem; padding: 0 .8rem; border-radius: .8rem; border: 1px solid v.$grisniebla; background: #262626; color: v.$arenaclaro; font-size: 1.35rem; text-align: center; cursor: pointer; &:hover { background: #2e2e2e; } &.active { background: color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 95%, black); border-color: color-mix(in srgb, var(--color-acento, #{var(--color-acento, #{v.$rojotierra})}) 88%, black); color: #fff; } }
 
 /* ==========================================================================
    5. OVERLAY MÓVIL
@@ -301,7 +301,7 @@ body.bsheet-lock {
     transform: none !important; 
     
     /* Aseguramos que el fondo sea TU gris grafito */
-    background: v.$grisgrafito !important;
+    background: var(--color-filtros, #{v.$grisgrafito}) !important;
     border-top: 1px solid v.$grisniebla;
     box-shadow: 0 -10px 40px rgba(0,0,0,0.5) !important;
     

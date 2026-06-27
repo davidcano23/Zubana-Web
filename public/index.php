@@ -6,6 +6,9 @@ use Controllers\ApartamentoController;
 use Controllers\ApiBusquedaController;
 use Controllers\ApiPropiedadesController;
 use Controllers\AvisoPoliticasController;
+use Controllers\ConfiguracionesController;
+use Controllers\CrmController;
+use Controllers\WhatsAppController;
 use Controllers\FincaController;
 use Controllers\LocalController;
 use MVC\Router;
@@ -58,6 +61,27 @@ $router->get('/aviso-legal', [AvisoPoliticasController::class, 'avisoLegal'] );
 $router->get('/politica-de-privacidad', [AvisoPoliticasController::class, 'politicasPrivacidad' ]);
 
 $router->post('/propiedades/eliminar', [PropiedadController::class, 'eliminar']);
+
+//WHATSAPP WEBHOOK (público — Meta necesita acceso sin auth)
+$router->get('/webhook/whatsapp',  [WhatsAppController::class, 'verificar']);
+$router->post('/webhook/whatsapp', [WhatsAppController::class, 'recibir']);
+$router->get('/crm/whatsapp',      [WhatsAppController::class, 'configuracion']);
+
+//CRM
+$router->get('/crm',             [CrmController::class, 'index']);
+$router->get('/crm/crear',       [CrmController::class, 'crear']);
+$router->post('/crm/crear',      [CrmController::class, 'crear']);
+$router->get('/crm/cliente',     [CrmController::class, 'detalle']);
+$router->get('/crm/editar',      [CrmController::class, 'editar']);
+$router->post('/crm/editar',     [CrmController::class, 'editar']);
+$router->post('/crm/actividad',  [CrmController::class, 'actividad']);
+$router->post('/crm/estado',     [CrmController::class, 'estado']);
+$router->post('/crm/eliminar',   [CrmController::class, 'eliminar']);
+
+//CONFIGURACIONES
+$router->get('/configuraciones', [ConfiguracionesController::class, 'index']);
+$router->post('/configuraciones/guardar', [ConfiguracionesController::class, 'guardar']);
+$router->post('/configuraciones/reset', [ConfiguracionesController::class, 'resetear']);
 
 //Login y Autenticacion
 $router->get('/login', [LoginController::class, 'login']);

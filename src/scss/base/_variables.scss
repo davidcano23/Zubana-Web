@@ -33,3 +33,14 @@ $black: 900;
 
 
 $separacion: 5rem;
+
+// CSS Custom Properties para theming en tiempo de ejecución
+:root {
+    --color-fondo:   #{$grisgrafito};
+    --color-header:  #{$grisniebla};
+    --color-texto:   #{$arenaclaro};
+    --color-acento:  #{$rojotierra};
+    --color-filtros: #{$grisgrafito};
+    --fuente-titulos: #{$titulos};
+    --fuente-cuerpo:  #{$texto};
+}

@@ -52,6 +52,74 @@
     }
     ?>
 
+<?php
+// Cargar configuración de apariencia del sitio
+$_siteSettingsFile = __DIR__ . '/../includes/config/site_settings.json';
+$_siteSettings = [
+    'color_fondo'        => '#1C1C1E',
+    'color_header'       => '#343434',
+    'color_texto'        => '#F5F1EA',
+    'color_acento'       => '#C1442E',
+    'color_filtros'      => '#1C1C1E',
+    'fuente_titulos'     => 'Playfair Display',
+    'fuente_cuerpo'      => 'Lato',
+    'fuente_titulos_url' => '',
+    'fuente_cuerpo_url'  => '',
+    'logo_principal'     => '',
+    'logo_secundario'    => '',
+];
+if (file_exists($_siteSettingsFile)) {
+    $_saved = json_decode(file_get_contents($_siteSettingsFile), true) ?? [];
+    $_siteSettings = array_merge($_siteSettings, $_saved);
+}
+
+// Fuentes predefinidas que no vienen en el CSS compilado (Lato, Playfair Display, Roboto ya están)
+$_fontsMap = [
+    'Lora'               => 'Lora:ital,wght@0,400;0,700;1,400',
+    'Merriweather'       => 'Merriweather:ital,wght@0,300;0,400;0,700;1,400',
+    'Cormorant Garamond' => 'Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400',
+    'Open Sans'          => 'Open+Sans:ital,wght@0,300;0,400;0,700;1,400',
+    'Raleway'            => 'Raleway:ital,wght@0,300;0,400;0,700;1,400',
+    'Nunito'             => 'Nunito:ital,wght@0,300;0,400;0,700;1,400',
+    'Inter'              => 'Inter:wght@300;400;500;700',
+    'Poppins'            => 'Poppins:wght@300;400;600;700',
+    'Source Sans 3'      => 'Source+Sans+3:ital,wght@0,300;0,400;0,700;1,400',
+    'DM Sans'            => 'DM+Sans:ital,wght@0,300;0,400;0,700;1,400',
+    'Montserrat'         => 'Montserrat:ital,wght@0,300;0,400;0,700;1,400',
+    'Outfit'             => 'Outfit:wght@300;400;600;700',
+    'Figtree'            => 'Figtree:ital,wght@0,300;0,400;0,700;1,400',
+    'Plus Jakarta Sans'  => 'Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,700;1,400',
+    'Cinzel'             => 'Cinzel:wght@400;600;700',
+    'Libre Baskerville'  => 'Libre+Baskerville:ital,wght@0,400;0,700;1,400',
+    'DM Serif Display'   => 'DM+Serif+Display:ital,wght@0,400;1,400',
+    'Abril Fatface'      => 'Abril+Fatface',
+    'Josefin Sans'       => 'Josefin+Sans:ital,wght@0,300;0,400;0,700;1,400',
+    'Bebas Neue'         => 'Bebas+Neue',
+];
+$_alreadyLoaded = ['Playfair Display', 'Roboto', 'Lato'];
+
+// Logos dinámicos
+$_logoPrincipal  = !empty($_siteSettings['logo_principal'])  ? $_siteSettings['logo_principal']  : '/img/logo_ZB.png';
+$_logoSecundario = !empty($_siteSettings['logo_secundario']) ? $_siteSettings['logo_secundario'] : '/img/logo_header_horizontal.png';
+
+// Links de fuentes extra (predefinidas o personalizadas via URL)
+$_extraFonts = []; // slug => href
+
+foreach (['fuente_titulos', 'fuente_cuerpo'] as $_fk) {
+    $_f   = $_siteSettings[$_fk];
+    $_url = $_siteSettings[$_fk . '_url'] ?? '';
+
+    if ($_url && str_starts_with($_url, 'https://fonts.googleapis.com/')) {
+        // Fuente personalizada con URL propia
+        $_extraFonts['custom-' . $_fk] = htmlspecialchars($_url, ENT_QUOTES);
+    } elseif (!in_array($_f, $_alreadyLoaded, true) && isset($_fontsMap[$_f])) {
+        // Fuente predefinida no incluida en el CSS compilado
+        $_slug = 'family=' . $_fontsMap[$_f];
+        $_extraFonts[$_slug] = 'https://fonts.googleapis.com/css2?' . $_slug . '&display=swap';
+    }
+}
+?>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -77,6 +145,22 @@
     <link rel="icon" href="<?= htmlspecialchars(($dominio ?? '') . '/img/icono_pestanapng.png') ?>" type="image/png"> <!-- Icono Pestaña -->
     <link rel="stylesheet" href="/build/css/app.css">
 
+    <?php foreach ($_extraFonts as $_fontHref): ?>
+    <link rel="stylesheet" href="<?= $_fontHref ?>">
+    <?php endforeach; ?>
+
+    <style>
+    :root {
+        --color-fondo:   <?= htmlspecialchars($_siteSettings['color_fondo'],   ENT_QUOTES) ?>;
+        --color-header:  <?= htmlspecialchars($_siteSettings['color_header'],  ENT_QUOTES) ?>;
+        --color-texto:   <?= htmlspecialchars($_siteSettings['color_texto'],   ENT_QUOTES) ?>;
+        --color-acento:  <?= htmlspecialchars($_siteSettings['color_acento'],  ENT_QUOTES) ?>;
+        --color-filtros: <?= htmlspecialchars($_siteSettings['color_filtros'], ENT_QUOTES) ?>;
+        --fuente-titulos: "<?= htmlspecialchars($_siteSettings['fuente_titulos'], ENT_QUOTES) ?>", serif;
+        --fuente-cuerpo:  "<?= htmlspecialchars($_siteSettings['fuente_cuerpo'],  ENT_QUOTES) ?>", sans-serif;
+    }
+    </style>
+
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 </head>
 
@@ -87,8 +171,8 @@
 
         <div class="nombre-logo">
         <a href="/">
-            <img src="/img/logo_ZB.png" alt="" class="logo-principal"> <!-- Logo de Celular -->
-            <img src="/img/logo_header_horizontal.png" alt="" class="logo-secundario"> <!-- Logo PC -->
+            <img src="<?= htmlspecialchars($_logoPrincipal,  ENT_QUOTES) ?>" alt="" class="logo-principal">
+            <img src="<?= htmlspecialchars($_logoSecundario, ENT_QUOTES) ?>" alt="" class="logo-secundario">
             
         </a>
         </div>
@@ -107,17 +191,39 @@
 
 
             <?php if($auth):?>
-                        
-                    <a href="/tipo-propiedad" class="admin_movil">
-                        <img src="/img/admin_header.png" loading="lazy" alt="Imagen Admin">    
-                        <p>Crear</p>
-                    </a>
 
-                    <a href="/logout" class="admin_movil">
-                        <img src="/img/cerrar_sesion.png" loading="lazy" alt="Imagen Admin">    
-                        <p>Salir</p>
-                    </a>
-                    
+                    <div class="admin-menu">
+                        <button type="button" class="admin-menu__toggle js-admin-menu" aria-haspopup="true" aria-expanded="false">
+                            <img src="/img/admin_header.png" loading="lazy" alt="Panel admin" width="18" height="18">
+                            <span>Admin</span>
+                            <svg class="admin-menu__chev" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+                        </button>
+
+                        <div class="admin-menu__panel" aria-hidden="true">
+                            <a href="/tipo-propiedad" class="admin-menu__item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                Crear Propiedad
+                            </a>
+                            <a href="/" class="admin-menu__item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                                Administrar
+                            </a>
+                            <a href="/crm" class="admin-menu__item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                                CRM
+                            </a>
+                            <a href="/configuraciones" class="admin-menu__item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                                Configuraciones
+                            </a>
+                            <div class="admin-menu__divider"></div>
+                            <a href="/logout" class="admin-menu__item admin-menu__item--danger">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                                Salir
+                            </a>
+                        </div>
+                    </div>
+
             <?php endif; ?>
 
             </div>
@@ -355,7 +461,7 @@
         <!-- CINTA SUPERIOR -->
         <div class="zf-footer__bar">
             <a class="zf-brand" href="/" aria-label="Inicio Z Bien Raíz">
-            <img class="zf-brand__logo" src="/img/logo_ZB.png" alt="Z Bien Raíz" width="36" height="36" loading="lazy"> <!--Logo del Footer -->
+            <img class="zf-brand__logo" src="<?= htmlspecialchars($_logoPrincipal, ENT_QUOTES) ?>" alt="Z Bien Raíz" width="36" height="36" loading="lazy">
             </a>
             <p class="zf-tagline">Conecta con tu casa, directo y fácil.</p>
             <a class="zf-cta" href="https://wa.me/573117856360" target="_blank" rel="noopener">WhatsApp</a>

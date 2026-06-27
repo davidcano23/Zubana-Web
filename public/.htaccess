@@ -1,5 +1,5 @@
 RewriteEngine On
-RewriteBase /public/
+RewriteBase /
 
 # Sirve archivos reales (css/js/img) y directorios tal cual
 RewriteCond %{REQUEST_FILENAME} -f [OR]

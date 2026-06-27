@@ -9,16 +9,16 @@ html {
     box-sizing: inherit;
 }
 body {
-    font-family: v.$secundaria;
+    font-family: var(--fuente-cuerpo, #{v.$secundaria});
     font-size: 1.6rem;
     line-height: 1.8;
-    background-color: v.$grisgrafito;
+    background-color: var(--color-fondo, #{v.$grisgrafito});
     overflow-x: hidden; /* Corta cualquier cosa que se salga del ancho de pantalla */
     width: 100%;
     position: relative; /* Ayuda a mantener la estructura fija */
 }
 p {
-    color: v.$arenaclaro;
+    color: var(--color-texto, #{v.$arenaclaro});
     font-size: 2rem;
     margin: 0;
 }
@@ -39,7 +39,7 @@ picture {
 }
 
 h1, h2, h3 {
-    font-family: v.$titulos;
+    font-family: var(--fuente-titulos, #{v.$titulos});
     margin: calc(v.$separacion / 2) 0;
     font-weight: 300;
     text-align: center;

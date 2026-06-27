@@ -27,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
   initGalerias();
   initLoginModalSubmit();
   initLoginModal();
+  initAdminMenu();
 });
 
 function initHeicToJpgInputs() {
@@ -1142,6 +1143,20 @@ function initGalerias() {
       document.body.style.overflow = '';
     }
   });
+}
+
+function initAdminMenu() {
+  const toggle = document.querySelector('.js-admin-menu');
+  const panel  = document.querySelector('.admin-menu__panel');
+  if (!toggle || !panel) return;
+
+  const open  = () => { toggle.setAttribute('aria-expanded', 'true');  panel.setAttribute('aria-hidden', 'false'); };
+  const close = () => { toggle.setAttribute('aria-expanded', 'false'); panel.setAttribute('aria-hidden', 'true');  };
+  const isOpen = () => toggle.getAttribute('aria-expanded') === 'true';
+
+  toggle.addEventListener('click', (e) => { e.stopPropagation(); isOpen() ? close() : open(); });
+  document.addEventListener('click', (e) => { if (isOpen() && !e.target.closest('.admin-menu')) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen()) close(); });
 }
 
 function confirmarEliminacionPropiedad() {

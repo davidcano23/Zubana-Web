@@ -24,6 +24,12 @@
 @use 'layout/propiedad';
 @use 'layout/politicas';
 
+/** CONFIGURACIONES ADMIN **/
+@use 'configuraciones/settings';
+
+/** CRM **/
+@use 'crm/crm';
+
 /** IMPORTACION DE LIBRERIAS **/
 @use "../../node_modules/swiper/swiper-bundle" as *;
 

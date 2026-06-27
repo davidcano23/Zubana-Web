@@ -1,0 +1,1103 @@
+@use 'base/variables' as v;
+@use 'base/mixins' as m;
+
+// ─────────────────────────────────────────────
+//  Layout base
+// ─────────────────────────────────────────────
+.crm-page {
+    min-height: 80vh;
+    padding: 3rem 0 8rem;
+}
+
+.crm-wrap {
+    width: 95%;
+    max-width: 130rem;
+    margin: 0 auto;
+
+    &--form {
+        max-width: 80rem;
+    }
+
+    h1 {
+        color: v.$arenaclaro;
+        font-size: 2.8rem;
+        font-weight: 300;
+        margin: 0 0 .3rem;
+    }
+}
+
+.crm-subtitle {
+    color: color-mix(in srgb, v.$arenaclaro 45%, transparent);
+    font-size: 1.45rem;
+    margin: 0;
+    font-family: v.$secundaria;
+}
+
+// ─────────────────────────────────────────────
+//  Cabecera
+// ─────────────────────────────────────────────
+.crm-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.crm-btn-new {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .85rem 1.8rem;
+    background-color: v.$arenaclaro;
+    color: v.$negrocarbon;
+    border-radius: .9rem;
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity .18s ease;
+    white-space: nowrap;
+
+    &:hover { opacity: .85; }
+}
+
+.crm-header-actions {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+}
+
+.crm-btn-wa {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    padding: .85rem 1.6rem;
+    background-color: color-mix(in srgb, #25D366 15%, transparent);
+    color: #25D366;
+    border: 1px solid color-mix(in srgb, #25D366 30%, transparent);
+    border-radius: .9rem;
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .18s ease, border-color .18s ease;
+    white-space: nowrap;
+
+    svg { flex-shrink: 0; }
+    &:hover {
+        background-color: color-mix(in srgb, #25D366 25%, transparent);
+        border-color: color-mix(in srgb, #25D366 50%, transparent);
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Alertas
+// ─────────────────────────────────────────────
+.crm-alert {
+    padding: 1.1rem 1.5rem;
+    border-radius: .9rem;
+    font-size: 1.45rem;
+    font-family: v.$secundaria;
+    margin-bottom: 1.8rem;
+
+    &--ok {
+        background: color-mix(in srgb, #10B981 12%, transparent);
+        color: #6ee7b7;
+        border: 1px solid color-mix(in srgb, #10B981 25%, transparent);
+    }
+
+    &--err {
+        background: color-mix(in srgb, v.$rojotierra 14%, transparent);
+        color: color-mix(in srgb, #f87171 80%, v.$arenaclaro 20%);
+        border: 1px solid color-mix(in srgb, v.$rojotierra 28%, transparent);
+
+        ul { margin: 0; padding-left: 1.8rem; }
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Stats
+// ─────────────────────────────────────────────
+.crm-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+    overflow-x: auto;
+    padding-bottom: .4rem;
+}
+
+.crm-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.1rem 1.8rem;
+    background: color-mix(in srgb, v.$grisniebla 60%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 8%, transparent);
+    border-radius: 1rem;
+    min-width: 9rem;
+    flex-shrink: 0;
+
+    &__num {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: v.$arenaclaro;
+        line-height: 1;
+    }
+
+    &__lbl {
+        font-size: 1.1rem;
+        color: color-mix(in srgb, v.$arenaclaro 45%, transparent);
+        font-family: v.$secundaria;
+        margin-top: .4rem;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    &--stage {
+        border-top: 3px solid var(--stage-color, v.$rojotierra);
+
+        .crm-stat__num { color: var(--stage-color, v.$arenaclaro); }
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Toolbar
+// ─────────────────────────────────────────────
+.crm-toolbar {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.crm-search-form { flex: 1; min-width: 24rem; }
+
+.crm-search-wrap {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    background: color-mix(in srgb, v.$grisniebla 70%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+    border-radius: .9rem;
+    padding: .7rem 1.1rem;
+    margin-bottom: .9rem;
+    transition: border-color .18s ease;
+
+    &:focus-within {
+        border-color: color-mix(in srgb, v.$arenaclaro 28%, transparent);
+    }
+}
+
+.crm-search-ico { opacity: .45; flex-shrink: 0; stroke: v.$arenaclaro; }
+
+.crm-search-input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: v.$arenaclaro;
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+
+    &::placeholder { color: color-mix(in srgb, v.$arenaclaro 30%, transparent); }
+}
+
+.crm-search-clear {
+    color: color-mix(in srgb, v.$arenaclaro 40%, transparent);
+    text-decoration: none;
+    font-size: 1.3rem;
+    &:hover { color: v.$arenaclaro; }
+}
+
+.crm-stage-filters {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+}
+
+.crm-stage-filter {
+    padding: .4rem 1rem;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    font-family: v.$secundaria;
+    text-decoration: none;
+    background: color-mix(in srgb, v.$grisniebla 55%, transparent);
+    color: color-mix(in srgb, v.$arenaclaro 55%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 10%, transparent);
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+    white-space: nowrap;
+
+    &:hover {
+        background: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 10%, transparent);
+        color: var(--stage-color, v.$arenaclaro);
+        border-color: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 30%, transparent);
+    }
+
+    &.active {
+        background: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 18%, transparent);
+        color: var(--stage-color, v.$arenaclaro);
+        border-color: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 40%, transparent);
+    }
+}
+
+.crm-view-toggle {
+    display: flex;
+    gap: .5rem;
+    background: color-mix(in srgb, v.$grisniebla 70%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 10%, transparent);
+    border-radius: .9rem;
+    padding: .4rem;
+    align-self: flex-start;
+}
+
+.crm-view-btn {
+    padding: .6rem .9rem;
+    border-radius: .6rem;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: color-mix(in srgb, v.$arenaclaro 40%, transparent);
+    transition: background .18s ease, color .18s ease;
+
+    svg { stroke: currentColor; }
+
+    &:hover { color: color-mix(in srgb, v.$arenaclaro 70%, transparent); }
+
+    &.active {
+        background: color-mix(in srgb, v.$arenaclaro 12%, transparent);
+        color: v.$arenaclaro;
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Pipeline Kanban
+// ─────────────────────────────────────────────
+.crm-pipeline {
+    display: flex;
+    gap: 1.4rem;
+    overflow-x: auto;
+    padding-bottom: 2rem;
+    -webkit-overflow-scrolling: touch;
+
+    // Scrollbar thin
+    scrollbar-width: thin;
+    scrollbar-color: color-mix(in srgb, v.$arenaclaro 15%, transparent) transparent;
+
+    &::-webkit-scrollbar { height: 6px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+        background: color-mix(in srgb, v.$arenaclaro 18%, transparent);
+        border-radius: 3px;
+    }
+}
+
+.crm-col {
+    flex: 0 0 27rem;
+    min-width: 27rem;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+}
+
+.crm-col-head {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    padding: .9rem 1.1rem;
+    background: color-mix(in srgb, v.$grisniebla 65%, transparent);
+    border-radius: 1rem;
+    border-top: 3px solid var(--stage-color, #888);
+
+    &__dot {
+        width: .9rem;
+        height: .9rem;
+        border-radius: 50%;
+        background: var(--stage-color, #888);
+        flex-shrink: 0;
+    }
+
+    &__name {
+        flex: 1;
+        font-family: v.$secundaria;
+        color: v.$arenaclaro;
+        font-size: 1.35rem;
+        font-weight: 600;
+    }
+
+    &__count {
+        background: color-mix(in srgb, v.$arenaclaro 10%, transparent);
+        color: color-mix(in srgb, v.$arenaclaro 65%, transparent);
+        font-size: 1.2rem;
+        font-family: v.$secundaria;
+        padding: .2rem .7rem;
+        border-radius: 2rem;
+    }
+}
+
+.crm-col-body {
+    display: flex;
+    flex-direction: column;
+    gap: .7rem;
+    flex: 1;
+}
+
+.crm-col-empty {
+    color: color-mix(in srgb, v.$arenaclaro 28%, transparent);
+    font-size: 1.3rem;
+    font-family: v.$secundaria;
+    text-align: center;
+    padding: 2rem 1rem;
+}
+
+.crm-col-add {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .7rem;
+    background: transparent;
+    border: 1px dashed color-mix(in srgb, v.$arenaclaro 14%, transparent);
+    border-radius: .8rem;
+    color: color-mix(in srgb, v.$arenaclaro 35%, transparent);
+    font-size: 1.25rem;
+    font-family: v.$secundaria;
+    text-decoration: none;
+    transition: border-color .18s ease, color .18s ease, background .18s ease;
+
+    svg { stroke: currentColor; }
+
+    &:hover {
+        border-color: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 30%, transparent);
+        color: var(--stage-color, v.$arenaclaro);
+        background: color-mix(in srgb, var(--stage-color, v.$arenaclaro) 6%, transparent);
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Tarjeta de cliente (kanban)
+// ─────────────────────────────────────────────
+.crm-card {
+    display: flex;
+    gap: .9rem;
+    padding: 1rem 1.1rem;
+    background: color-mix(in srgb, v.$grisniebla 55%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 8%, transparent);
+    border-left: 3px solid var(--stage-color, #888);
+    border-radius: .9rem;
+    text-decoration: none;
+    transition: background .18s ease, border-color .18s ease, transform .12s ease;
+
+    &:hover {
+        background: color-mix(in srgb, v.$grisniebla 75%, transparent);
+        transform: translateY(-1px);
+    }
+
+    &__avatar {
+        width: 3.4rem;
+        height: 3.4rem;
+        min-width: 3.4rem;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--stage-color, #888) 20%, transparent);
+        border: 1.5px solid color-mix(in srgb, var(--stage-color, #888) 45%, transparent);
+        color: var(--stage-color, v.$arenaclaro);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        font-weight: 700;
+        font-family: v.$secundaria;
+    }
+
+    &__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: .3rem; }
+
+    &__name {
+        display: block;
+        color: v.$arenaclaro;
+        font-size: 1.4rem;
+        font-family: v.$secundaria;
+        font-weight: 600;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__phone {
+        display: block;
+        color: color-mix(in srgb, v.$arenaclaro 55%, transparent);
+        font-size: 1.2rem;
+        font-family: v.$secundaria;
+    }
+
+    &__budget {
+        display: block;
+        color: color-mix(in srgb, v.$arenaclaro 70%, transparent);
+        font-size: 1.2rem;
+        font-family: v.$secundaria;
+    }
+
+    &__meta {
+        display: flex;
+        gap: .4rem;
+        flex-wrap: wrap;
+        margin-top: .2rem;
+    }
+
+    &__tag {
+        padding: .2rem .65rem;
+        background: color-mix(in srgb, v.$arenaclaro 8%, transparent);
+        border-radius: 2rem;
+        font-size: 1.05rem;
+        font-family: v.$secundaria;
+        color: color-mix(in srgb, v.$arenaclaro 55%, transparent);
+        white-space: nowrap;
+    }
+
+    &__side {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: space-between;
+        min-width: 4.5rem;
+    }
+
+    &__source {
+        font-size: 1.05rem;
+        font-family: v.$secundaria;
+        color: color-mix(in srgb, v.$arenaclaro 38%, transparent);
+        text-align: right;
+    }
+
+    &__age {
+        font-size: 1.1rem;
+        font-family: v.$secundaria;
+        color: color-mix(in srgb, v.$arenaclaro 38%, transparent);
+
+        &--warn { color: #F97316; }
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Vista lista (tabla)
+// ─────────────────────────────────────────────
+.crm-list-wrap { overflow-x: auto; }
+
+.crm-empty {
+    text-align: center;
+    color: color-mix(in srgb, v.$arenaclaro 38%, transparent);
+    font-size: 1.5rem;
+    font-family: v.$secundaria;
+    padding: 4rem 0;
+}
+
+.crm-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: v.$secundaria;
+    font-size: 1.35rem;
+
+    thead tr {
+        border-bottom: 1px solid color-mix(in srgb, v.$arenaclaro 10%, transparent);
+    }
+
+    th {
+        padding: 1rem 1.2rem;
+        color: color-mix(in srgb, v.$arenaclaro 45%, transparent);
+        font-weight: 500;
+        font-size: 1.2rem;
+        text-align: left;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    tbody tr {
+        border-bottom: 1px solid color-mix(in srgb, v.$arenaclaro 6%, transparent);
+        transition: background .15s ease;
+
+        &:hover {
+            background: color-mix(in srgb, v.$grisniebla 45%, transparent);
+        }
+    }
+
+    td {
+        padding: 1.1rem 1.2rem;
+        color: v.$arenaclaro;
+        vertical-align: middle;
+    }
+}
+
+.crm-warn { color: #F97316 !important; }
+
+.crm-table-name {
+    display: flex;
+    align-items: center;
+    gap: .9rem;
+
+    strong { display: block; font-weight: 500; }
+    small {
+        display: block;
+        color: color-mix(in srgb, v.$arenaclaro 40%, transparent);
+        font-size: 1.15rem;
+    }
+}
+
+.crm-table-avatar {
+    width: 3.2rem;
+    height: 3.2rem;
+    min-width: 3.2rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, v.$grisniebla 80%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 14%, transparent);
+    color: v.$arenaclaro;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.crm-table-action {
+    padding: .4rem 1rem;
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 15%, transparent);
+    border-radius: .6rem;
+    font-size: 1.25rem;
+    color: color-mix(in srgb, v.$arenaclaro 60%, transparent);
+    text-decoration: none;
+    transition: border-color .15s ease, color .15s ease;
+    white-space: nowrap;
+
+    &:hover {
+        border-color: color-mix(in srgb, v.$arenaclaro 35%, transparent);
+        color: v.$arenaclaro;
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Badge de etapa
+// ─────────────────────────────────────────────
+.crm-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .35rem 1rem;
+    border-radius: 2rem;
+    font-size: 1.2rem;
+    font-family: v.$secundaria;
+    background: color-mix(in srgb, var(--stage-color, #888) 18%, transparent);
+    color: var(--stage-color, v.$arenaclaro);
+    border: 1px solid color-mix(in srgb, var(--stage-color, #888) 35%, transparent);
+    white-space: nowrap;
+
+    &--lg {
+        padding: .55rem 1.4rem;
+        font-size: 1.35rem;
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Breadcrumb
+// ─────────────────────────────────────────────
+.crm-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin-bottom: 2rem;
+    font-size: 1.35rem;
+    font-family: v.$secundaria;
+
+    a {
+        color: color-mix(in srgb, v.$arenaclaro 55%, transparent);
+        text-decoration: none;
+        &:hover { color: v.$arenaclaro; }
+    }
+
+    span {
+        color: color-mix(in srgb, v.$arenaclaro 30%, transparent);
+
+        &:last-child { color: color-mix(in srgb, v.$arenaclaro 70%, transparent); }
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Detalle de cliente
+// ─────────────────────────────────────────────
+.crm-detalle {
+    display: grid;
+    gap: 2.5rem;
+
+    @include m.desktop {
+        grid-template-columns: 30rem 1fr;
+        align-items: start;
+    }
+}
+
+// ── Sidebar perfil ──
+.crm-perfil {
+    background: color-mix(in srgb, v.$grisniebla 65%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 8%, transparent);
+    border-radius: 1.4rem;
+    padding: 2.4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+
+    &__avatar {
+        width: 7rem;
+        height: 7rem;
+        border-radius: 50%;
+        background: color-mix(in srgb, v.$rojotierra 20%, transparent);
+        border: 2px solid color-mix(in srgb, v.$rojotierra 40%, transparent);
+        color: v.$arenaclaro;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.2rem;
+        font-weight: 700;
+        font-family: v.$secundaria;
+    }
+
+    &__nombre {
+        color: v.$arenaclaro;
+        font-size: 2rem;
+        font-weight: 400;
+        text-align: center;
+        margin: 0;
+        font-family: v.$titulos;
+    }
+
+    &__estado-wrap {
+        display: flex;
+        align-items: center;
+        gap: .9rem;
+        position: relative;
+    }
+
+    &__change-btn {
+        background: transparent;
+        border: 1px solid color-mix(in srgb, v.$arenaclaro 18%, transparent);
+        border-radius: .6rem;
+        color: color-mix(in srgb, v.$arenaclaro 50%, transparent);
+        font-size: 1.2rem;
+        font-family: v.$secundaria;
+        padding: .35rem .8rem;
+        cursor: pointer;
+        transition: border-color .18s ease, color .18s ease;
+
+        &:hover {
+            border-color: color-mix(in srgb, v.$arenaclaro 30%, transparent);
+            color: v.$arenaclaro;
+        }
+    }
+
+    &__section {
+        width: 100%;
+
+        h4 {
+            color: color-mix(in srgb, v.$arenaclaro 42%, transparent);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: .07em;
+            font-family: v.$secundaria;
+            font-weight: 600;
+            margin: 0 0 .8rem;
+        }
+    }
+
+    &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: .65rem;
+
+        li {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            color: v.$arenaclaro;
+            font-size: 1.35rem;
+            font-family: v.$secundaria;
+
+            svg { opacity: .55; flex-shrink: 0; stroke: v.$arenaclaro; }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+                &:hover { text-decoration: underline; }
+            }
+        }
+    }
+
+    &__notas {
+        color: color-mix(in srgb, v.$arenaclaro 65%, transparent);
+        font-size: 1.35rem;
+        font-family: v.$secundaria;
+        line-height: 1.6;
+        margin: 0;
+        word-break: break-word;
+    }
+
+    &__actions {
+        display: flex;
+        gap: .8rem;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    &__created {
+        color: color-mix(in srgb, v.$arenaclaro 28%, transparent);
+        font-size: 1.15rem;
+        font-family: v.$secundaria;
+        text-align: center;
+        margin: 0;
+    }
+}
+
+// ── Estado picker ──
+.crm-estado-picker {
+    position: absolute;
+    top: calc(100% + .6rem);
+    left: 0;
+    z-index: 100;
+    background: v.$grisniebla;
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+    border-radius: 1rem;
+    padding: .6rem;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 18rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,.6);
+}
+
+.crm-estado-opt {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    width: 100%;
+    padding: .75rem 1rem;
+    background: transparent;
+    border: none;
+    border-radius: .6rem;
+    color: v.$arenaclaro;
+    font-size: 1.35rem;
+    font-family: v.$secundaria;
+    cursor: pointer;
+    text-align: left;
+    transition: background .15s ease;
+
+    &:hover {
+        background: color-mix(in srgb, var(--stage-color) 12%, transparent);
+        color: var(--stage-color);
+    }
+
+    &__dot {
+        width: .8rem;
+        height: .8rem;
+        border-radius: 50%;
+        background: var(--stage-color, #888);
+        flex-shrink: 0;
+    }
+}
+
+// ─────────────────────────────────────────────
+//  Panel de actividades
+// ─────────────────────────────────────────────
+.crm-actividades-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    &__title {
+        color: v.$arenaclaro;
+        font-size: 1.8rem;
+        font-weight: 300;
+        margin: 0;
+    }
+}
+
+.crm-add-act {
+    background: color-mix(in srgb, v.$grisniebla 60%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 9%, transparent);
+    border-radius: 1.2rem;
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &__row { display: flex; gap: .9rem; }
+    &__tipo { flex: 1; }
+}
+
+// ─────────────────────────────────────────────
+//  Timeline
+// ─────────────────────────────────────────────
+.crm-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.crm-timeline__empty {
+    color: color-mix(in srgb, v.$arenaclaro 30%, transparent);
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.crm-tl-item {
+    display: flex;
+    gap: 1.2rem;
+    position: relative;
+    padding-bottom: 1.8rem;
+
+    // Línea vertical conectora
+    &:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        left: 1.55rem;
+        top: 3.5rem;
+        bottom: 0;
+        width: 1.5px;
+        background: color-mix(in srgb, v.$arenaclaro 10%, transparent);
+    }
+
+    &--new {
+        animation: fadeSlide .35s ease;
+    }
+
+    &__ico {
+        width: 3.2rem;
+        height: 3.2rem;
+        min-width: 3.2rem;
+        border-radius: 50%;
+        background: color-mix(in srgb, v.$grisniebla 80%, transparent);
+        border: 1.5px solid color-mix(in srgb, v.$arenaclaro 15%, transparent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        font-family: v.$secundaria;
+        font-weight: 700;
+        color: v.$arenaclaro;
+        flex-shrink: 0;
+        z-index: 1;
+    }
+
+    &__content {
+        flex: 1;
+        background: color-mix(in srgb, v.$grisniebla 55%, transparent);
+        border: 1px solid color-mix(in srgb, v.$arenaclaro 8%, transparent);
+        border-radius: .9rem;
+        padding: 1.1rem 1.3rem;
+    }
+
+    &__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: .8rem;
+        margin-bottom: .6rem;
+        flex-wrap: wrap;
+    }
+
+    &__tipo {
+        font-family: v.$secundaria;
+        font-weight: 600;
+        font-size: 1.3rem;
+        color: v.$arenaclaro;
+    }
+
+    &__fecha {
+        font-family: v.$secundaria;
+        font-size: 1.2rem;
+        color: color-mix(in srgb, v.$arenaclaro 38%, transparent);
+    }
+
+    &__desc {
+        font-family: v.$secundaria;
+        font-size: 1.35rem;
+        color: color-mix(in srgb, v.$arenaclaro 72%, transparent);
+        line-height: 1.6;
+        margin: 0;
+        word-break: break-word;
+    }
+}
+
+@keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─────────────────────────────────────────────
+//  Formulario CRM
+// ─────────────────────────────────────────────
+.crm-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.crm-form-section {
+    background: color-mix(in srgb, v.$grisniebla 60%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 9%, transparent);
+    border-radius: 1.2rem;
+    padding: 2rem;
+
+    legend {
+        color: color-mix(in srgb, v.$arenaclaro 55%, transparent);
+        font-size: 1.2rem;
+        font-family: v.$secundaria;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        padding: 0 .5rem;
+    }
+}
+
+.crm-form-grid {
+    display: grid;
+    gap: 1.4rem;
+    margin-top: 1.4rem;
+
+    &--2 {
+        @include m.tablet {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+}
+
+.crm-form-field {
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+
+    label {
+        color: color-mix(in srgb, v.$arenaclaro 65%, transparent);
+        font-size: 1.35rem;
+        font-family: v.$secundaria;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    input[type="url"] {
+        background: color-mix(in srgb, v.$negrocarbon 55%, transparent);
+        border: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+        border-radius: .8rem;
+        color: v.$arenaclaro;
+        font-size: 1.45rem;
+        font-family: v.$secundaria;
+        padding: .9rem 1.1rem;
+        outline: none;
+        transition: border-color .18s ease;
+
+        &::placeholder { color: color-mix(in srgb, v.$arenaclaro 25%, transparent); }
+        &:focus { border-color: color-mix(in srgb, v.$arenaclaro 30%, transparent); }
+    }
+}
+
+.crm-required {
+    color: v.$rojotierra;
+    font-size: 1.1rem;
+}
+
+.crm-select {
+    appearance: none;
+    background-color: color-mix(in srgb, v.$negrocarbon 55%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+    border-radius: .8rem;
+    color: v.$arenaclaro;
+    font-size: 1.45rem;
+    font-family: v.$secundaria;
+    padding: .9rem 3.2rem .9rem 1.1rem;
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23F5F1EA' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.1rem center;
+    transition: border-color .18s ease;
+
+    &:focus { border-color: color-mix(in srgb, v.$arenaclaro 30%, transparent); }
+
+    option, optgroup {
+        background-color: v.$grisgrafito;
+        color: v.$arenaclaro;
+    }
+}
+
+.crm-textarea {
+    background: color-mix(in srgb, v.$negrocarbon 55%, transparent);
+    border: 1px solid color-mix(in srgb, v.$arenaclaro 12%, transparent);
+    border-radius: .8rem;
+    color: v.$arenaclaro;
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+    padding: .9rem 1.1rem;
+    resize: vertical;
+    outline: none;
+    width: 100%;
+    transition: border-color .18s ease;
+
+    &::placeholder { color: color-mix(in srgb, v.$arenaclaro 25%, transparent); }
+    &:focus { border-color: color-mix(in srgb, v.$arenaclaro 30%, transparent); }
+}
+
+.crm-form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+// ─────────────────────────────────────────────
+//  Botones generales CRM
+// ─────────────────────────────────────────────
+.crm-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .9rem 1.8rem;
+    border-radius: .8rem;
+    font-size: 1.4rem;
+    font-family: v.$secundaria;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
+
+    &--primary {
+        background: v.$arenaclaro;
+        color: v.$negrocarbon;
+        &:hover { opacity: .85; }
+    }
+
+    &--secondary {
+        background: transparent;
+        color: color-mix(in srgb, v.$arenaclaro 65%, transparent);
+        border: 1px solid color-mix(in srgb, v.$arenaclaro 18%, transparent);
+        &:hover {
+            border-color: color-mix(in srgb, v.$arenaclaro 35%, transparent);
+            color: v.$arenaclaro;
+        }
+    }
+
+    &--danger {
+        background: transparent;
+        color: color-mix(in srgb, v.$rojotierra 80%, v.$arenaclaro 20%);
+        border: 1px solid color-mix(in srgb, v.$rojotierra 30%, transparent);
+        &:hover {
+            background: color-mix(in srgb, v.$rojotierra 15%, transparent);
+            border-color: color-mix(in srgb, v.$rojotierra 50%, transparent);
+        }
+    }
+}

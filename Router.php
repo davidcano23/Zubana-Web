@@ -32,7 +32,18 @@ class Router {
             '/propiedades/actualizar-lote',
             '/propiedades/crear-local',
             '/propiedades/actualizar-local',
-            '/propiedades/eliminar'
+            '/propiedades/eliminar',
+            '/crm/whatsapp',
+            '/crm',
+            '/crm/crear',
+            '/crm/cliente',
+            '/crm/editar',
+            '/crm/actividad',
+            '/crm/estado',
+            '/crm/eliminar',
+            '/configuraciones',
+            '/configuraciones/guardar',
+            '/configuraciones/reset',
         ];
 
         // PATH_INFO may be absent on some hosts (e.g. Hostinger); fall back to REQUEST_URI.
