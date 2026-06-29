@@ -231,7 +231,7 @@ function mapDinamicoComoFincaRaiz() {
 
     // Función para llenar los inputs ocultos cuando cargue la página por primera vez
     // Solo si estamos creando una nueva propiedad para que no vaya vacía
-    if(!latInput.value) {
+    if(!latInput.value || parseFloat(latInput.value) === 0) {
         latInput.value = lat;
         lngInput.value = lng;
     }
