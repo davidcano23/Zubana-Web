@@ -6,7 +6,7 @@ class Local extends ActiveRecord {
     
     protected static $tabla = 'local';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'area_construida', 'banos', 'estrato','tipo', 'tipo_local','actualizacion','descripcion','barrio', 'administracion','corregimiento','palabra_clave', 'latitud', 'longitud', 'video_url'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'area_construida', 'banos', 'estrato','tipo', 'tipo_local','actualizacion','descripcion','barrio', 'administracion','corregimiento','palabra_clave', 'latitud', 'longitud', 'created_at', 'video_url'];
 
     public $id;
     public $nombre;

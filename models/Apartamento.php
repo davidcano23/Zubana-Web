@@ -6,7 +6,7 @@ class Apartamento extends ActiveRecord {
     
     protected static $tabla = 'apartamento';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco', 'video_url'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'habitaciones', 'banos', 'zona_ropa', 'cocina', 'sala_comedor', 'balcon', 'estrato', 'garaje', 'tipo_unidad', 'tipo', 'vigilancia', 'zonas_verdes', 'juegos', 'coworking', 'gimnasio', 'piscina', 'cancha', 'actualizacion','descripcion', 'barrio','administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco', 'created_at' ,'video_url'];
 
     public $id;
     public $nombre;

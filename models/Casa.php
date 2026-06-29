@@ -15,7 +15,7 @@ class Casa extends ActiveRecord {
         'vigilancia', 'zonas_verdes', 'juegos', 'coworking',
         'gimnasio', 'piscina', 'cancha',
         'actualizacion', 'descripcion', 'barrio', 'administracion',
-        'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco',
+        'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco', 'created_at',
         'video_url'
     ];
 

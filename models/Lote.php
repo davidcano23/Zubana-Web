@@ -6,7 +6,7 @@ class Lote extends ActiveRecord {
     
     protected static $tabla = 'lotes';
 
-    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'estrato','tipo_unidad', 'tipo','actualizacion','descripcion','barrio', 'administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'video_url'];
+    protected static $columnasDB = ['id', 'nombre', 'precio', 'ubicacion', 'direccion', 'imagen', 'propietario', 'contacto', 'modalidad', 'codigo','area_total', 'estrato','tipo_unidad', 'tipo','actualizacion','descripcion','barrio', 'administracion', 'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'created_at', 'video_url'];
 
     public $id;
     public $nombre;

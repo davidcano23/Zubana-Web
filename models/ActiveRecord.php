@@ -29,6 +29,9 @@ class ActiveRecord {
     public function crear(): void {
         $atributos = $this->sanetizarAtributos();
 
+        // Quitar columnas gestionadas por la BD para que actúe su DEFAULT
+        unset($atributos['created_at']);
+
         $query  = "INSERT INTO " . static::$tabla . " (";
         $query .= join(', ', array_keys($atributos));
         $query .= ") VALUES (";
