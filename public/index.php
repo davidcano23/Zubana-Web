@@ -1,4 +1,26 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+/**
+ * Normaliza PATH_INFO/url cuando vienen desde .htaccess
+ * (En algunos servidores PATH_INFO llega vacío)
+ */
+if (!isset($_SERVER['PATH_INFO']) || $_SERVER['PATH_INFO'] === '') {
+    if (isset($_GET['PATH_INFO'])) {
+        $_SERVER['PATH_INFO'] = $_GET['PATH_INFO'];
+    } elseif (isset($_GET['url'])) {
+        $_SERVER['PATH_INFO'] = $_GET['url'];
+    } else {
+        $_SERVER['PATH_INFO'] = '/';
+    }
+}
+
+// Si tu Router usa $_GET['url'], asegúralo también:
+if (!isset($_GET['url']) && isset($_SERVER['PATH_INFO'])) {
+    $_GET['url'] = $_SERVER['PATH_INFO'];
+}
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../includes/app.php';
 
