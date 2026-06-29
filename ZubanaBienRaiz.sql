@@ -1,13 +1,13 @@
--- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.42, for Win64 (x86_64)
 --
 -- Host: localhost    Database: zubanabienraiz
 -- ------------------------------------------------------
--- Server version	8.0.44
+-- Server version	8.0.42
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -123,7 +123,7 @@ CREATE TABLE `casa` (
   `turco` varchar(5) DEFAULT NULL,
   `video_url` varchar(500) NOT NULL DEFAULT 'N/A',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -132,7 +132,7 @@ CREATE TABLE `casa` (
 
 LOCK TABLES `casa` WRITE;
 /*!40000 ALTER TABLE `casa` DISABLE KEYS */;
-INSERT INTO `casa` VALUES (60,2000,7,'Si','Si',10,'','c539232af5b03ac5578b9136388f3ff8.webp',10500000000,'Rionegro, Antioquia','N/A','Casa Campestre','Carlos Peralta','312 7578505','','Directo',400,4,'Si','Si','cerrada','Si','Si','No','No','No','No','No','casa','Mansión En Unidad Cerrada En Exclusiva Zona De Llanogrande, Siete Alcobas Con Baño, Vestier Y Terraza, Amplia Zona Social Con Piscina Y Cancha De Futbol, Zona De Bar, Dos Cocinas, Sala De Cine, Biblioteca, Ascensor, Aire Acondicionado Central, Cuarto De Juegos, Dos Oficinas, Capilla, Tres Cuartos De Servicio Con Baño Y Closet. Puerta Habitación Blindada, Vidrieras Blindadas, Cuarto Cuartos útiles Y Espacio Para Parqueo De Más De 12 Carros.','N/A',0,'Llanogrande, Rionegro','N/A',0.00000000,0.00000000,'No','No','https://youtu.be/n9SEnUmwXCk?si=r7Ka1tYid9jpPD9a');
+INSERT INTO `casa` VALUES (61,2000,5,'Si','Si',5,'','35864b8b87540eccca116fe92c6227b9.webp',600000000,'El Carmen de Viboral, Antioquia','calle 55 #23 - 34','Casa Campestre','David Cano','3004641524','','Directo',220,6,'Si','Si','abierta','Si','Si','Si','Si','Si','Si','Si','casa','Casa de Prueba   Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'El Canada, El Carmen de Viboral, Antioquia','comando el porvenir',6.08057769,-75.33602872,'Si','Si','https://www.youtube.com/watch?v=nfPPgK5ftz8');
 /*!40000 ALTER TABLE `casa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -215,7 +215,7 @@ CREATE TABLE `imagenes_propiedad` (
   PRIMARY KEY (`id`),
   KEY `fk_imagenes_propiedad_casa` (`casa_id`),
   CONSTRAINT `fk_imagenes_propiedad_casa` FOREIGN KEY (`casa_id`) REFERENCES `casa` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=382 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=398 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `imagenes_propiedad` (
 
 LOCK TABLES `imagenes_propiedad` WRITE;
 /*!40000 ALTER TABLE `imagenes_propiedad` DISABLE KEYS */;
-INSERT INTO `imagenes_propiedad` VALUES (373,60,'d5ac4e9fe1ba3df0d40ad480fa1fc879.webp'),(374,60,'dce5b84fd940b4c9eace6a48fa5d9983.webp'),(375,60,'3b331b75aa6d2a8ac1f2795d4580074a.webp'),(376,60,'d63bc47d6d1f2cbcaef2204ee85b89f2.webp'),(377,60,'ff0d478ebaf40cdf2bc7a8aa7b65b873.webp'),(378,60,'e0bbc471ae8b8011b859c0d51a1329e2.webp'),(379,60,'0ad42a7cb605aea4b18803dc22ff296d.webp'),(380,60,'a1a118e5073fb3423081366c8beca31b.webp'),(381,60,'2675e7c59b33936926a45ad9a4010f57.webp');
+INSERT INTO `imagenes_propiedad` VALUES (382,61,'4ae4037dacf3c9f454b9c53a561762af.webp'),(383,61,'2dc8339819f0d3f5902bb88d35c0fc61.webp'),(384,61,'ae6d5dd17440f2ea18ba142b7d62e8d5.webp'),(385,61,'2e4b71b41bcb87bd8a9ccdc16772eaa8.webp'),(386,61,'620a06f1a9f368352ee9ee41a9c03516.webp'),(387,61,'4ede5562cd7037f349dfc542b217c742.webp'),(388,61,'3a0bc290903d70d822400e28286c37e0.webp'),(389,61,'00d63111f5957a4660120f644feec188.webp'),(390,61,'f592c9b9d08a2ed7abdcb975427c7926.webp'),(391,61,'1214b8d0dcadef840440cd391494a5de.webp'),(392,61,'28448364e158223443cc629495ac6a6a.webp'),(393,61,'31362fb02a06577a3c111660fc125fcf.webp'),(394,61,'a7529e46626dba4aed1e76bd0b0fabe6.webp'),(395,61,'d36ea15f3c28efd6cc49577f326aa767.webp'),(396,61,'1b165bded75ca4d1d95f3244e8245d3d.webp'),(397,61,'addb8c20e83d2260e7130d8b197b6adf.webp');
 /*!40000 ALTER TABLE `imagenes_propiedad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -397,6 +397,68 @@ LOCK TABLES `lotes` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `tenants`
+--
+
+DROP TABLE IF EXISTS `tenants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tenants` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(150) NOT NULL,
+  `subdominio` varchar(63) NOT NULL,
+  `estado` enum('activo','suspendido','prueba') NOT NULL DEFAULT 'prueba',
+  `plan_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `subdominio` (`subdominio`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tenants`
+--
+
+LOCK TABLES `tenants` WRITE;
+/*!40000 ALTER TABLE `tenants` DISABLE KEYS */;
+INSERT INTO `tenants` VALUES (1,'Zubana BienRaíz','zubana','activo',NULL,'2026-06-18 17:32:18');
+/*!40000 ALTER TABLE `tenants` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `theme_colors`
+--
+
+DROP TABLE IF EXISTS `theme_colors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `theme_colors` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `color_uno` varchar(10) DEFAULT NULL,
+  `color_dos` varchar(10) DEFAULT NULL,
+  `color_tres` varchar(10) DEFAULT NULL,
+  `color_cuatro` varchar(10) DEFAULT NULL,
+  `color_cinco` varchar(10) DEFAULT NULL,
+  `color_seis` varchar(10) DEFAULT NULL,
+  `color_siete` varchar(10) DEFAULT NULL,
+  `color_ocho` varchar(10) DEFAULT NULL,
+  `color_nueve` varchar(10) DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `theme_colors`
+--
+
+LOCK TABLES `theme_colors` WRITE;
+/*!40000 ALTER TABLE `theme_colors` DISABLE KEYS */;
+INSERT INTO `theme_colors` VALUES (1,'#f27373','#2e8b57','#a4c8d8','#f5f1ea','#2e2e2e','#000000','#ffffff','#ff0000','#a9cbb7','2026-02-24 21:45:35');
+/*!40000 ALTER TABLE `theme_colors` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuarios`
 --
 
@@ -420,10 +482,6 @@ LOCK TABLES `usuarios` WRITE;
 INSERT INTO `usuarios` VALUES (2,'correo@correo.com','$2y$10$f85r901eSVL72F7pn2rNbO106Ed7pt8ux7OBcvUZNM6Ir0h53zcSW');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping routines for database 'zubanabienraiz'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -434,4 +492,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-27  2:24:07
+-- Dump completed on 2026-06-29  0:08:51
