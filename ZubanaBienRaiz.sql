@@ -62,8 +62,9 @@ CREATE TABLE `apartamento` (
   `jacuzzi` varchar(5) DEFAULT NULL,
   `turco` varchar(5) DEFAULT NULL,
   `video_url` varchar(500) NOT NULL DEFAULT 'N/A',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -72,6 +73,7 @@ CREATE TABLE `apartamento` (
 
 LOCK TABLES `apartamento` WRITE;
 /*!40000 ALTER TABLE `apartamento` DISABLE KEYS */;
+INSERT INTO `apartamento` VALUES (26,'',850000000,'La Ceja, Antioquia','Vereda los Olivos Propiedad #15','38a37b60eebe413cfb5937f71351bfea.webp','Daniel Gonzales','3054154879','Colegaje','',125,4,3,'No','Si','Si','Si',4,'Si','abierta','Apartamento','No','Si','Si','Si','Si','Si','Si','apartamento','Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba','N/A',250000,'San Antonio de Pereira, Rionegro, Antioquia','La Cumbre',6.15510000,-75.37370000,'Si','Si','N/A','2026-06-29 21:08:14');
 /*!40000 ALTER TABLE `apartamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -122,6 +124,7 @@ CREATE TABLE `casa` (
   `jacuzzi` varchar(5) DEFAULT NULL,
   `turco` varchar(5) DEFAULT NULL,
   `video_url` varchar(500) NOT NULL DEFAULT 'N/A',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -132,7 +135,7 @@ CREATE TABLE `casa` (
 
 LOCK TABLES `casa` WRITE;
 /*!40000 ALTER TABLE `casa` DISABLE KEYS */;
-INSERT INTO `casa` VALUES (61,2000,5,'Si','Si',5,'','35864b8b87540eccca116fe92c6227b9.webp',600000000,'El Carmen de Viboral, Antioquia','calle 55 #23 - 34','Casa Campestre','David Cano','3004641524','','Directo',220,6,'Si','Si','abierta','Si','Si','Si','Si','Si','Si','Si','casa','Casa de Prueba   Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'El Canada, El Carmen de Viboral, Antioquia','comando el porvenir',6.08057769,-75.33602872,'Si','Si','https://www.youtube.com/watch?v=nfPPgK5ftz8');
+INSERT INTO `casa` VALUES (61,2000,5,'Si','Si',5,'','35864b8b87540eccca116fe92c6227b9.webp',600000000,'El Carmen de Viboral, Antioquia','calle 55 #23 - 34','Casa Campestre','David Cano','3004641524','','Directo',220,6,'Si','Si','abierta','Si','Si','Si','Si','Si','Si','Si','casa','Casa de Prueba   Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'El Canada, El Carmen de Viboral, Antioquia','comando el porvenir',6.08057769,-75.33602872,'Si','Si','https://www.youtube.com/watch?v=nfPPgK5ftz8','2026-06-29 11:08:14');
 /*!40000 ALTER TABLE `casa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -242,7 +245,7 @@ CREATE TABLE `imagenes_propiedad_apartamento` (
   PRIMARY KEY (`id`),
   KEY `fk_imagenes_propiedad_apartamento` (`apartamento_id`),
   CONSTRAINT `fk_imagenes_propiedad_apartamento` FOREIGN KEY (`apartamento_id`) REFERENCES `apartamento` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=182 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=188 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -251,6 +254,7 @@ CREATE TABLE `imagenes_propiedad_apartamento` (
 
 LOCK TABLES `imagenes_propiedad_apartamento` WRITE;
 /*!40000 ALTER TABLE `imagenes_propiedad_apartamento` DISABLE KEYS */;
+INSERT INTO `imagenes_propiedad_apartamento` VALUES (182,26,'0229b3cdbd4d0441a1cc7e79c21e36a2.webp'),(183,26,'dc35cbae7f79978beae962ceeb6f8060.webp'),(184,26,'f799b854a088175fa03900167ba42d10.webp'),(185,26,'76957cb64736488fa5d2145f2788968f.webp'),(186,26,'85fcafe6f50b73b0dc091e3181fb53d0.webp'),(187,26,'1fda659137153055ffbd1c850fe78d73.webp');
 /*!40000 ALTER TABLE `imagenes_propiedad_apartamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -268,7 +272,7 @@ CREATE TABLE `imagenes_propiedad_local` (
   PRIMARY KEY (`id`),
   KEY `fk_imagenes_propiedad_local` (`local_id`),
   CONSTRAINT `fk_imagenes_propiedad_local` FOREIGN KEY (`local_id`) REFERENCES `local` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -277,6 +281,7 @@ CREATE TABLE `imagenes_propiedad_local` (
 
 LOCK TABLES `imagenes_propiedad_local` WRITE;
 /*!40000 ALTER TABLE `imagenes_propiedad_local` DISABLE KEYS */;
+INSERT INTO `imagenes_propiedad_local` VALUES (51,11,'551ac16abf483e8b13ff1a94e331310d.webp'),(52,11,'e9a2d11592785277b7e8e2f2b39e2474.webp'),(53,11,'9d153ef9fa9a52e0438206c0971b9494.webp'),(54,11,'cc5e362cd743582af60181606463ff82.webp'),(55,11,'eaa019c8bd41fe6a751607bfcfa2627d.webp'),(56,11,'252e1c3b6db79f854121714c6fb83557.webp'),(57,11,'4862119118a4202a9e060f1587c6eabd.webp');
 /*!40000 ALTER TABLE `imagenes_propiedad_local` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -339,8 +344,9 @@ CREATE TABLE `local` (
   `latitud` decimal(10,8) DEFAULT NULL,
   `longitud` decimal(10,8) DEFAULT NULL,
   `video_url` varchar(500) NOT NULL DEFAULT 'N/A',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -349,6 +355,7 @@ CREATE TABLE `local` (
 
 LOCK TABLES `local` WRITE;
 /*!40000 ALTER TABLE `local` DISABLE KEYS */;
+INSERT INTO `local` VALUES (11,'',950000000,'Rionegro, Antioquia','Vereda los palitos','5419aebf808a7e39903cfcdcdb8f0bd9.webp','Antonio Lopez','3054157278','Colegaje','',125,220,3,4,'Local','centro comercial','local','Local de Prueba Local de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de PruebaLocal de Prueba','N/A',150000,'San Antonio de Pereira, Rionegro, Antioquia','cacha de tejo manuel trujillo',6.15510000,-75.37370000,'https://www.youtube.com/watch?v=nfPPgK5ftz8','2026-06-29 21:17:36');
 /*!40000 ALTER TABLE `local` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,6 +390,7 @@ CREATE TABLE `lotes` (
   `latitud` decimal(10,8) DEFAULT NULL,
   `longitud` decimal(10,8) DEFAULT NULL,
   `video_url` varchar(500) NOT NULL DEFAULT 'N/A',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -492,4 +500,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-29  0:08:51
+-- Dump completed on 2026-06-29 16:25:13
