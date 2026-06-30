@@ -2,6 +2,8 @@
 
 namespace Model;
 
+use mysqli;
+
 class ActiveRecord {
 
     protected static $db;
@@ -16,6 +18,21 @@ class ActiveRecord {
 
     public static function escapeString(string $value): string {
         return self::$db->escape_string($value);
+    }
+
+    protected static $tenantId = null;
+
+    // Se llama una vez al arrancar la app, para decir "ahora trabajamos con el tenant X"
+    public static function setTenant(?int $tenantId): void {
+        self::$tenantId = $tenantId;
+    }
+
+    // Devuelve el tenant actual; si nadie lo definió, LANZA UN ERROR (no consulta sin filtro)
+    protected static function tid(): int {
+        if (self::$tenantId === null) {
+            throw new \RuntimeException('Tenant no resuelto');
+        }
+        return self::$tenantId;
     }
 
     public function guardar(): void {

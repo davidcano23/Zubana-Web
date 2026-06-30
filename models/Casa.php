@@ -16,7 +16,7 @@ class Casa extends ActiveRecord {
         'gimnasio', 'piscina', 'cancha',
         'actualizacion', 'descripcion', 'barrio', 'administracion',
         'corregimiento', 'palabra_clave', 'latitud', 'longitud', 'jacuzzi', 'turco', 'created_at',
-        'video_url'
+        'video_url', 'tenant_id'
     ];
 
     public $id;
@@ -59,6 +59,7 @@ class Casa extends ActiveRecord {
     public $turco;
     public $created_at;
     public $video_url;
+    public $tenant_id;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;

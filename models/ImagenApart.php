@@ -4,11 +4,12 @@ namespace Model;
 
 class ImagenApart extends ActiveRecord {
     protected static $tabla = 'imagenes_propiedad_apartamento';
-    protected static $columnasDB = ['id', 'apartamento_id', 'nombre'];
+    protected static $columnasDB = ['id', 'apartamento_id', 'nombre', 'tenant_id'];
 
     public $id;
     public $apartamento_id;
     public $nombre;
+    public $tenant_id;
 
     public function __construct($args = []) {
         $this->id = $args['id'] ?? null;
