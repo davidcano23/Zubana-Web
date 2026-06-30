@@ -69,6 +69,7 @@ class ApartamentoController {
     public static function actualizarApartamento(Router $router): void {
         $id        = validarORedireccion('/');
         $propiedad = Apartamento::find($id);
+        if (!$propiedad) { header('Location: /'); exit; }
         $errores   = Apartamento::getErrores();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

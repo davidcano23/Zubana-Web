@@ -16,7 +16,9 @@ class Router {
     }
 
     public function comprobarRutas(): void {
-        session_start();
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
         $auth = $_SESSION['login'] ?? null;
 

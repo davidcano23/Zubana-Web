@@ -74,6 +74,7 @@ class PropiedadController {
     public static function actualizarCasa(Router $router): void {
         $id        = validarORedireccion('/');
         $propiedad = Casa::find($id);
+        if (!$propiedad) { header('Location: /'); exit; }
         $errores   = Casa::getErrores();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

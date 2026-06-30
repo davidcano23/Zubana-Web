@@ -16,6 +16,9 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class PaginaController {
 
+    // TODO Fase 5: reemplazar por la resolución real del subdominio
+    protected static int $tenantPublico = 1;
+
     private static function construirMapaImagenes(): array {
         $mapa = [];
         foreach (ImagenCasa::todas() as $img) {
@@ -90,7 +93,9 @@ class PaginaController {
         $ordenar = $_GET['ordenar'] ?? 'mas_recientes';
         if (!in_array($ordenar, $ORDENES_VALIDOS, true)) $ordenar = 'mas_recientes';
 
+        $tid = (int) self::$tenantPublico;
         $condBase = [];
+        $condBase[] = "tenant_id = {$tid}";
         if ($busqueda) {
             $safe = ModelActiveRecord::escapeString(trim($busqueda));
             $condBase[] = "(ubicacion LIKE '%{$safe}%' OR barrio LIKE '%{$safe}%' OR corregimiento LIKE '%{$safe}%' OR palabra_clave LIKE '%{$safe}%')";

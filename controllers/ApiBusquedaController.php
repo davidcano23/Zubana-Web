@@ -6,6 +6,9 @@ use mysqli;
 
 class ApiBusquedaController {
 
+    // TODO Fase 5: reemplazar por la resolución real del subdominio
+    protected static int $tenantPublico = 1;
+
     public static function buscar() {
         header('Content-Type: application/json; charset=utf-8');
 
@@ -24,12 +27,13 @@ class ApiBusquedaController {
 
         // Tablas a consultar
         $tablas = ['casa', 'apartamento', 'local', 'lotes'];
+        $tenantId = self::$tenantPublico;
 
         $resultados = [];
         $seen = [];
 
         foreach ($tablas as $tabla) {
-            $items = self::sugerenciasTabla($db, $tabla, $q);
+            $items = self::sugerenciasTabla($db, $tabla, $q, $tenantId);
 
             foreach ($items as $item) {
                 $key = mb_strtolower($item['texto']);
@@ -52,7 +56,7 @@ class ApiBusquedaController {
     /**
      * Obtiene sugerencias de una tabla para varias columnas
      */
-    private static function sugerenciasTabla(mysqli $db, string $tabla, string $q): array {
+    private static function sugerenciasTabla(mysqli $db, string $tabla, string $q, int $tenantId): array {
 
         $campos = ['ubicacion', 'corregimiento', 'barrio', 'palabra_clave'];
         $out = [];
@@ -66,6 +70,7 @@ class ApiBusquedaController {
                 AND $campo <> ''
                 AND $campo COLLATE utf8mb4_unicode_ci
                     LIKE CONCAT('%', ?, '%') COLLATE utf8mb4_unicode_ci
+                AND tenant_id = ?
                 LIMIT 5
             ";
 
@@ -74,7 +79,7 @@ class ApiBusquedaController {
                 continue;
             }
 
-            $stmt->bind_param('s', $q);
+            $stmt->bind_param('si', $q, $tenantId);
             $stmt->execute();
             $stmt->bind_result($texto);
 

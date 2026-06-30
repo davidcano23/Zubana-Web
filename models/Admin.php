@@ -6,17 +6,19 @@ class Admin extends ActiveRecord {
 
     //Base de datos
     protected static $tabla = 'usuarios';
-    protected static $columnasDB = ['id', 'email', 'password'];
+    protected static $columnasDB = ['id', 'email', 'password', 'tenant_id'];
 
     public $id;
     public $email;
     public $password;
+    public $tenant_id;
 
     public function __construct($args = [])
     {
         $this->id = $args['id'] ?? null;
         $this->email = $args['email'] ?? '';
         $this->password = $args['password'] ?? '';
+        $this->tenant_id = $args['tenant_id'] ?? null;
     }
 
     public function validar(): array
@@ -38,7 +40,8 @@ class Admin extends ActiveRecord {
 
 
     public function existeUsuario() {
-        $query = "SELECT * FROM " . self::$tabla . " WHERE email = ? LIMIT 1";
+        $tid = self::tid();
+        $query = "SELECT * FROM " . self::$tabla . " WHERE email = ? AND tenant_id = ? LIMIT 1";
         $stmt = self::$db->prepare($query);
 
         if (!$stmt) {
@@ -46,7 +49,7 @@ class Admin extends ActiveRecord {
             return null;
         }
 
-        $stmt->bind_param('s', $this->email);
+        $stmt->bind_param('si', $this->email, $tid);
         $stmt->execute();
 
         $resultado = $stmt->get_result();
@@ -77,6 +80,9 @@ class Admin extends ActiveRecord {
 
         if (!$autenticado) {
             self::$errores[] = 'El password es incorrecto';
+        } else {
+            // Guardar el tenant del registro para que iniciarSesion() lo persista
+            $this->tenant_id = $usuario->tenant_id ?? null;
         }
 
         return $autenticado;
@@ -89,8 +95,9 @@ class Admin extends ActiveRecord {
                 session_start();
             }
             session_regenerate_id(true);
-            $_SESSION['usuario'] = $this->email ?? null;
-            $_SESSION['login']   = true;
+            $_SESSION['usuario']   = $this->email ?? null;
+            $_SESSION['login']     = true;
+            $_SESSION['tenant_id'] = $this->tenant_id;
         }
 
         // (Opcional legado) si algún lugar aún llama a autenticarTo, lo dejamos,

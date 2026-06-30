@@ -70,6 +70,7 @@ class LocalController {
     public static function actualizarLocal(Router $router): void {
         $id        = validarORedireccion('/');
         $propiedad = Local::find($id);
+        if (!$propiedad) { header('Location: /'); exit; }
         $errores   = Local::getErrores();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

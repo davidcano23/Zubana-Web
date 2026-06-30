@@ -70,6 +70,7 @@ class LotesController {
     public static function actualizarLotes(Router $router): void {
         $id        = validarORedireccion('/');
         $propiedad = Lote::find($id);
+        if (!$propiedad) { header('Location: /'); exit; }
         $errores   = Lote::getErrores();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

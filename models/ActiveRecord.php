@@ -49,6 +49,9 @@ class ActiveRecord {
         // Quitar columnas gestionadas por la BD para que actúe su DEFAULT
         unset($atributos['created_at']);
 
+        // Forzar el tenant: siempre nace con el dueño correcto, sin importar lo que envíe el formulario
+        $atributos['tenant_id'] = self::tid();
+
         $query  = "INSERT INTO " . static::$tabla . " (";
         $query .= join(', ', array_keys($atributos));
         $query .= ") VALUES (";
@@ -76,7 +79,7 @@ class ActiveRecord {
 
         $query  = "UPDATE " . static::$tabla . " SET ";
         $query .= join(', ', $valores);
-        $query .= " WHERE id = '" . self::$db->escape_string($this->{'id'}) . "' LIMIT 1";
+        $query .= " WHERE id = '" . self::$db->escape_string($this->{'id'}) . "' AND tenant_id = " . self::tid() . " LIMIT 1";
 
         $resultado = self::$db->query($query);
 
@@ -86,7 +89,7 @@ class ActiveRecord {
     }
 
     public function eliminar(): void {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " LIMIT 1";
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " AND tenant_id = " . self::tid() . " LIMIT 1";
 
         $resultado = self::$db->query($query);
 
@@ -97,7 +100,7 @@ class ActiveRecord {
     }
 
     public function eliminarImagenes(): bool {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'});
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " AND tenant_id = " . self::tid();
 
         $resultado = self::$db->query($query);
 
@@ -109,7 +112,7 @@ class ActiveRecord {
     }
 
     public function eliminarImg(): bool {
-        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " LIMIT 1";
+        $query = "DELETE FROM " . static::$tabla . " WHERE id = " . self::$db->escape_string($this->{'id'}) . " AND tenant_id = " . self::tid() . " LIMIT 1";
         $resultado = self::$db->query($query);
 
         if ($resultado) {
@@ -165,7 +168,8 @@ class ActiveRecord {
     }
 
     public static function filtrar(array $filtros): array {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE 1=1";
+        $t = self::tid();
+        $query = "SELECT * FROM " . static::$tabla . " WHERE tenant_id = {$t}";
 
         if (!empty($filtros['ciudad'])) {
             $ciudad = self::$db->escape_string($filtros['ciudad']);
@@ -256,18 +260,21 @@ class ActiveRecord {
     }
 
     public static function todas(): array {
-        return self::consultarSQL("SELECT * FROM " . static::$tabla);
+        return self::consultarSQL("SELECT * FROM " . static::$tabla . " WHERE tenant_id = " . self::tid());
     }
 
     public static function get(int $cantidad): array {
-        $query = "SELECT * FROM " . static::$tabla . " ORDER BY RAND() LIMIT " . $cantidad;
+        $t = self::tid();
+        $query = "SELECT * FROM " . static::$tabla . " WHERE tenant_id = {$t} ORDER BY RAND() LIMIT " . $cantidad;
         return self::consultarSQL($query);
     }
 
     public static function getRecomendadas(string $ubicacion, int $idExcluir, int $cantidad): array {
+        $t = self::tid();
         $ubicacion = self::$db->escape_string($ubicacion);
         $query = "SELECT * FROM " . static::$tabla . "
-                  WHERE ubicacion = '$ubicacion'
+                  WHERE tenant_id = {$t}
+                  AND ubicacion = '$ubicacion'
                   AND id != $idExcluir
                   ORDER BY RAND()
                   LIMIT $cantidad";
@@ -275,17 +282,20 @@ class ActiveRecord {
     }
 
     public static function where(string $columna, $valor): array {
+        $t = self::tid();
         $columna = self::$db->escape_string($columna);
         $valor   = self::$db->escape_string($valor);
-        return self::consultarSQL("SELECT * FROM " . static::$tabla . " WHERE {$columna} = '{$valor}'");
+        return self::consultarSQL("SELECT * FROM " . static::$tabla . " WHERE tenant_id = {$t} AND {$columna} = '{$valor}'");
     }
 
     public static function contar(): int {
-        $resultado = self::$db->query("SELECT COUNT(*) as total FROM " . static::$tabla);
+        $t = self::tid();
+        $resultado = self::$db->query("SELECT COUNT(*) as total FROM " . static::$tabla . " WHERE tenant_id = {$t}");
         return (int)$resultado->fetch_assoc()['total'];
     }
 
     public static function getPaginadas(int $limite, int $offset, ?string $ordenar = null): array {
+        $t = self::tid();
         $orderSQL = match ($ordenar) {
             'mayor_precio' => "ORDER BY precio DESC",
             'menor_precio' => "ORDER BY precio ASC",
@@ -294,14 +304,15 @@ class ActiveRecord {
             default        => "ORDER BY id DESC",
         };
 
-        $query = "SELECT * FROM " . static::$tabla . " $orderSQL LIMIT $limite OFFSET $offset";
+        $query = "SELECT * FROM " . static::$tabla . " WHERE tenant_id = {$t} $orderSQL LIMIT $limite OFFSET $offset";
         return self::consultarSQL($query);
     }
 
     public static function find(int $id): ?object {
-        $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id}";
-        $resultado = self::consultarSQL($query);
-        return array_shift($resultado);
+        $t = self::tid();
+        $query = "SELECT * FROM " . static::$tabla . " WHERE id = {$id} AND tenant_id = {$t} LIMIT 1";
+        $resultados = self::consultarSQL($query);
+        return array_shift($resultados);
     }
 
     public static function consultarSQL(string $query): array {
