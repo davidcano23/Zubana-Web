@@ -62,9 +62,11 @@ class Router {
             ? ($this->rutasGET[$urlActual]  ?? null)
             : ($this->rutasPOST[$urlActual] ?? null);
 
-        if (in_array($urlActual, $rutas_protegidas) && !$auth) {
-            header('location: /');
-            exit;
+        if (in_array($urlActual, $rutas_protegidas)) {
+            if (!$auth || !isset($_SESSION['tenant_id'])) {
+                header('location: /');
+                exit;
+            }
         }
 
         if ($fn) {

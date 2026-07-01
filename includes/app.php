@@ -14,15 +14,23 @@ use Model\ActiveRecord;
 
 ActiveRecord::setDB($db);
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 
 if (isset($_SESSION['tenant_id'])) {
-    // Zona privada (panel): el tenant sale de la sesión, fijada en el login
+    // ZONA PRIVADA: el usuario ya inició sesión, su tenant manda
     ActiveRecord::setTenant((int) $_SESSION['tenant_id']);
 } else {
-    // Zona pública: temporalmente tenant 1 (en la Fase 5 se resolverá por subdominio)
-    ActiveRecord::setTenant(1);
+    // ZONA PÚBLICA: resolver por subdominio
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $sub  = explode('.', $host)[0];        // 'zubana' de 'zubana.tudominio.com'
+
+    $tenant = Model\Tenant::porSubdominio($sub);
+
+    if (!$tenant || $tenant->estado === 'suspendido') {
+        http_response_code(404);
+        exit('Inmobiliaria no encontrada');
+    }
+
+    ActiveRecord::setTenant((int) $tenant->id);
 }
 
