@@ -20,17 +20,23 @@ if (isset($_SESSION['tenant_id'])) {
     // ZONA PRIVADA: el usuario ya inició sesión, su tenant manda
     ActiveRecord::setTenant((int) $_SESSION['tenant_id']);
 } else {
-    // ZONA PÚBLICA: resolver por subdominio
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    $sub  = explode('.', $host)[0];        // 'zubana' de 'zubana.tudominio.com'
+    $sub  = explode('.', $host)[0];
+
+    // --- SOLO PARA DESARROLLO EN LOCALHOST ---
+    if ($host === 'localhost' || strpos($host, 'localhost:') === 0 || strpos($host, '127.0.0.1') === 0) {
+        if (isset($_GET['tenant'])) {
+            $_SESSION['dev_tenant'] = preg_replace('/[^a-z0-9-]/', '', strtolower($_GET['tenant']));
+        }
+        $sub = $_SESSION['dev_tenant'] ?? 'zubana';
+    }
+    // --- FIN MODO DESARROLLO ---
 
     $tenant = Model\Tenant::porSubdominio($sub);
-
     if (!$tenant || $tenant->estado === 'suspendido') {
         http_response_code(404);
         exit('Inmobiliaria no encontrada');
     }
-
     ActiveRecord::setTenant((int) $tenant->id);
 }
 

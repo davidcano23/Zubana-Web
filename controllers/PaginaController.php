@@ -93,7 +93,7 @@ class PaginaController {
         $ordenar = $_GET['ordenar'] ?? 'mas_recientes';
         if (!in_array($ordenar, $ORDENES_VALIDOS, true)) $ordenar = 'mas_recientes';
 
-        $tid = (int) self::$tenantPublico;
+        $tid = ModelActiveRecord::getTenant();
         $condBase = [];
         $condBase[] = "tenant_id = {$tid}";
         if ($busqueda) {
@@ -155,6 +155,7 @@ class PaginaController {
         $whereLocal = $buildWhere($condLocal);
         $whereLotes = $buildWhere($condLotes);
 
+
         $casas        = $includeCasa  ? Casa::consultarSQL("SELECT * FROM casa {$whereCasa} ORDER BY id DESC")             : [];
         $apartamentos = $includeApart ? Apartamento::consultarSQL("SELECT * FROM apartamento {$whereApart} ORDER BY id DESC") : [];
         $locales      = $includeLocal ? Local::consultarSQL("SELECT * FROM local {$whereLocal} ORDER BY id DESC")          : [];
@@ -214,7 +215,8 @@ class PaginaController {
             case 'casa':
             case 'finca':
             case 'casa campestre':
-                $propiedad   = Casa::find($id);
+                $propiedad = Casa::find($id);
+                if (!$propiedad) { http_response_code(404); header('Location: /'); exit; }
                 $propiedades = Casa::getRecomendadas($propiedad->ubicacion, $id, 3);
                 $imagenes    = ImagenCasa::where('casa_id', $id);
                 break;
@@ -222,13 +224,15 @@ class PaginaController {
             case 'apartamento':
             case 'apartaestudio':
             case 'apartaoficina':
-                $propiedad   = Apartamento::find($id);
+                $propiedad = Apartamento::find($id);
+                if (!$propiedad) { http_response_code(404); header('Location: /'); exit; }
                 $propiedades = Apartamento::getRecomendadas($propiedad->ubicacion, $id, 3);
                 $imagenes    = ImagenApart::where('apartamento_id', $id);
                 break;
 
             case 'local':
-                $propiedad   = Local::find($id);
+                $propiedad = Local::find($id);
+                if (!$propiedad) { http_response_code(404); header('Location: /'); exit; }
                 $propiedades = Local::getRecomendadas($propiedad->ubicacion, $id, 3);
                 $imagenes    = ImagenLocal::where('local_id', $id);
                 break;
@@ -237,7 +241,8 @@ class PaginaController {
             case 'lote urbano':
             case 'lote bodega':
             case 'lote urbanizable':
-                $propiedad   = Lote::find($id);
+                $propiedad = Lote::find($id);
+                if (!$propiedad) { http_response_code(404); header('Location: /'); exit; }
                 $propiedades = Lote::getRecomendadas($propiedad->ubicacion, $id, 3);
                 $imagenes    = ImagenLotes::where('lotes_id', $id);
                 break;
@@ -245,11 +250,6 @@ class PaginaController {
             default:
                 header('Location: /');
                 exit;
-        }
-
-        if (!$propiedad) {
-            header('Location: /');
-            exit;
         }
 
         $router->render('paginas/propiedad', [

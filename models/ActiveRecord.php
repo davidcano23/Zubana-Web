@@ -35,6 +35,8 @@ class ActiveRecord {
         return self::$tenantId;
     }
 
+    public static function getTenant(): int { return self::tid(); }
+
     public function guardar(): void {
         if (!is_null($this->{'id'})) {
             $this->actualizar();
