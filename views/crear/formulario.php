@@ -47,7 +47,7 @@
 
     <?php if(!empty($propiedad?->imagen)) { ?>
         
-    <img src="/imagenes/<?php echo $propiedad->imagen ?>" alt="" class="imagen-peque">
+    <img src="<?php echo urlImagen($propiedad->imagen) ?>" alt="" class="imagen-peque">
 
     <?php } ?>
 

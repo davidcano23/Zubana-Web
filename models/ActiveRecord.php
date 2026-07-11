@@ -16,6 +16,12 @@ class ActiveRecord {
         self::$db = $database;
     }
 
+    // Expone la conexión mysqli para operaciones que la necesitan directamente
+    // (ej. transacciones en RegistroController). No confundir con getTenant().
+    public static function getDB(): mysqli {
+        return self::$db;
+    }
+
     public static function escapeString(string $value): string {
         return self::$db->escape_string($value);
     }
@@ -36,6 +42,82 @@ class ActiveRecord {
     }
 
     public static function getTenant(): int { return self::tid(); }
+
+    // =====================================================================
+    // MODO GLOBAL (Fase 7 · Tarea 2) — cimiento del panel superadmin.
+    //
+    // Filosofía: NO se toca ninguna consulta existente (el aislamiento de
+    // la Fase 4 queda intacto). En su lugar se abren DOS puertas nuevas,
+    // ambas cerradas con llave: solo funcionan si la sesión es superadmin.
+    // =====================================================================
+
+    // Lanza excepción si la sesión actual NO es de superadmin.
+    // Es el candado de todas las operaciones globales.
+    protected static function exigirSuperadmin(): void {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+        if (($_SESSION['superadmin'] ?? false) !== true) {
+            throw new \RuntimeException('Operación global denegada: se requiere sesión de superadmin');
+        }
+    }
+
+    /**
+     * Ejecuta un SELECT sin filtro de tenant (agregados, métricas, listados
+     * globales). Devuelve un array de objetos genéricos (stdClass).
+     *
+     * Doble protección:
+     *  1. Solo sesión superadmin (exigirSuperadmin).
+     *  2. Solo lecturas: rechaza cualquier cosa que no empiece por SELECT.
+     */
+    public static function consultaGlobal(string $query): array {
+        self::exigirSuperadmin();
+
+        if (!preg_match('/^\s*SELECT\b/i', $query)) {
+            throw new \InvalidArgumentException('consultaGlobal() solo admite consultas SELECT');
+        }
+
+        $resultado = self::$db->query($query);
+        if (!$resultado) {
+            throw new \RuntimeException('Error en consulta global: ' . self::$db->error);
+        }
+
+        $filas = [];
+        while ($fila = $resultado->fetch_assoc()) {
+            $filas[] = (object) $fila;
+        }
+        $resultado->free();
+        return $filas;
+    }
+
+    // Cuenta TODOS los registros de la tabla del modelo, sin filtro de tenant.
+    // Ej: Casa::contarGlobal() → total de casas de TODAS las inmobiliarias.
+    public static function contarGlobal(): int {
+        self::exigirSuperadmin();
+        $resultado = self::$db->query("SELECT COUNT(*) AS total FROM " . static::$tabla);
+        return $resultado ? (int) $resultado->fetch_assoc()['total'] : 0;
+    }
+
+    /**
+     * Ejecuta $fn "actuando como" un tenant concreto y SIEMPRE restaura el
+     * contexto anterior (incluso si $fn lanza excepción, gracias al finally).
+     *
+     * Permite reutilizar los métodos existentes del modelo desde el panel:
+     *   $casas = ActiveRecord::comoTenant(5, fn() => Casa::todas());
+     */
+    public static function comoTenant(int $tenantId, callable $fn) {
+        self::exigirSuperadmin();
+
+        $anterior = self::$tenantId;
+        self::setTenant($tenantId);
+        try {
+            return $fn();
+        } finally {
+            self::setTenant($anterior);
+        }
+    }
+
+    // ===================== FIN MODO GLOBAL =====================
 
     public function guardar(): void {
         if (!is_null($this->{'id'})) {
@@ -164,8 +246,8 @@ class ActiveRecord {
     }
 
     public function borrarImagen(): void {
-        if (file_exists(CARPETA_IMAGENES . $this->{'imagen'})) {
-            unlink(CARPETA_IMAGENES . $this->{'imagen'});
+        if (file_exists(carpetaImagenes() . $this->{'imagen'})) {
+            unlink(carpetaImagenes() . $this->{'imagen'});
         }
     }
 

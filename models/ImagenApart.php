@@ -25,7 +25,7 @@ class ImagenApart extends ActiveRecord {
         $imagenes = self::where('apartamento_id', $apartamentoId);
 
         foreach ($imagenes as $imagen) {
-            $ruta = CARPETA_IMAGENES . $imagen->nombre;
+            $ruta = carpetaImagenes() . $imagen->nombre;
             if (file_exists($ruta)) {
                 unlink($ruta);
             }
@@ -34,7 +34,7 @@ class ImagenApart extends ActiveRecord {
     }
 
     public function borrarImagen(): void {
-        $rutaImagen = CARPETA_IMAGENES . $this->nombre;
+        $rutaImagen = carpetaImagenes() . $this->nombre;
         if (file_exists($rutaImagen)) {
             unlink($rutaImagen);
         }

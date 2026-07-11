@@ -31,9 +31,9 @@
     
     // Si en tu vista llega $imagenes como array
     if (isset($imagenes) && is_array($imagenes) && !empty($imagenes[0]->nombre)) {
-        $imgRel = "/imagenes/" . $imagenes[0]->nombre;
+        $imgRel = urlImagen($imagenes[0]->nombre);
     } elseif (!empty($propiedad->imagen)) {
-        $imgRel = "/imagenes/" . $propiedad->imagen;
+        $imgRel = urlImagen($propiedad->imagen);
     } else {
         $imgRel = "/img/preview-default.jpg";
     }
@@ -46,7 +46,7 @@
     $imagen_principal = null;
 
     if (!empty($imagenes)) {
-        $imagen_principal = $dominio . "/imagenes/" . $imagenes[0]->nombre;
+        $imagen_principal = $dominio . urlImagen($imagenes[0]->nombre);
     } else {
         $imagen_principal = $dominio . "/img/icono_pestanapng.png"; // fallback
     }

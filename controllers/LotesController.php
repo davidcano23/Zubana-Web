@@ -40,10 +40,8 @@ class LotesController {
             $errores = array_merge($errores, $propiedad->validar());
 
             if (empty($errores)) {
-                if (!is_dir(CARPETA_IMAGENES)) mkdir(CARPETA_IMAGENES);
-
                 if (isset($imagen)) {
-                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                    $imagen->save(carpetaImagenes() . $nombreImagen);
                 }
 
                 $propiedad->guardar();
@@ -54,7 +52,7 @@ class LotesController {
                         if (!$tmpName) continue;
                         try {
                             $nombreAdicional = md5(uniqid(rand(), true)) . ".webp";
-                            $manager->read($tmpName)->cover(1200, 800)->save(CARPETA_IMAGENES . $nombreAdicional);
+                            $manager->read($tmpName)->cover(1200, 800)->save(carpetaImagenes() . $nombreAdicional);
                             (new ImagenLotes(['lotes_id' => $idPropiedad, 'nombre' => $nombreAdicional]))->guardar();
                         } catch (\Throwable) {
                             continue;
@@ -100,7 +98,7 @@ class LotesController {
 
             if (empty($errores)) {
                 if (isset($imagen)) {
-                    $imagen->save(CARPETA_IMAGENES . $nombreImagen);
+                    $imagen->save(carpetaImagenes() . $nombreImagen);
                 }
                 $propiedad->guardar();
             }

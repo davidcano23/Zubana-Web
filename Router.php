@@ -69,6 +69,17 @@ class Router {
             }
         }
 
+        // --- Guard del panel superadmin (Fase 7) ---
+        // Protege TODO /superadmin/* por prefijo (no lista manual: cualquier
+        // ruta nueva del panel queda protegida automáticamente).
+        // Única excepción: el propio login.
+        if (strpos($urlActual, '/superadmin') === 0 && $urlActual !== '/superadmin/login') {
+            if (($_SESSION['superadmin'] ?? false) !== true) {
+                header('location: /superadmin/login');
+                exit;
+            }
+        }
+
         if ($fn) {
             call_user_func($fn, $this);
         } else {
@@ -85,5 +96,19 @@ class Router {
         include_once __DIR__ . "/views/$view.php";
         $contenido = ob_get_clean();
         include_once __DIR__ . '/views/layout.php';
+    }
+
+    // Igual que render() pero con el layout del panel superadmin.
+    // El layout normal (views/layout.php) arma metadatos de propiedades
+    // del tenant; el panel privado no tiene nada de eso.
+    public function renderSuperadmin($view, $datos = []): void {
+        foreach ($datos as $key => $value) {
+            $$key = $value;
+        }
+
+        ob_start();
+        include_once __DIR__ . "/views/$view.php";
+        $contenido = ob_get_clean();
+        include_once __DIR__ . '/views/superadmin/layout.php';
     }
 }

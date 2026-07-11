@@ -2,7 +2,16 @@
 
 define('TEMPLATE_URL', __DIR__.'/template');
 define('FUNCIONES_URL', __DIR__ . 'funciones.php');
-define('CARPETA_IMAGENES', __DIR__ . '/../public/imagenes/');
+
+function carpetaImagenes(): string {
+    $ruta = __DIR__ . '/../public/imagenes/' . \Model\ActiveRecord::getTenant() . '/';
+    if (!is_dir($ruta)) { mkdir($ruta, 0755, true); }
+    return $ruta;
+}
+
+function urlImagen(string $archivo): string {
+    return '/imagenes/' . \Model\ActiveRecord::getTenant() . '/' . $archivo;
+}
 
 function estaAutenticado() {
     session_start();

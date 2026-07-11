@@ -36,8 +36,10 @@ use Controllers\LocalController;
 use MVC\Router;
 use Controllers\PaginaController;
 use Controllers\LoginController;
+use Controllers\SuperadminController;
 use Controllers\LotesController;
 use Controllers\PropiedadController;
+use Controllers\RegistroController;
 
 $router = new Router();
 
@@ -109,6 +111,23 @@ $router->post('/configuraciones/reset', [ConfiguracionesController::class, 'rese
 $router->get('/login', [LoginController::class, 'login']);
 $router->post('/login', [LoginController::class, 'login']);
 $router->get('/logout', [LoginController::class, 'logout']);
+
+//RUTA DE REGISTRO
+$router->get('/registro',  [RegistroController::class, 'registro']);
+$router->post('/registro', [RegistroController::class, 'registro']);
+
+//PANEL SUPERADMIN (Fase 7) — protegido por prefijo en Router::comprobarRutas()
+$router->get('/superadmin',         [SuperadminController::class, 'index']);
+$router->get('/superadmin/login',   [SuperadminController::class, 'login']);
+$router->post('/superadmin/login',  [SuperadminController::class, 'login']);
+$router->get('/superadmin/logout',  [SuperadminController::class, 'logout']);
+$router->get('/superadmin/api/metricas', [SuperadminController::class, 'metricas']);
+$router->get('/superadmin/inmobiliarias',         [SuperadminController::class, 'inmobiliarias']);
+$router->get('/superadmin/inmobiliarias/crear',   [SuperadminController::class, 'inmobiliariaCrear']);
+$router->post('/superadmin/inmobiliarias/crear',  [SuperadminController::class, 'inmobiliariaCrear']);
+$router->post('/superadmin/inmobiliarias/estado', [SuperadminController::class, 'inmobiliariaEstado']);
+$router->get('/superadmin/mapa',     [SuperadminController::class, 'mapa']);
+$router->get('/superadmin/api/mapa', [SuperadminController::class, 'apiMapa']);
 
 //API DE BUSQUEDA
 $router->get('/api/buscar', [ApiBusquedaController::class, 'buscar']);

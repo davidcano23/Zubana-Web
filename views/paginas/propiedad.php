@@ -30,7 +30,7 @@
                 <div class="swiper-wrapper">
                     <?php foreach($imagenes as $imagen): ?>
                         <div class="swiper-slide">
-                            <img src="/imagenes/<?php echo $imagen->nombre; ?>" alt="Imagen de la propiedad" loading="lazy">
+                            <img src="<?php echo urlImagen($imagen->nombre); ?>" alt="Imagen de la propiedad" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -43,7 +43,7 @@
                 <div class="swiper-wrapper">
                     <?php foreach($imagenes as $imagen): ?>
                         <div class="swiper-slide">
-                            <img src="/imagenes/<?php echo $imagen->nombre; ?>" alt="Miniaturas de las imagenes de la propiedad" loading="lazy">
+                            <img src="<?php echo urlImagen($imagen->nombre); ?>" alt="Miniaturas de las imagenes de la propiedad" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -58,7 +58,7 @@
                 <div class="swiper-wrapper">
                     <?php foreach($imagenes as $imagen): ?>
                         <div class="swiper-slide">
-                            <img src="/imagenes/<?php echo $imagen->nombre; ?>" alt="Imagenes de la propiedad" loading="lazy">
+                            <img src="<?php echo urlImagen($imagen->nombre); ?>" alt="Imagenes de la propiedad" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -71,7 +71,7 @@
                 <div class="swiper-wrapper">
                     <?php foreach($imagenes as $imagen): ?>
                         <div class="swiper-slide">
-                            <img src="/imagenes/<?php echo $imagen->nombre; ?>" alt="Miniaturas de las imagenes de la propiedad" loading="lazy">
+                            <img src="<?php echo urlImagen($imagen->nombre); ?>" alt="Miniaturas de las imagenes de la propiedad" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -420,7 +420,7 @@
             $videoEmbed = youtubeEmbedUrl($propiedad->video_url ?? null);
         ?>
 
-        <?php if ($videoEmbed && $propiedad->video_url !== "N/A"): ?>w
+        <?php if ($videoEmbed && $propiedad->video_url !== "N/A"): ?>
                 <div class="video-propiedad precio">
                     <h4>Video del Inmueble</h4>
 

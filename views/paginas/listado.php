@@ -10,7 +10,7 @@
             <div class="swiper-wrapper">
                 
                 <div class="swiper-slide">
-                    <img src="/imagenes/<?php echo $recomendada->imagen; ?>" alt="Imagen propiedad" loading="lazy">
+                    <img src="<?php echo urlImagen($recomendada->imagen); ?>" alt="Imagen propiedad" loading="lazy">
                 </div>
 
                 <?php 
@@ -36,7 +36,7 @@
                 <?php if (!empty($imagenesPorCasa[$llaveUnica])): ?>
                     <?php foreach($imagenesPorCasa[$llaveUnica] as $imagenNombre): ?>
                         <div class="swiper-slide">
-                            <img src="/imagenes/<?php echo $imagenNombre; ?>" alt="Imagen Extra" loading="lazy">
+                            <img src="<?php echo urlImagen($imagenNombre); ?>" alt="Imagen Extra" loading="lazy">
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
