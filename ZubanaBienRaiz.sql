@@ -75,7 +75,7 @@ CREATE TABLE `apartamento` (
 
 LOCK TABLES `apartamento` WRITE;
 /*!40000 ALTER TABLE `apartamento` DISABLE KEYS */;
-INSERT INTO `apartamento` VALUES (26,1,'',850000000,'La Ceja, Antioquia','Vereda los Olivos Propiedad #15','38a37b60eebe413cfb5937f71351bfea.webp','Daniel Gonzales','3054154879','Colegaje','',125,4,3,'No','Si','Si','Si',4,'Si','abierta','Apartamento','No','Si','Si','Si','Si','Si','Si','apartamento','Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba','N/A',250000,'San Antonio de Pereira, Rionegro, Antioquia','La Cumbre',6.15510000,-75.37370000,'Si','Si','N/A','2026-06-29 21:08:14'),(27,1,'',850000000,'El Carmen de Viboral, Antioquia','Vereda los Olivos Propiedad #15','852e7c96f98ac5c355e068cd38ab5dc3.webp','Antonio Lopez','3054157278','Directo','',125,2,2,'Si','Si','Si','Si',2,'No','abierta','Apartamento','Si','Si','Si','Si','Si','Si','Si','apartamento','Prueba Apartamento   Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'San Antonio de Pereira, Rionegro, Antioquia','La Cumbre',6.13014342,-75.38286209,'Si','Si','N/A','2026-06-30 23:16:11');
+INSERT INTO `apartamento` VALUES (26,1,'',850000000,'La Ceja, Antioquia','Vereda los Olivos Propiedad #15','38a37b60eebe413cfb5937f71351bfea.webp','Daniel Gonzales','3054154879','Colegaje','',125,4,3,'No','Si','Si','Si',4,'Si','abierta','Apartamento','No','Si','Si','Si','Si','Si','Si','apartamento','Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba   Apartamento de prueba','N/A',250000,'San Antonio de Pereira, Rionegro, Antioquia','La Cumbre',6.15510000,-75.37370000,'Si','Si','N/A','2026-06-29 21:08:14'),(27,2,'',850000000,'El Carmen de Viboral, Antioquia','Vereda los Olivos Propiedad #15','852e7c96f98ac5c355e068cd38ab5dc3.webp','Antonio Lopez','3054157278','Directo','',125,2,2,'Si','Si','Si','Si',2,'No','abierta','Apartamento','Si','Si','Si','Si','Si','Si','Si','apartamento','Prueba Apartamento   Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento  Prueba Apartamento','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'San Antonio de Pereira, Rionegro, Antioquia','La Cumbre',6.13014342,-75.38286209,'Si','Si','N/A','2026-06-30 23:16:11');
 /*!40000 ALTER TABLE `apartamento` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -139,7 +139,7 @@ CREATE TABLE `casa` (
 
 LOCK TABLES `casa` WRITE;
 /*!40000 ALTER TABLE `casa` DISABLE KEYS */;
-INSERT INTO `casa` VALUES (61,1,2000,5,'Si','Si',5,'','35864b8b87540eccca116fe92c6227b9.webp',600000000,'El Carmen de Viboral, Antioquia','calle 55 #23 - 34','Casa Campestre','David Cano','3004641524','','Directo',220,6,'Si','Si','abierta','Si','Si','Si','Si','Si','Si','Si','casa','Casa de Prueba   Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'El Canada, El Carmen de Viboral, Antioquia','comando el porvenir',6.08057769,-75.33602872,'Si','Si','https://www.youtube.com/watch?v=nfPPgK5ftz8','2026-06-29 11:08:14'),(64,1,120,5,'No','No',4,'','fa9ea5efc010fbffbeb658130e4f39b6.webp',995000000,'Rionegro, Antioquia','N/A','Finca','Alveiro Tabares','3206110254','','Colegaje',150,5,'No','No','cerrada','No','Si','Si','No','No','No','No','finca','Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia','N/A',150000,'San Antonio de Pereira, Rionegro, Antioquia','N/A',6.15659813,-75.39779663,'No','No','N/A','2026-06-30 23:19:16');
+INSERT INTO `casa` VALUES (61,1,2000,5,'Si','Si',5,'','35864b8b87540eccca116fe92c6227b9.webp',600000000,'El Carmen de Viboral, Antioquia','calle 55 #23 - 34','Casa Campestre','David Cano','3004641524','','Directo',220,6,'Si','Si','abierta','Si','Si','Si','Si','Si','Si','Si','casa','Casa de Prueba   Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba  Casa de Prueba','Vereda Sonadora, El Canada, El Carmen de Viboral, Antioquia',250000,'El Canada, El Carmen de Viboral, Antioquia','comando el porvenir',6.08057769,-75.33602872,'Si','Si','https://www.youtube.com/watch?v=nfPPgK5ftz8','2026-06-29 11:08:14'),(64,2,120,5,'No','No',4,'','fa9ea5efc010fbffbeb658130e4f39b6.webp',995000000,'Rionegro, Antioquia','N/A','Finca','Alveiro Tabares','3206110254','','Colegaje',150,5,'No','No','cerrada','No','Si','Si','No','No','No','No','finca','Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia   Finca Prueba Rionegro Antioquia','N/A',150000,'San Antonio de Pereira, Rionegro, Antioquia','N/A',6.15659813,-75.39779663,'No','No','N/A','2026-06-30 23:19:16');
 /*!40000 ALTER TABLE `casa` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -233,7 +233,7 @@ CREATE TABLE `imagenes_propiedad` (
 
 LOCK TABLES `imagenes_propiedad` WRITE;
 /*!40000 ALTER TABLE `imagenes_propiedad` DISABLE KEYS */;
-INSERT INTO `imagenes_propiedad` VALUES (382,1,61,'4ae4037dacf3c9f454b9c53a561762af.webp'),(383,1,61,'2dc8339819f0d3f5902bb88d35c0fc61.webp'),(384,1,61,'ae6d5dd17440f2ea18ba142b7d62e8d5.webp'),(385,1,61,'2e4b71b41bcb87bd8a9ccdc16772eaa8.webp'),(386,1,61,'620a06f1a9f368352ee9ee41a9c03516.webp'),(387,1,61,'4ede5562cd7037f349dfc542b217c742.webp'),(388,1,61,'3a0bc290903d70d822400e28286c37e0.webp'),(389,1,61,'00d63111f5957a4660120f644feec188.webp'),(390,1,61,'f592c9b9d08a2ed7abdcb975427c7926.webp'),(391,1,61,'1214b8d0dcadef840440cd391494a5de.webp'),(392,1,61,'28448364e158223443cc629495ac6a6a.webp'),(393,1,61,'31362fb02a06577a3c111660fc125fcf.webp'),(394,1,61,'a7529e46626dba4aed1e76bd0b0fabe6.webp'),(395,1,61,'d36ea15f3c28efd6cc49577f326aa767.webp'),(396,1,61,'1b165bded75ca4d1d95f3244e8245d3d.webp'),(397,1,61,'addb8c20e83d2260e7130d8b197b6adf.webp'),(398,1,64,'84dea509a771b1236f1a463a937e110f.webp'),(399,1,64,'6aac0928d201296cd5032c734ca5b303.webp'),(400,1,64,'30cee7c623531b019e169aa92237d3ac.webp'),(401,1,64,'9a6b832c6125a29ff3ce6733e352be9b.webp'),(402,1,64,'bd957fa9de87a5da65656b5a699fc9ad.webp'),(403,1,64,'1e21455b4b1dc5f5a85d95af6cfee682.webp'),(404,1,64,'42574ba10c55cf91beb58c8e77029054.webp'),(405,1,64,'6cce51a67dfc318ed5bc48673f64dcb2.webp'),(406,1,64,'ef2374299aaeef7362734a25cebf811a.webp'),(407,1,64,'c81e0ee7bb45a7db26a2f3aea1e2ecd7.webp'),(408,1,64,'3b01b1a8f3443c6b9ba356d876bc9be6.webp'),(409,1,64,'31698dcbb3cdec3e0afc6fdea37b75f7.webp'),(410,1,64,'ae35f8f583ec242aa41a8fd4237f1602.webp'),(411,1,64,'811e66551df818be779ae6a38bedf3f9.webp'),(412,1,64,'37d7b6632e6dd2ec477c52b33ce03f56.webp');
+INSERT INTO `imagenes_propiedad` VALUES (382,1,61,'4ae4037dacf3c9f454b9c53a561762af.webp'),(383,1,61,'2dc8339819f0d3f5902bb88d35c0fc61.webp'),(384,1,61,'ae6d5dd17440f2ea18ba142b7d62e8d5.webp'),(385,1,61,'2e4b71b41bcb87bd8a9ccdc16772eaa8.webp'),(386,1,61,'620a06f1a9f368352ee9ee41a9c03516.webp'),(387,1,61,'4ede5562cd7037f349dfc542b217c742.webp'),(388,1,61,'3a0bc290903d70d822400e28286c37e0.webp'),(389,1,61,'00d63111f5957a4660120f644feec188.webp'),(390,1,61,'f592c9b9d08a2ed7abdcb975427c7926.webp'),(391,1,61,'1214b8d0dcadef840440cd391494a5de.webp'),(392,1,61,'28448364e158223443cc629495ac6a6a.webp'),(393,1,61,'31362fb02a06577a3c111660fc125fcf.webp'),(394,1,61,'a7529e46626dba4aed1e76bd0b0fabe6.webp'),(395,1,61,'d36ea15f3c28efd6cc49577f326aa767.webp'),(396,1,61,'1b165bded75ca4d1d95f3244e8245d3d.webp'),(397,1,61,'addb8c20e83d2260e7130d8b197b6adf.webp'),(398,2,64,'84dea509a771b1236f1a463a937e110f.webp'),(399,2,64,'6aac0928d201296cd5032c734ca5b303.webp'),(400,2,64,'30cee7c623531b019e169aa92237d3ac.webp'),(401,2,64,'9a6b832c6125a29ff3ce6733e352be9b.webp'),(402,2,64,'bd957fa9de87a5da65656b5a699fc9ad.webp'),(403,2,64,'1e21455b4b1dc5f5a85d95af6cfee682.webp'),(404,2,64,'42574ba10c55cf91beb58c8e77029054.webp'),(405,2,64,'6cce51a67dfc318ed5bc48673f64dcb2.webp'),(406,2,64,'ef2374299aaeef7362734a25cebf811a.webp'),(407,2,64,'c81e0ee7bb45a7db26a2f3aea1e2ecd7.webp'),(408,2,64,'3b01b1a8f3443c6b9ba356d876bc9be6.webp'),(409,2,64,'31698dcbb3cdec3e0afc6fdea37b75f7.webp'),(410,2,64,'ae35f8f583ec242aa41a8fd4237f1602.webp'),(411,2,64,'811e66551df818be779ae6a38bedf3f9.webp'),(412,2,64,'37d7b6632e6dd2ec477c52b33ce03f56.webp');
 /*!40000 ALTER TABLE `imagenes_propiedad` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -421,6 +421,35 @@ LOCK TABLES `lotes` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `superadmins`
+--
+
+DROP TABLE IF EXISTS `superadmins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `superadmins` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '',
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_superadmins_email` (`email`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `superadmins`
+--
+
+LOCK TABLES `superadmins` WRITE;
+/*!40000 ALTER TABLE `superadmins` DISABLE KEYS */;
+INSERT INTO `superadmins` VALUES (1,'David','davidcanomarin23@gmail.com','$2y$10$VXIxiYE/hR5KJ8JoIFeY5u9zUOKSwkyXz2GY6VvPGf64kwbgCaeJC',1,'2026-07-04 11:11:47');
+/*!40000 ALTER TABLE `superadmins` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tenants`
 --
 
@@ -436,7 +465,7 @@ CREATE TABLE `tenants` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `subdominio` (`subdominio`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -445,7 +474,7 @@ CREATE TABLE `tenants` (
 
 LOCK TABLES `tenants` WRITE;
 /*!40000 ALTER TABLE `tenants` DISABLE KEYS */;
-INSERT INTO `tenants` VALUES (1,'Zubana BienRaíz','zubana','activo',NULL,'2026-06-18 17:32:18');
+INSERT INTO `tenants` VALUES (1,'Zubana BienRaíz','zubana','activo',NULL,'2026-06-18 17:32:18'),(2,'Demo Inmobiliaria','demo','activo',NULL,'2026-07-01 01:16:02'),(3,'Cristobal','cristo','activo',NULL,'2026-07-09 22:02:54'),(4,'Perritos','perritos','activo',NULL,'2026-07-11 05:07:39');
 /*!40000 ALTER TABLE `tenants` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -496,7 +525,7 @@ CREATE TABLE `usuarios` (
   `password` char(60) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_tenant` (`tenant_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -505,7 +534,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (2,1,'correo@correo.com','$2y$10$f85r901eSVL72F7pn2rNbO106Ed7pt8ux7OBcvUZNM6Ir0h53zcSW');
+INSERT INTO `usuarios` VALUES (2,1,'correo@correo.com','$2y$10$f85r901eSVL72F7pn2rNbO106Ed7pt8ux7OBcvUZNM6Ir0h53zcSW'),(3,3,'cristo@gmail.com','$2y$10$46X7JUQgQWP3xJXDB4mNZeRw17L8yqKTzT0/fEOmq45Lwmz1qjAGq'),(4,4,'perritos@gmail.com','$2y$10$G9oDDDfIdgcWF1rQJOlj6OPwY6ngBPMPVDKE1.S6JoZJoevVWJrbW');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -518,4 +547,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-30 18:35:39
+-- Dump completed on 2026-07-11 18:59:55
