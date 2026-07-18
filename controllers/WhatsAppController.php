@@ -41,29 +41,49 @@ class WhatsAppController {
 
         $rawPayload = file_get_contents('php://input');
 
+        self::log('RECIBIDO payload (' . strlen($rawPayload) . ' bytes)');
+
         // Verificar firma de seguridad de Meta
         $firma    = $_SERVER['HTTP_X_HUB_SIGNATURE_256'] ?? '';
         $esperada = 'sha256=' . hash_hmac('sha256', $rawPayload, WA_APP_SECRET);
 
         if (WA_APP_SECRET !== 'TU_APP_SECRET_AQUI' && !hash_equals($esperada, $firma)) {
+            self::log('ERROR firma inválida. Recibida: ' . $firma);
             http_response_code(403);
             exit;
         }
 
         $data = json_decode($rawPayload, true);
 
-        if (($data['object'] ?? '') !== 'whatsapp_business_account') {
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            self::log('ERROR JSON inválido: ' . json_last_error_msg());
+            http_response_code(200);
+            exit;
+        }
+
+        $objeto = $data['object'] ?? '';
+        if ($objeto !== 'whatsapp_business_account') {
+            self::log("IGNORADO: object='$objeto' (no es whatsapp_business_account)");
             http_response_code(200);
             exit;
         }
 
         foreach ($data['entry'] ?? [] as $entry) {
             foreach ($entry['changes'] ?? [] as $change) {
-                if (($change['field'] ?? '') !== 'messages') continue;
+                $field = $change['field'] ?? '';
+                if ($field !== 'messages') {
+                    self::log("IGNORADO change field='$field'");
+                    continue;
+                }
 
                 $value    = $change['value']    ?? [];
                 $messages = $value['messages']  ?? [];
                 $contacts = $value['contacts']  ?? [];
+
+                if (empty($messages)) {
+                    self::log('SIN mensajes en este change (probablemente status update)');
+                    continue;
+                }
 
                 // Indexar contactos por wa_id para acceso rápido
                 $contactMap = [];
@@ -75,12 +95,21 @@ class WhatsAppController {
                     $tipo  = $msg['type'] ?? '';
                     $phone = $msg['from'] ?? '';
 
-                    if (!$phone) continue;
+                    self::log("MENSAJE de='$phone' tipo='$tipo'");
+
+                    if (!$phone) {
+                        self::log('IGNORADO: sin número de teléfono');
+                        continue;
+                    }
 
                     $waName = $contactMap[$phone] ?? '';
                     $texto  = self::extraerTexto($msg, $tipo);
 
-                    if ($texto === '') continue;
+                    if ($texto === '') {
+                        // Tipo no soportado: igual crear/actualizar el cliente sin actividad
+                        self::log("TIPO '$tipo' sin texto — creando cliente igualmente");
+                        $texto = "[Mensaje de tipo: $tipo]";
+                    }
 
                     self::procesarMensaje($phone, $waName, $texto, $tipo);
                 }
@@ -129,18 +158,40 @@ class WhatsAppController {
             $nuevo->estado   = 'nuevo';
             $nuevo->notas    = 'Creado automáticamente desde WhatsApp';
 
-            if (!$nuevo->crearCliente()) return;
+            if (!$nuevo->crearCliente()) {
+                self::log("ERROR al crear cliente para teléfono='$telefonoNorm'");
+                return;
+            }
+            self::log("CLIENTE CREADO id={$nuevo->id} nombre='{$partes[0]} {$partes[1]}' tel='$telefonoNorm'");
             $cliente = $nuevo;
+        } else {
+            self::log("CLIENTE EXISTENTE id={$cliente->id} tel='$telefonoNorm'");
         }
 
-        if (!$cliente->id) return;
+        if (!$cliente->id) {
+            self::log('ERROR: cliente sin ID después de crear/buscar');
+            return;
+        }
 
         // Registrar el mensaje como actividad
         $act = new CrmActividad();
         $act->cliente_id  = (int) $cliente->id;
         $act->tipo        = 'whatsapp';
         $act->descripcion = $texto;
-        $act->crearActividad();
+
+        if ($act->crearActividad()) {
+            self::log("ACTIVIDAD CREADA id={$act->id} cliente_id={$cliente->id}");
+        } else {
+            self::log("ERROR al crear actividad para cliente_id={$cliente->id}");
+        }
+    }
+
+    private static function log(string $msg): void {
+        $logFile = __DIR__ . '/../logs/webhook_wa.log';
+        $dir = dirname($logFile);
+        if (!is_dir($dir)) @mkdir($dir, 0755, true);
+        $line = '[' . date('Y-m-d H:i:s') . '] ' . $msg . PHP_EOL;
+        @file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
     }
 
     private static function buscarPorTelefono(string $telefonoNorm, string $phoneRaw): ?object {
